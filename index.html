@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A lightweight static web game starter.">
+  <title>MaxGame</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #eef2ff;
+      --surface: #ffffff;
+      --surface-muted: #e0e7ff;
+      --text: #172033;
+      --muted: #5d6880;
+      --accent: #4f46e5;
+      --accent-hover: #4338ca;
+      --border: #c7d2fe;
+      --shadow: 0 18px 45px rgb(30 41 59 / 14%);
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --background: #111827;
+      --surface: #1f2937;
+      --surface-muted: #273449;
+      --text: #f8fafc;
+      --muted: #aab5c7;
+      --accent: #818cf8;
+      --accent-hover: #a5b4fc;
+      --border: #3c4b63;
+      --shadow: 0 18px 45px rgb(0 0 0 / 30%);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: linear-gradient(145deg, var(--background), var(--surface-muted));
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 18px;
+      background: var(--accent);
+      color: #ffffff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+    }
+
+    button:focus-visible {
+      outline: 3px solid var(--text);
+      outline-offset: 3px;
+    }
+
+    button.secondary {
+      border: 1px solid var(--border);
+      background: var(--surface-muted);
+      color: var(--text);
+    }
+
+    .game-shell {
+      width: min(720px, 100%);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .game-header,
+    .game-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 24px;
+    }
+
+    .game-header {
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1,
+    p {
+      margin: 0;
+    }
+
+    .subtitle,
+    .game-footer {
+      color: var(--muted);
+    }
+
+    .game-area {
+      display: grid;
+      gap: 20px;
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    .score {
+      font-size: clamp(3rem, 12vw, 6rem);
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .status {
+      min-height: 1.5em;
+      color: var(--muted);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .primary-action {
+      min-height: 88px;
+      font-size: 1.25rem;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 12px;
+      }
+
+      .game-header {
+        align-items: flex-start;
+      }
+
+      .game-header,
+      .game-footer {
+        padding: 16px;
+      }
+
+      .game-area {
+        padding: 28px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="game-shell">
+    <header class="game-header">
+      <div>
+        <h1>MaxGame</h1>
+        <p class="subtitle">A foundation for a new game.</p>
+      </div>
+      <button id="themeToggle" class="secondary" type="button">Dark mode</button>
+    </header>
+
+    <section class="game-area" aria-labelledby="scoreLabel">
+      <p id="scoreLabel" class="subtitle">Score</p>
+      <p id="score" class="score">0</p>
+      <p id="status" class="status" aria-live="polite">Ready to begin.</p>
+
+      <button id="primaryAction" class="primary-action" type="button">
+        Take action
+      </button>
+
+      <div class="controls">
+        <button id="startPause" type="button">Start</button>
+        <button id="resetGame" class="secondary" type="button">Reset</button>
+      </div>
+    </section>
+
+    <footer class="game-footer">
+      <span>Use Space for the main action.</span>
+      <span id="elapsedTime">00:00</span>
+    </footer>
+  </main>
+
+  <script>
+    const SAVE_KEY = "max-game-save-v1";
+    const THEME_KEY = "max-game-theme";
+
+    const defaultState = {
+      score: 0,
+      elapsedSeconds: 0,
+      running: false
+    };
+
+    let state = loadState();
+    let previousFrameTime = performance.now();
+    let unsavedElapsedSeconds = 0;
+
+    const score = document.querySelector("#score");
+    const status = document.querySelector("#status");
+    const elapsedTime = document.querySelector("#elapsedTime");
+    const primaryAction = document.querySelector("#primaryAction");
+    const startPause = document.querySelector("#startPause");
+    const resetGame = document.querySelector("#resetGame");
+    const themeToggle = document.querySelector("#themeToggle");
+
+    primaryAction.addEventListener("click", performPrimaryAction);
+    startPause.addEventListener("click", toggleRunning);
+    resetGame.addEventListener("click", resetState);
+    themeToggle.addEventListener("click", toggleTheme);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.code === "Space" && event.target === document.body) {
+        event.preventDefault();
+        performPrimaryAction();
+      }
+    });
+
+    window.addEventListener("beforeunload", saveState);
+
+    applySavedTheme();
+    render();
+    requestAnimationFrame(gameLoop);
+
+    function performPrimaryAction() {
+      state.score += 1;
+      status.textContent = "Action completed.";
+      saveState();
+      render();
+    }
+
+    function toggleRunning() {
+      state.running = !state.running;
+      status.textContent = state.running ? "Game running." : "Game paused.";
+      previousFrameTime = performance.now();
+      saveState();
+      render();
+    }
+
+    function resetState() {
+      if (!window.confirm("Reset all saved progress?")) {
+        return;
+      }
+
+      state = structuredClone(defaultState);
+      unsavedElapsedSeconds = 0;
+      status.textContent = "Progress reset.";
+      saveState();
+      render();
+    }
+
+    function gameLoop(currentTime) {
+      const deltaSeconds = Math.min((currentTime - previousFrameTime) / 1000, 1);
+      previousFrameTime = currentTime;
+
+      if (state.running) {
+        state.elapsedSeconds += deltaSeconds;
+        unsavedElapsedSeconds += deltaSeconds;
+
+        if (unsavedElapsedSeconds >= 5) {
+          unsavedElapsedSeconds = 0;
+          saveState();
+        }
+
+        render();
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    function render() {
+      score.textContent = formatNumber(state.score);
+      elapsedTime.textContent = formatTime(state.elapsedSeconds);
+      startPause.textContent = state.running ? "Pause" : "Start";
+    }
+
+    function loadState() {
+      try {
+        const savedState = JSON.parse(localStorage.getItem(SAVE_KEY));
+        if (!savedState) {
+          return structuredClone(defaultState);
+        }
+
+        return {
+          score: getSavedNumber(savedState.score),
+          elapsedSeconds: getSavedNumber(savedState.elapsedSeconds),
+          running: Boolean(savedState.running)
+        };
+      } catch {
+        return structuredClone(defaultState);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    }
+
+    function applySavedTheme() {
+      const savedTheme = localStorage.getItem(THEME_KEY);
+      const preferredTheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      setTheme(savedTheme ?? preferredTheme);
+    }
+
+    function toggleTheme() {
+      const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      localStorage.setItem(THEME_KEY, nextTheme);
+      setTheme(nextTheme);
+    }
+
+    function setTheme(theme) {
+      const isDark = theme === "dark";
+      document.documentElement.dataset.theme = isDark ? "dark" : "light";
+      themeToggle.textContent = isDark ? "Light mode" : "Dark mode";
+      themeToggle.setAttribute("aria-pressed", String(isDark));
+    }
+
+    function getSavedNumber(value) {
+      const number = Number(value);
+      return Number.isFinite(number) && number >= 0 ? number : 0;
+    }
+
+    function formatNumber(value) {
+      return Math.floor(value).toLocaleString();
+    }
+
+    function formatTime(totalSeconds) {
+      const seconds = Math.floor(totalSeconds);
+      const minutes = Math.floor(seconds / 60);
+      return `${String(minutes).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+    }
+  </script>
+</body>
+</html>
