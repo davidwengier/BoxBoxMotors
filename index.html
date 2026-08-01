@@ -2346,7 +2346,6 @@
       drawRoadMarkings(context, roadPoint, player.distance);
       drawFinishLine(context, roadPoint, session);
       drawRivals(context, roadPoint, session);
-      drawSpeedLines(context, width, height, player.speed);
       drawPlayerCar(context, width, height, player.car, drivingInput);
     }
 
@@ -2565,21 +2564,6 @@
       context.fillStyle = "#15171d";
       context.fillRect(-size * 0.18, size * 0.23, size * 0.36, size * 0.07);
       context.restore();
-    }
-
-    function drawSpeedLines(context, width, height, speed) {
-      if (speed < 230) return;
-      const strength = clamp((speed - 230) / 100, 0, 1);
-      context.strokeStyle = `rgb(255 255 255 / ${0.12 + strength * 0.2})`;
-      context.lineWidth = 2;
-      for (let index = 0; index < 16; index += 1) {
-        const x = (index * 83 + speed * 2) % width;
-        const y = height * 0.25 + (index % 6) * height * 0.1;
-        context.beginPath();
-        context.moveTo(x, y);
-        context.lineTo(x + (index < 8 ? -1 : 1) * (25 + strength * 55), y + 20);
-        context.stroke();
-      }
     }
 
     function getRoadCurve(distance, track) {
