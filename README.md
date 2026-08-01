@@ -1,6 +1,6 @@
 # Box Box Motors
 
-A mobile-friendly car pack opening and factory tycoon game for the browser.
+A mobile-friendly car pack opening and auto dealership tycoon game for the browser.
 
 ## Gameplay
 
@@ -14,9 +14,11 @@ A mobile-friendly car pack opening and factory tycoon game for the browser.
 - Track every obtainable car on an automatic collection checklist.
 - Store every packed copy as an individual car, including unlimited duplicates.
 - Sell cars from the garage to earn credits.
+- Open the auto group for passive customers who buy the cheapest cars first.
+- Close the dealership at any time to stop automatic customer sales.
 - Start with 10 storage spaces and buy larger warehouse expansions.
-- Upgrade factory pack luck for better epic and legendary chances.
-- Grow the operation from a backyard workshop into a global auto empire.
+- Upgrade sourcing luck for better epic and legendary chances.
+- Grow the operation from a backyard car yard into a global dealer empire.
 - Progress is saved in browser `localStorage`.
 
 ## Technology
