@@ -4,11 +4,14 @@ A mobile-friendly car pack opening and racing game for the browser.
 
 ## Gameplay
 
-- Buy six packs, including JDM, European, American muscle, and hypercar collections.
-- Collect 22 real production cars across four rarity tiers.
+- Buy 15 packs, including manufacturer collections, LEGO cars, and
+  Fast & Furious movie cars.
+- Collect 100 cars across four rarity tiers.
 - Every car is from Ford, Honda, Acura, Porsche, Chevrolet, Hyundai,
   Lamborghini, Lotus, or Toyota.
-- Cars use distinct hatchback, SUV, roadster, sedan, muscle, supercar, and hypercar shapes.
+- Cars use distinct hatchback, SUV, roadster, sedan, muscle, supercar,
+  hypercar, and brick-built shapes.
+- Track every obtainable car on an automatic collection checklist.
 - Pull duplicates to level up cars and improve their stats.
 - Select any owned car from the garage.
 - Drive time trials from a behind-the-car view with steering, throttle, and braking.

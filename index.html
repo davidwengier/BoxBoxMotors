@@ -159,9 +159,9 @@
 
     .nav {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      max-width: 600px;
+      max-width: 780px;
       margin: 0 auto 34px;
       padding: 6px;
       border: 1px solid var(--line);
@@ -713,6 +713,42 @@
       transform: skewX(-28deg);
     }
 
+    .car.brick {
+      height: 58px;
+      image-rendering: pixelated;
+    }
+
+    .car.brick .car-body {
+      height: 30px;
+      border-radius: 2px;
+      background:
+        radial-gradient(circle, rgb(255 255 255 / 28%) 0 2px, transparent 2.5px) 8px 5px / 18px 12px,
+        var(--car-color);
+      box-shadow: inset 0 -9px rgb(0 0 0 / 18%);
+    }
+
+    .car.brick .car-cabin {
+      top: 6px;
+      left: 48px;
+      width: 63px;
+      height: 27px;
+      border-radius: 2px;
+      transform: none;
+      clip-path: polygon(15% 0, 80% 0, 100% 100%, 0 100%);
+    }
+
+    .car.brick::after {
+      position: absolute;
+      z-index: 2;
+      right: 20px;
+      bottom: 15px;
+      width: 17px;
+      height: 8px;
+      background: #f7ee96;
+      box-shadow: -104px 0 #f7ee96;
+      content: "";
+    }
+
     .wheel {
       position: absolute;
       z-index: 3;
@@ -799,6 +835,88 @@
       border-radius: 20px;
       color: var(--muted);
       text-align: center;
+    }
+
+    .collection-summary {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    .collection-summary strong {
+      color: var(--cyan);
+    }
+
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .collection-card {
+      position: relative;
+      min-height: 165px;
+      overflow: hidden;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: linear-gradient(145deg, var(--panel-2), var(--panel));
+    }
+
+    .collection-card.owned {
+      border-color: var(--rarity-color);
+      box-shadow: inset 0 0 18px color-mix(in srgb, var(--rarity-color) 10%, transparent);
+    }
+
+    .collection-card.locked .car-visual {
+      filter: grayscale(1) brightness(0.35);
+      opacity: 0.6;
+    }
+
+    .collection-card .car-visual {
+      height: 76px;
+      margin: 3px 0;
+      transform: scale(0.76);
+    }
+
+    .collection-check {
+      position: absolute;
+      z-index: 3;
+      top: 9px;
+      right: 9px;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: #111722;
+      color: #596274;
+      font-size: 0.72rem;
+      font-weight: 1000;
+    }
+
+    .owned .collection-check {
+      border-color: var(--green);
+      background: var(--green);
+      color: #092310;
+    }
+
+    .collection-card h3 {
+      margin: 0 0 4px;
+      font-size: 0.78rem;
+      line-height: 1.15;
+      text-transform: uppercase;
+    }
+
+    .collection-card p {
+      margin: 0;
+      color: var(--rarity-color);
+      font-size: 0.56rem;
+      font-weight: 1000;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
     .race-setup {
@@ -1397,6 +1515,10 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
+      .collection-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
       .pack:last-child {
         grid-column: 1 / -1;
         min-height: 430px;
@@ -1447,7 +1569,8 @@
       }
 
       .nav-button {
-        font-size: 0.7rem;
+        padding-inline: 5px;
+        font-size: 0.62rem;
       }
 
       .section-heading {
@@ -1462,6 +1585,10 @@
       .packs,
       .garage-grid {
         grid-template-columns: 1fr;
+      }
+
+      .collection-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .pack,
@@ -1558,6 +1685,7 @@
     <nav class="nav" aria-label="Game sections">
       <button class="nav-button active" type="button" data-view="shop">📦 Shop</button>
       <button class="nav-button" type="button" data-view="garage">🚘 Garage <span id="garageCount" class="nav-count">1</span></button>
+      <button class="nav-button" type="button" data-view="collection">✅ Collection</button>
       <button class="nav-button" type="button" data-view="race">🏁 Race</button>
     </nav>
 
@@ -1585,6 +1713,18 @@
         <div id="garageSummary" class="garage-summary"></div>
       </div>
       <div id="garageGrid" class="garage-grid"></div>
+    </section>
+
+    <section id="collectionView" class="view">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">Complete the checklist</p>
+          <h2>Car collection</h2>
+        </div>
+        <p class="section-copy">Every obtainable car appears here. Cars are automatically checked off the moment you open them from a pack.</p>
+      </div>
+      <div id="collectionSummary" class="collection-summary"></div>
+      <div id="collectionGrid" class="collection-grid"></div>
     </section>
 
     <section id="raceView" class="view">
@@ -1675,7 +1815,7 @@
       legendary: "#ffb62e"
     };
 
-    const CARS = [
+    const CORE_CARS = [
       { id: "metro-zip", name: "Hyundai i30 N", rarity: "common", class: "Hot Hatch", origin: "korea", body: "hatch", color: "#f05b62", speed: 48, acceleration: 63, grip: 65 },
       { id: "dust-runner", name: "Ford Bronco", rarity: "common", class: "Off-Road SUV", origin: "usa", body: "suv", color: "#e39a42", speed: 56, acceleration: 54, grip: 62 },
       { id: "pocket-rocket", name: "Honda S2000", rarity: "common", class: "Roadster", origin: "japan", body: "roadster", color: "#df3445", speed: 62, acceleration: 59, grip: 68 },
@@ -1699,6 +1839,99 @@
       { id: "gtr-nismo", name: "Acura NSX Type S", rarity: "legendary", class: "Hybrid Supercar", origin: "japan", body: "supercar", color: "#d5d8dc", speed: 92, acceleration: 94, grip: 93 },
       { id: "ford-gt", name: "Ford GT", rarity: "legendary", class: "Supercar", origin: "usa", body: "supercar", color: "#3472d4", speed: 95, acceleration: 91, grip: 92 }
     ];
+
+    const ADDITIONAL_CARS = [
+      makeCar("ford-fiesta-st", "Ford Fiesta ST", "Ford", "common", "Hot Hatch", "usa", "hatch", "#ff5c43", 55, 65, 67),
+      makeCar("ford-focus-rs", "Ford Focus RS", "Ford", "rare", "Hot Hatch", "usa", "hatch", "#3b9cff", 70, 73, 76),
+      makeCar("ford-f150-raptor", "Ford F-150 Raptor", "Ford", "rare", "Performance Truck", "usa", "suv", "#e1883d", 66, 61, 69),
+      makeCar("ford-mustang-mach1", "Ford Mustang Mach 1", "Ford", "rare", "Muscle", "usa", "muscle", "#efb72e", 77, 71, 67),
+      makeCar("ford-mustang-boss302", "Ford Mustang Boss 302", "Ford", "epic", "Classic Muscle", "usa", "muscle", "#ff6d2d", 82, 76, 72),
+      makeCar("ford-shelby-cobra", "Ford Shelby Cobra 427", "Ford", "epic", "Roadster", "usa", "roadster", "#266ed6", 86, 84, 69),
+      makeCar("ford-gt40", "Ford GT40 Mk II", "Ford", "legendary", "Le Mans Legend", "usa", "supercar", "#4aa6df", 94, 89, 90),
+
+      makeCar("honda-fit-rs", "Honda Fit RS", "Honda", "common", "Sport Hatch", "japan", "hatch", "#f4d445", 49, 64, 65),
+      makeCar("honda-prelude", "Honda Prelude Type SH", "Honda", "common", "Sports Coupe", "japan", "sedan", "#d8414d", 58, 62, 67),
+      makeCar("honda-civic-si", "Honda Civic Si", "Honda", "common", "Sport Sedan", "japan", "sedan", "#38a0d9", 60, 66, 68),
+      makeCar("honda-nsx-1992", "Honda NSX 1992", "Honda", "epic", "JDM Supercar", "japan", "supercar", "#e63636", 83, 81, 86),
+      makeCar("honda-s660", "Honda S660", "Honda", "common", "Kei Roadster", "japan", "roadster", "#f3f3ee", 48, 68, 71),
+      makeCar("honda-crx-si", "Honda CR-X Si", "Honda", "common", "Lightweight Hatch", "japan", "hatch", "#ef4d46", 53, 65, 70),
+      makeCar("honda-accord-euror", "Honda Accord Euro R", "Honda", "rare", "Sport Sedan", "japan", "sedan", "#e7e9ed", 68, 71, 74),
+
+      makeCar("acura-rsx", "Acura RSX Type S", "Acura", "common", "Sport Liftback", "japan", "hatch", "#476dc5", 62, 68, 69),
+      makeCar("acura-tlx", "Acura TLX Type S", "Acura", "rare", "Sport Sedan", "japan", "sedan", "#d04b55", 74, 72, 76),
+      makeCar("acura-integra-r", "Acura Integra Type R", "Acura", "rare", "JDM Icon", "japan", "hatch", "#f1f0e8", 69, 75, 80),
+      makeCar("acura-nsx-1991", "Acura NSX 1991", "Acura", "epic", "Supercar", "japan", "supercar", "#d93838", 84, 82, 86),
+      makeCar("acura-zdx", "Acura ZDX Type S", "Acura", "rare", "Performance SUV", "japan", "suv", "#6469bd", 72, 79, 73),
+
+      makeCar("porsche-718-cayman", "Porsche 718 Cayman GTS", "Porsche", "rare", "Sports Car", "europe", "supercar", "#f2c334", 78, 77, 84),
+      makeCar("porsche-boxster-spyder", "Porsche 718 Spyder RS", "Porsche", "rare", "Roadster", "europe", "roadster", "#68b5df", 79, 79, 85),
+      makeCar("porsche-911-carrera", "Porsche 911 Carrera S", "Porsche", "rare", "Sports Car", "europe", "supercar", "#8492a3", 81, 80, 83),
+      makeCar("porsche-911-turbo", "Porsche 911 Turbo S", "Porsche", "epic", "Supercar", "europe", "supercar", "#42a5ce", 91, 92, 89),
+      makeCar("porsche-carrera-gt", "Porsche Carrera GT", "Porsche", "legendary", "Analog Hypercar", "europe", "hypercar", "#c9cdd0", 96, 90, 92),
+      makeCar("porsche-cayenne-turbo", "Porsche Cayenne Turbo GT", "Porsche", "rare", "Performance SUV", "europe", "suv", "#6a8d42", 80, 78, 75),
+      makeCar("porsche-taycan-turbo", "Porsche Taycan Turbo S", "Porsche", "epic", "Electric Sedan", "europe", "sedan", "#9b6cca", 87, 95, 84),
+
+      makeCar("chevrolet-camaro-ss", "Chevrolet Camaro SS", "Chevrolet", "rare", "Muscle", "usa", "muscle", "#e7b928", 76, 72, 66),
+      makeCar("chevrolet-camaro-zl1", "Chevrolet Camaro ZL1", "Chevrolet", "epic", "Track Muscle", "usa", "muscle", "#4b79d8", 87, 82, 80),
+      makeCar("chevrolet-corvette-c7", "Chevrolet Corvette C7 Z06", "Chevrolet", "epic", "Supercar", "usa", "supercar", "#e43b38", 89, 84, 82),
+      makeCar("chevrolet-corvette-zr1", "Chevrolet Corvette ZR1", "Chevrolet", "legendary", "Supercar", "usa", "supercar", "#ff8a25", 96, 91, 88),
+      makeCar("chevrolet-bel-air", "Chevrolet Bel Air", "Chevrolet", "common", "Classic Cruiser", "usa", "sedan", "#50b7bc", 48, 45, 53),
+      makeCar("chevrolet-chevelle", "Chevrolet Chevelle SS", "Chevrolet", "rare", "Classic Muscle", "usa", "muscle", "#743fa8", 72, 68, 58),
+      makeCar("chevrolet-silverado-zr2", "Chevrolet Silverado ZR2", "Chevrolet", "common", "Off-Road Truck", "usa", "suv", "#d4533f", 58, 54, 65),
+
+      makeCar("hyundai-veloster-n", "Hyundai Veloster N", "Hyundai", "common", "Hot Hatch", "korea", "hatch", "#58a4d7", 61, 69, 70),
+      makeCar("hyundai-kona-n", "Hyundai Kona N", "Hyundai", "common", "Sport SUV", "korea", "suv", "#ef5350", 60, 67, 68),
+      makeCar("hyundai-ioniq5-n", "Hyundai Ioniq 5 N", "Hyundai", "rare", "Electric Performance", "korea", "hatch", "#89b8bc", 79, 90, 75),
+      makeCar("hyundai-genesis-coupe", "Hyundai Genesis Coupe", "Hyundai", "common", "Sports Coupe", "korea", "sedan", "#4a6eab", 64, 63, 65),
+      makeCar("hyundai-tiburon", "Hyundai Tiburon GT", "Hyundai", "common", "Sports Coupe", "korea", "sedan", "#db3c45", 55, 58, 62),
+      makeCar("hyundai-n-vision-74", "Hyundai N Vision 74", "Hyundai", "epic", "Hydrogen Concept", "korea", "supercar", "#e6e8df", 86, 90, 84),
+
+      makeCar("lamborghini-huracan-evo", "Lamborghini Huracan EVO", "Lamborghini", "epic", "V10 Supercar", "europe", "supercar", "#f2b72c", 90, 88, 86),
+      makeCar("lamborghini-huracan-sto", "Lamborghini Huracan STO", "Lamborghini", "epic", "Track Supercar", "europe", "supercar", "#4ba6d8", 91, 89, 92),
+      makeCar("lamborghini-aventador-s", "Lamborghini Aventador S", "Lamborghini", "legendary", "V12 Supercar", "europe", "hypercar", "#ef6727", 96, 89, 87),
+      makeCar("lamborghini-countach", "Lamborghini Countach LPI 800-4", "Lamborghini", "legendary", "Hybrid Supercar", "europe", "hypercar", "#f4f1e7", 95, 94, 89),
+      makeCar("lamborghini-gallardo", "Lamborghini Gallardo Superleggera", "Lamborghini", "epic", "V10 Supercar", "europe", "supercar", "#e4d126", 87, 84, 83),
+      makeCar("lamborghini-urus", "Lamborghini Urus Performante", "Lamborghini", "epic", "Super SUV", "europe", "suv", "#6c9e42", 85, 83, 75),
+
+      makeCar("lotus-elise", "Lotus Elise S1", "Lotus", "common", "Lightweight Roadster", "europe", "roadster", "#f0b928", 65, 75, 88),
+      makeCar("lotus-exige", "Lotus Exige Cup 430", "Lotus", "rare", "Track Car", "europe", "supercar", "#49a85b", 80, 82, 91),
+      makeCar("lotus-evora", "Lotus Evora GT", "Lotus", "rare", "Sports Car", "europe", "supercar", "#e7c62e", 78, 76, 84),
+      makeCar("lotus-emeya", "Lotus Emeya R", "Lotus", "epic", "Electric GT", "europe", "sedan", "#835fd0", 88, 94, 86),
+      makeCar("lotus-eletre", "Lotus Eletre R", "Lotus", "epic", "Electric SUV", "europe", "suv", "#d9c049", 86, 92, 80),
+      makeCar("lotus-esprit", "Lotus Esprit V8", "Lotus", "rare", "Classic Supercar", "europe", "supercar", "#d9443f", 79, 76, 82),
+
+      makeCar("toyota-gr-corolla", "Toyota GR Corolla", "Toyota", "rare", "Rally Hatch", "japan", "hatch", "#eeeeea", 70, 76, 78),
+      makeCar("toyota-celica-gt4", "Toyota Celica GT-Four", "Toyota", "rare", "Rally Coupe", "japan", "sedan", "#d64042", 68, 72, 77),
+      makeCar("toyota-mr2-turbo", "Toyota MR2 Turbo", "Toyota", "rare", "Mid-Engine Sports", "japan", "roadster", "#e13d3b", 72, 76, 80),
+      makeCar("toyota-supra-mk4", "Toyota Supra Mk IV", "Toyota", "epic", "JDM Icon", "japan", "supercar", "#f07b2d", 84, 82, 77),
+      makeCar("toyota-ae86", "Toyota AE86 Corolla", "Toyota", "common", "Drift Classic", "japan", "hatch", "#f2eee4", 54, 62, 70),
+      makeCar("toyota-land-cruiser", "Toyota Land Cruiser GR Sport", "Toyota", "common", "Off-Road SUV", "japan", "suv", "#d7c4a0", 55, 50, 67),
+      makeCar("toyota-2000gt", "Toyota 2000GT", "Toyota", "legendary", "Classic Sports", "japan", "roadster", "#e8e6dc", 82, 78, 88),
+
+      makeCar("lego-ford-mustang", "LEGO Ford Mustang Dark Horse", "Ford", "common", "Brick-Built Muscle", "usa", "brick", "#315bc5", 55, 68, 62, "lego"),
+      makeCar("lego-ford-gt", "LEGO Ford GT", "Ford", "rare", "Brick-Built Supercar", "usa", "brick", "#3e79d7", 73, 76, 70, "lego"),
+      makeCar("lego-honda-s2000", "LEGO Honda S2000", "Honda", "common", "Brick-Built Roadster", "japan", "brick", "#ee3f43", 58, 72, 66, "lego"),
+      makeCar("lego-acura-nsx", "LEGO Acura NSX", "Acura", "rare", "Brick-Built Supercar", "japan", "brick", "#ecebe4", 72, 77, 73, "lego"),
+      makeCar("lego-porsche-911", "LEGO Porsche 911 Turbo", "Porsche", "epic", "Brick-Built Icon", "europe", "brick", "#55a4cf", 81, 83, 78, "lego"),
+      makeCar("lego-corvette-c8", "LEGO Chevrolet Corvette C8", "Chevrolet", "rare", "Brick-Built Supercar", "usa", "brick", "#e0b524", 75, 78, 72, "lego"),
+      makeCar("lego-ioniq5-n", "LEGO Hyundai Ioniq 5 N", "Hyundai", "rare", "Brick-Built EV", "korea", "brick", "#8abcc2", 74, 85, 70, "lego"),
+      makeCar("lego-lamborghini", "LEGO Lamborghini Countach", "Lamborghini", "legendary", "Brick-Built Legend", "europe", "brick", "#f1eee3", 88, 87, 82, "lego"),
+      makeCar("lego-lotus-evija", "LEGO Lotus Evija", "Lotus", "epic", "Brick-Built Hypercar", "europe", "brick", "#e7c72d", 84, 91, 79, "lego"),
+      makeCar("lego-toyota-supra", "LEGO Toyota GR Supra", "Toyota", "epic", "Brick-Built Sports", "japan", "brick", "#f2c52b", 80, 82, 76, "lego"),
+
+      makeCar("ff-toyota-supra", "Fast & Furious Toyota Supra Mk IV", "Toyota", "legendary", "Movie Hero Car", "japan", "supercar", "#ef812f", 92, 91, 84, "fast"),
+      makeCar("ff-honda-civic", "Fast & Furious Honda Civic EJ1", "Honda", "common", "Movie Street Car", "japan", "sedan", "#202329", 63, 72, 66, "fast"),
+      makeCar("ff-honda-s2000", "Fast & Furious Honda S2000", "Honda", "rare", "Movie Roadster", "japan", "roadster", "#ef4b9a", 76, 81, 73, "fast"),
+      makeCar("ff-acura-nsx", "Fast & Furious Acura NSX", "Acura", "epic", "Movie Supercar", "japan", "supercar", "#2e333c", 85, 86, 82, "fast"),
+      makeCar("ff-ford-mustang", "Fast & Furious Ford Mustang Fastback", "Ford", "epic", "Drift Movie Car", "usa", "muscle", "#4b5968", 82, 78, 69, "fast"),
+      makeCar("ff-ford-escort", "Fast & Furious Ford Escort RS1600", "Ford", "rare", "Movie Rally Car", "usa", "hatch", "#4288cf", 72, 79, 78, "fast"),
+      makeCar("ff-chevelle", "Fast & Furious Chevrolet Chevelle SS", "Chevrolet", "rare", "Movie Muscle", "usa", "muscle", "#35383b", 78, 75, 65, "fast"),
+      makeCar("ff-yenko-camaro", "Fast & Furious Chevrolet Camaro Yenko", "Chevrolet", "epic", "Movie Muscle", "usa", "muscle", "#3774c8", 84, 80, 70, "fast"),
+      makeCar("ff-f150-lightning", "Fast & Furious Ford F-150 Lightning", "Ford", "rare", "Movie Truck", "usa", "suv", "#e74a42", 70, 73, 65, "fast"),
+      makeCar("ff-corvette-grand-sport", "Fast & Furious Chevrolet Corvette Grand Sport", "Chevrolet", "epic", "Movie Supercar", "usa", "supercar", "#4b99cb", 86, 84, 80, "fast")
+    ];
+
+    const CARS = [...CORE_CARS, ...ADDITIONAL_CARS];
 
     const PACKS = [
       {
@@ -1763,6 +1996,105 @@
         symbol: "X",
         color: "#ffb62e",
         odds: { common: 0, rare: 0, epic: 0, legendary: 100 }
+      },
+      {
+        id: "ford",
+        name: "Ford Legends",
+        tier: "Manufacturer pack",
+        description: "Ford hot hatches, trucks, muscle cars, and racing legends.",
+        price: 850,
+        symbol: "F",
+        color: "#3184d8",
+        brands: ["Ford"],
+        odds: { common: 28, rare: 45, epic: 22, legendary: 5 }
+      },
+      {
+        id: "honda-acura",
+        name: "Honda & Acura",
+        tier: "Manufacturer pack",
+        description: "Lightweight VTEC icons and mid-engine Japanese supercars.",
+        price: 850,
+        symbol: "H",
+        color: "#e9414b",
+        brands: ["Honda", "Acura"],
+        odds: { common: 34, rare: 43, epic: 19, legendary: 4 }
+      },
+      {
+        id: "porsche",
+        name: "Porsche Collection",
+        tier: "Manufacturer pack",
+        description: "Sports cars, track weapons, performance SUVs, and hypercars.",
+        price: 1600,
+        symbol: "P",
+        color: "#d2b359",
+        brands: ["Porsche"],
+        odds: { common: 0, rare: 50, epic: 38, legendary: 12 }
+      },
+      {
+        id: "chevrolet",
+        name: "Chevrolet Power",
+        tier: "Manufacturer pack",
+        description: "Classic cruisers, Camaros, trucks, and generations of Corvette.",
+        price: 900,
+        symbol: "C",
+        color: "#e1bd32",
+        brands: ["Chevrolet"],
+        odds: { common: 24, rare: 42, epic: 28, legendary: 6 }
+      },
+      {
+        id: "hyundai",
+        name: "Hyundai N Pack",
+        tier: "Manufacturer pack",
+        description: "Affordable N performance cars and the wild N Vision 74.",
+        price: 650,
+        symbol: "N",
+        color: "#5caedb",
+        brands: ["Hyundai"],
+        odds: { common: 57, rare: 33, epic: 10, legendary: 0 }
+      },
+      {
+        id: "toyota",
+        name: "Toyota Gazoo Pack",
+        tier: "Manufacturer pack",
+        description: "Rally machines, drift classics, Supras, and Toyota history.",
+        price: 850,
+        symbol: "T",
+        color: "#ed4149",
+        brands: ["Toyota"],
+        odds: { common: 28, rare: 45, epic: 22, legendary: 5 }
+      },
+      {
+        id: "exotic",
+        name: "Exotic Duo",
+        tier: "Lamborghini & Lotus",
+        description: "Lightweight British handling meets dramatic Italian performance.",
+        price: 1750,
+        symbol: "E",
+        color: "#82d343",
+        brands: ["Lamborghini", "Lotus"],
+        odds: { common: 8, rare: 25, epic: 47, legendary: 20 }
+      },
+      {
+        id: "lego",
+        name: "LEGO Car Pack",
+        tier: "Brick-built collection",
+        description: "Ten blocky collectible versions with an exclusive brick body style.",
+        price: 1000,
+        symbol: "🧱",
+        color: "#f2d12b",
+        series: "lego",
+        odds: { common: 25, rare: 40, epic: 28, legendary: 7 }
+      },
+      {
+        id: "fast-furious",
+        name: "Fast & Furious Pack",
+        tier: "Movie car collection",
+        description: "Ten memorable street, muscle, and hero cars inspired by the films.",
+        price: 1400,
+        symbol: "FF",
+        color: "#ff633b",
+        series: "fast",
+        odds: { common: 12, rare: 43, epic: 37, legendary: 8 }
       }
     ];
 
@@ -1834,6 +2166,8 @@
     const packGrid = document.querySelector("#packGrid");
     const garageGrid = document.querySelector("#garageGrid");
     const garageSummary = document.querySelector("#garageSummary");
+    const collectionGrid = document.querySelector("#collectionGrid");
+    const collectionSummary = document.querySelector("#collectionSummary");
     const selectedRacer = document.querySelector("#selectedRacer");
     const trackSelect = document.querySelector("#trackSelect");
     const licenseInfo = document.querySelector("#licenseInfo");
@@ -1979,6 +2313,7 @@
       garageCount.textContent = Object.keys(state.collection).length;
       renderPacks();
       renderGarage();
+      renderCollection();
       renderSelectedRacer();
       renderTrackDetails();
     }
@@ -2055,6 +2390,28 @@
       `;
     }
 
+    function renderCollection() {
+      const ownedCount = Object.keys(state.collection).length;
+      collectionSummary.innerHTML = `<strong>${ownedCount} / ${CARS.length}</strong> cars collected · ${CARS.length - ownedCount} remaining`;
+      collectionGrid.innerHTML = [...CARS]
+        .sort((a, b) => {
+          const ownedDifference = Number(Boolean(state.collection[b.id])) - Number(Boolean(state.collection[a.id]));
+          return ownedDifference || rarityRank(b.rarity) - rarityRank(a.rarity) || a.name.localeCompare(b.name);
+        })
+        .map((car) => {
+          const owned = Boolean(state.collection[car.id]);
+          return `
+            <article class="collection-card ${owned ? "owned" : "locked"}" style="--rarity-color:${RARITY_COLORS[car.rarity]}">
+              <span class="collection-check">${owned ? "✓" : "?"}</span>
+              <div class="car-visual">${createCarVisual(car)}</div>
+              <h3>${car.name}</h3>
+              <p>${car.rarity}${owned ? ` · LV ${state.collection[car.id]}` : " · Not owned"}</p>
+            </article>
+          `;
+        })
+        .join("");
+    }
+
     function createStatRow(label, value) {
       return `
         <div class="stat-row">
@@ -2086,6 +2443,16 @@
       return CARS.find((car) => car.id === id);
     }
 
+    function makeCar(id, name, brand, rarity, className, origin, body, color, speed, acceleration, grip, series = "core") {
+      return { id, name, brand, rarity, class: className, origin, body, color, speed, acceleration, grip, series };
+    }
+
+    function getCarBrand(car) {
+      if (car.brand) return car.brand;
+      return ["Ford", "Honda", "Acura", "Porsche", "Chevrolet", "Hyundai", "Lamborghini", "Lotus", "Toyota"]
+        .find((brand) => car.name.startsWith(brand));
+    }
+
     function showView(name) {
       if (raceRunning && name !== "race") {
         showToast("Finish the current race first!");
@@ -2100,6 +2467,7 @@
       });
 
       if (name === "garage") renderGarage();
+      if (name === "collection") renderCollection();
       if (name === "race") {
         renderSelectedRacer();
         resetRace();
@@ -2144,10 +2512,13 @@
         }
       }
 
-      const choices = CARS.filter((car) => (
-        car.rarity === rarity &&
-        (!pack.origins || pack.origins.includes(car.origin))
-      ));
+      const choices = CARS.filter((car) => {
+        const series = car.series ?? "core";
+        return car.rarity === rarity &&
+          (pack.series ? series === pack.series : series === "core") &&
+          (!pack.origins || pack.origins.includes(car.origin)) &&
+          (!pack.brands || pack.brands.includes(getCarBrand(car)));
+      });
       return choices[Math.floor(Math.random() * choices.length)];
     }
 
@@ -2716,7 +3087,8 @@
         sedan: { roofY: -0.49, roofHalf: 0.29, shoulderHalf: 0.43, bodyTop: -0.22, tail: 0.4 },
         muscle: { roofY: -0.4, roofHalf: 0.23, shoulderHalf: 0.46, bodyTop: -0.19, tail: 0.39 },
         supercar: { roofY: -0.42, roofHalf: 0.27, shoulderHalf: 0.47, bodyTop: -0.17, tail: 0.37 },
-        hypercar: { roofY: -0.27, roofHalf: 0.15, shoulderHalf: 0.52, bodyTop: -0.1, tail: 0.29 }
+        hypercar: { roofY: -0.27, roofHalf: 0.15, shoulderHalf: 0.52, bodyTop: -0.1, tail: 0.29 },
+        brick: { roofY: -0.46, roofHalf: 0.27, shoulderHalf: 0.45, bodyTop: -0.2, tail: 0.4 }
       };
       const profile = profiles[car.body] ?? profiles.sedan;
       context.save();
@@ -2753,7 +3125,19 @@
       context.closePath();
       context.fill();
 
-      if (car.body === "hypercar") {
+      if (car.body === "brick") {
+        context.fillStyle = "#14171c";
+        context.fillRect(-size * 0.38, -size * 0.05, size * 0.76, size * 0.09);
+        context.fillStyle = "#ffef70";
+        context.fillRect(-size * 0.34, size * 0.1, size * 0.14, size * 0.08);
+        context.fillRect(size * 0.2, size * 0.1, size * 0.14, size * 0.08);
+        context.fillStyle = "rgb(255 255 255 / 28%)";
+        for (let stud = -3; stud <= 3; stud += 1) {
+          context.beginPath();
+          context.arc(stud * size * 0.095, -size * 0.38, size * 0.025, 0, Math.PI * 2);
+          context.fill();
+        }
+      } else if (car.body === "hypercar") {
         context.strokeStyle = "#090b10";
         context.lineWidth = size * 0.055;
         context.beginPath();
