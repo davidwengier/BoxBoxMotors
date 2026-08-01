@@ -1,13 +1,14 @@
-# MaxGame
+# Locker Checking Day
 
-A lightweight starter for a static browser game.
+A fast, mobile-friendly browser game inspired by the viral "Locker Checking
+Day" videos.
 
 ## Technology
 
 - HTML5
 - CSS
 - Vanilla JavaScript
-- Browser `localStorage` for progress and theme preferences
+- Browser `localStorage` for high scores
 - GitHub Pages-compatible static hosting
 
 There is no framework, backend, package manager, or build step.
@@ -27,6 +28,5 @@ Then open `http://localhost:8080/`.
 - `index.html` contains the page structure, styles, and game logic.
 - `README.md` documents the starter.
 
-The JavaScript includes a small state model, save/load helpers, theme support,
-keyboard input, rendering, and a `requestAnimationFrame` game loop ready to
-replace with the new game's mechanics.
+The game includes a two-part comic opening, three escalating timed locker
+inspections, touch and mouse controls, scoring, grades, and saved high scores.
