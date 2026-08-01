@@ -629,30 +629,88 @@
       border-radius: 8px 20px 7px 7px;
     }
 
-    .car.supercar,
-    .car.hypercar {
+    .car.supercar {
       height: 48px;
     }
 
-    .car.supercar .car-cabin,
+    .car.supercar .car-cabin {
+      top: 9px;
+      left: 47px;
+      width: 65px;
+      height: 23px;
+      border-radius: 34px 27px 0 0;
+      transform: skewX(-17deg);
+    }
+
+    .car.supercar .car-body {
+      height: 27px;
+      border-radius: 10px 48px 7px 15px;
+      clip-path: polygon(0 32%, 11% 13%, 67% 0, 94% 21%, 100% 53%, 95% 100%, 0 100%);
+    }
+
+    .car.supercar::after {
+      position: absolute;
+      z-index: 2;
+      right: 34px;
+      bottom: 14px;
+      width: 23px;
+      height: 10px;
+      border-radius: 70% 15% 50% 20%;
+      background: #10151d;
+      content: "";
+      transform: skewX(-24deg);
+    }
+
+    .car.hypercar {
+      width: 158px;
+      height: 44px;
+    }
+
     .car.hypercar .car-cabin {
       top: 12px;
-      left: 52px;
-      width: 58px;
-      height: 20px;
-      border-radius: 30px 24px 0 0;
-    }
-
-    .car.supercar .car-body,
-    .car.hypercar .car-body {
-      height: 25px;
-      border-radius: 12px 45px 7px 14px;
+      left: 57px;
+      width: 50px;
+      height: 17px;
+      border-radius: 38px 38px 0 0;
+      background: linear-gradient(110deg, #bdf4ff, #142a3c 62%, #05070b);
+      transform: skewX(-7deg);
     }
 
     .car.hypercar .car-body {
+      height: 23px;
+      border-radius: 8px 56px 5px 17px;
+      clip-path: polygon(0 45%, 17% 17%, 56% 0, 90% 10%, 100% 45%, 94% 100%, 4% 100%);
       background:
-        linear-gradient(100deg, transparent 0 58%, rgb(8 10 15 / 35%) 59% 66%, rgb(255 255 255 / 23%) 67% 73%, transparent 74%),
+        linear-gradient(100deg, transparent 0 35%, rgb(8 10 15 / 45%) 36% 43%, transparent 44% 62%, rgb(8 10 15 / 38%) 63% 70%, rgb(255 255 255 / 23%) 71% 76%, transparent 77%),
         var(--car-color);
+    }
+
+    .car.hypercar::before {
+      position: absolute;
+      z-index: 2;
+      top: 11px;
+      left: 8px;
+      width: 37px;
+      height: 5px;
+      border: 3px solid #080a0f;
+      border-bottom: 0;
+      background: var(--car-color);
+      content: "";
+      transform: rotate(-3deg);
+    }
+
+    .car.hypercar::after {
+      position: absolute;
+      z-index: 3;
+      right: 28px;
+      bottom: 12px;
+      width: 31px;
+      height: 8px;
+      border-radius: 50% 10% 60% 20%;
+      background: #090c12;
+      box-shadow: -56px 1px 0 -2px #090c12;
+      content: "";
+      transform: skewX(-28deg);
     }
 
     .wheel {
@@ -2657,8 +2715,8 @@
         roadster: { roofY: -0.29, roofHalf: 0.18, shoulderHalf: 0.43, bodyTop: -0.18, tail: 0.38 },
         sedan: { roofY: -0.49, roofHalf: 0.29, shoulderHalf: 0.43, bodyTop: -0.22, tail: 0.4 },
         muscle: { roofY: -0.4, roofHalf: 0.23, shoulderHalf: 0.46, bodyTop: -0.19, tail: 0.39 },
-        supercar: { roofY: -0.34, roofHalf: 0.22, shoulderHalf: 0.48, bodyTop: -0.15, tail: 0.34 },
-        hypercar: { roofY: -0.3, roofHalf: 0.19, shoulderHalf: 0.5, bodyTop: -0.13, tail: 0.31 }
+        supercar: { roofY: -0.42, roofHalf: 0.27, shoulderHalf: 0.47, bodyTop: -0.17, tail: 0.37 },
+        hypercar: { roofY: -0.27, roofHalf: 0.15, shoulderHalf: 0.52, bodyTop: -0.1, tail: 0.29 }
       };
       const profile = profiles[car.body] ?? profiles.sedan;
       context.save();
@@ -2695,9 +2753,60 @@
       context.closePath();
       context.fill();
 
-      context.fillStyle = "#ff344d";
-      context.fillRect(-size * 0.35, size * 0.12, size * 0.15, size * 0.07);
-      context.fillRect(size * 0.2, size * 0.12, size * 0.15, size * 0.07);
+      if (car.body === "hypercar") {
+        context.strokeStyle = "#090b10";
+        context.lineWidth = size * 0.055;
+        context.beginPath();
+        context.moveTo(-size * 0.47, -size * 0.18);
+        context.lineTo(size * 0.47, -size * 0.18);
+        context.stroke();
+        context.fillStyle = "#090b10";
+        context.beginPath();
+        context.moveTo(-size * 0.4, size * 0.03);
+        context.lineTo(-size * 0.16, size * 0.01);
+        context.lineTo(-size * 0.22, size * 0.26);
+        context.lineTo(-size * 0.46, size * 0.22);
+        context.closePath();
+        context.fill();
+        context.beginPath();
+        context.moveTo(size * 0.4, size * 0.03);
+        context.lineTo(size * 0.16, size * 0.01);
+        context.lineTo(size * 0.22, size * 0.26);
+        context.lineTo(size * 0.46, size * 0.22);
+        context.closePath();
+        context.fill();
+        context.fillStyle = "#ff344d";
+        context.fillRect(-size * 0.38, size * 0.08, size * 0.22, size * 0.035);
+        context.fillRect(size * 0.16, size * 0.08, size * 0.22, size * 0.035);
+        context.fillStyle = "#d7f7ff";
+        context.fillRect(-size * 0.025, -size * 0.25, size * 0.05, size * 0.38);
+      } else if (car.body === "supercar") {
+        context.fillStyle = "#080b11";
+        context.beginPath();
+        context.moveTo(-size * 0.39, -size * 0.01);
+        context.lineTo(-size * 0.19, -size * 0.06);
+        context.lineTo(-size * 0.23, size * 0.2);
+        context.lineTo(-size * 0.43, size * 0.17);
+        context.closePath();
+        context.fill();
+        context.beginPath();
+        context.moveTo(size * 0.39, -size * 0.01);
+        context.lineTo(size * 0.19, -size * 0.06);
+        context.lineTo(size * 0.23, size * 0.2);
+        context.lineTo(size * 0.43, size * 0.17);
+        context.closePath();
+        context.fill();
+        context.fillStyle = "#ff344d";
+        context.beginPath();
+        context.arc(-size * 0.29, size * 0.08, size * 0.055, 0, Math.PI * 2);
+        context.arc(size * 0.29, size * 0.08, size * 0.055, 0, Math.PI * 2);
+        context.fill();
+      } else {
+        context.fillStyle = "#ff344d";
+        context.fillRect(-size * 0.35, size * 0.12, size * 0.15, size * 0.07);
+        context.fillRect(size * 0.2, size * 0.12, size * 0.15, size * 0.07);
+      }
+
       context.fillStyle = "#15171d";
       context.fillRect(-size * 0.18, size * 0.23, size * 0.36, size * 0.07);
       context.restore();
