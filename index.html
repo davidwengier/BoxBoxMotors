@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Buy car packs, build a garage, and race your collection.">
+  <meta name="description" content="Open car packs, grow a factory, store cars, and sell your collection.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <title>Box Box Racing</title>
+  <title>Box Box Motors</title>
   <style>
     :root {
       color-scheme: dark;
@@ -952,6 +952,213 @@
       text-transform: uppercase;
     }
 
+    .factory-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 18px;
+    }
+
+    .factory-floor,
+    .factory-panel {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .factory-floor {
+      position: relative;
+      min-height: 440px;
+      overflow: hidden;
+      padding: 24px;
+      background:
+        linear-gradient(90deg, transparent 49%, rgb(255 255 255 / 4%) 50%, transparent 51%) 0 0 / 42px 42px,
+        linear-gradient(transparent 49%, rgb(255 255 255 / 4%) 50%, transparent 51%) 0 0 / 42px 42px,
+        linear-gradient(160deg, #222a38, #111620);
+    }
+
+    .factory-floor h3,
+    .factory-panel h3 {
+      margin-bottom: 5px;
+      font-size: 1.4rem;
+      font-style: italic;
+      text-transform: uppercase;
+    }
+
+    .factory-floor > p,
+    .factory-panel > p {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 650;
+      line-height: 1.45;
+    }
+
+    .factory-building {
+      position: absolute;
+      right: 8%;
+      bottom: 94px;
+      left: 8%;
+      height: 190px;
+      border: 5px solid #080b10;
+      border-radius: 8px 8px 0 0;
+      background:
+        linear-gradient(90deg, #172230 0 12%, transparent 12% 22%, #172230 22% 34%, transparent 34% 44%, #172230 44% 56%, transparent 56% 66%, #172230 66% 78%, transparent 78% 88%, #172230 88%),
+        linear-gradient(#536278 0 30%, #354256 30%);
+      box-shadow: inset 0 0 0 5px #74839a, 0 20px 35px rgb(0 0 0 / 38%);
+    }
+
+    .factory-building::before {
+      position: absolute;
+      top: -83px;
+      left: 8%;
+      width: 42px;
+      height: 83px;
+      border: 5px solid #080b10;
+      border-bottom: 0;
+      background: repeating-linear-gradient(90deg, #d35c4e 0 15px, #e9e2cf 15px 28px);
+      content: "";
+    }
+
+    .factory-building::after {
+      position: absolute;
+      top: 68px;
+      left: 50%;
+      width: 92px;
+      height: 122px;
+      border: 5px solid #080b10;
+      background: repeating-linear-gradient(90deg, #202a38 0 12px, #354256 12px 24px);
+      content: "";
+      transform: translateX(-50%);
+    }
+
+    .factory-sign {
+      position: absolute;
+      z-index: 2;
+      top: 23px;
+      left: 50%;
+      padding: 7px 17px;
+      border: 3px solid #080b10;
+      border-radius: 6px;
+      background: var(--cyan);
+      color: #051319;
+      font-size: 0.8rem;
+      font-style: italic;
+      font-weight: 1000;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+    }
+
+    .conveyor {
+      position: absolute;
+      right: 3%;
+      bottom: 39px;
+      left: 3%;
+      height: 58px;
+      overflow: hidden;
+      border: 5px solid #080b10;
+      border-radius: 10px;
+      background:
+        radial-gradient(circle, #637087 0 8px, #202633 9px 12px, transparent 13px) 0 50% / 46px 46px repeat-x,
+        #303949;
+    }
+
+    .conveyor-cars {
+      position: absolute;
+      z-index: 3;
+      right: 11%;
+      bottom: 74px;
+      left: 11%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+    }
+
+    .conveyor-cars .car {
+      transform: scale(0.55);
+      transform-origin: bottom;
+    }
+
+    .factory-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .factory-stat {
+      padding: 12px 8px;
+      border-radius: 10px;
+      background: rgb(7 11 17 / 55%);
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 900;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .factory-stat strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text);
+      font-size: 1.25rem;
+    }
+
+    .factory-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+    }
+
+    .upgrade-card {
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel-2);
+    }
+
+    .upgrade-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 7px;
+    }
+
+    .upgrade-card h4 {
+      margin: 0;
+      font-size: 0.84rem;
+      text-transform: uppercase;
+    }
+
+    .upgrade-level {
+      color: var(--cyan);
+      font-size: 0.65rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .upgrade-card p {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      line-height: 1.4;
+    }
+
+    .capacity-track {
+      height: 8px;
+      overflow: hidden;
+      margin: 8px 0 13px;
+      border-radius: 8px;
+      background: #2c3443;
+    }
+
+    .capacity-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan-dark), var(--cyan));
+    }
+
     .race-setup {
       display: grid;
       grid-template-columns: 330px 1fr;
@@ -1561,6 +1768,10 @@
         grid-template-columns: 1fr;
       }
 
+      .factory-grid {
+        grid-template-columns: 1fr;
+      }
+
       .race-sidebar {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1622,6 +1833,10 @@
 
       .collection-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .factory-floor {
+        min-height: 390px;
       }
 
       .pack,
@@ -1700,16 +1915,16 @@
   <main class="app">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark" aria-label="Box Box Racing logo"><span>BB</span></div>
+        <div class="brand-mark" aria-label="Box Box Motors logo"><span>BB</span></div>
         <div>
-          <h1>Box Box <span>Racing</span></h1>
-          <p>Collect. Tune. Race.</p>
+          <h1>Box Box <span>Motors</span></h1>
+          <p>Open. Build. Sell.</p>
         </div>
       </div>
       <div class="wallet" aria-label="Your credits">
         <span class="wallet-icon">🪙</span>
         <div>
-          <small>Credits</small>
+          <small>Credits · Storage <span id="storageDisplay">1/10</span></small>
           <strong id="creditsDisplay">0</strong>
         </div>
       </div>
@@ -1719,7 +1934,7 @@
       <button class="nav-button active" type="button" data-view="shop">📦 Shop</button>
       <button class="nav-button" type="button" data-view="garage">🚘 Garage <span id="garageCount" class="nav-count">1</span></button>
       <button class="nav-button" type="button" data-view="collection">✅ Collection</button>
-      <button class="nav-button" type="button" data-view="race">🏁 Race</button>
+      <button class="nav-button" type="button" data-view="factory">🏭 Factory</button>
     </nav>
 
     <section id="shopView" class="view active">
@@ -1740,7 +1955,7 @@
           <p class="kicker">Your collection</p>
           <h2>The garage</h2>
         </div>
-        <p class="section-copy">Choose your active racer. Duplicate pulls increase a car's level and add +2 to every stat.</p>
+        <p class="section-copy">Every packed car is stored as a separate copy. Keep your favourites or sell copies to fund more packs and factory upgrades.</p>
       </div>
       <div class="garage-toolbar">
         <div id="garageSummary" class="garage-summary"></div>
@@ -1760,7 +1975,56 @@
       <div id="collectionGrid" class="collection-grid"></div>
     </section>
 
-    <section id="raceView" class="view">
+    <section id="factoryView" class="view">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">Grow your operation</p>
+          <h2>Motor factory</h2>
+        </div>
+        <p class="section-copy">Run a small car-packing business, expand your warehouse, improve pack luck, and turn duplicate cars into a growing dealership empire.</p>
+      </div>
+
+      <div class="factory-grid">
+        <div class="factory-floor">
+          <h3 id="factoryRank">Backyard Workshop</h3>
+          <p>Your factory grows as you improve its storage and luck systems.</p>
+          <div class="factory-stats">
+            <div class="factory-stat"><strong id="factoryStored">1 / 10</strong>Stored cars</div>
+            <div class="factory-stat"><strong id="factoryPacked">0</strong>Cars packed</div>
+            <div class="factory-stat"><strong id="factorySold">0</strong>Cars sold</div>
+          </div>
+          <div class="factory-building" aria-hidden="true"><span class="factory-sign">Box Box Motors</span></div>
+          <div id="conveyorCars" class="conveyor-cars" aria-hidden="true"></div>
+          <div class="conveyor" aria-hidden="true"></div>
+        </div>
+
+        <aside class="factory-panel">
+          <h3>Factory upgrades</h3>
+          <p>Invest your sales revenue to expand the business.</p>
+
+          <div class="upgrade-card">
+            <div class="upgrade-card-header">
+              <h4>Warehouse storage</h4>
+              <span id="storageLevel" class="upgrade-level">Level 1</span>
+            </div>
+            <p id="storageDescription">Store up to 10 individual cars.</p>
+            <div class="capacity-track"><div id="capacityFill" class="capacity-fill"></div></div>
+            <button id="upgradeStorageButton" class="primary-button" type="button">Add 10 spaces</button>
+          </div>
+
+          <div class="upgrade-card">
+            <div class="upgrade-card-header">
+              <h4>Pack luck scanner</h4>
+              <span id="luckLevel" class="upgrade-level">Level 0</span>
+            </div>
+            <p id="luckDescription">Standard pack odds.</p>
+            <button id="upgradeLuckButton" class="primary-button" type="button">Improve luck</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="raceView" class="view" hidden>
       <div class="section-heading">
         <div>
           <p class="kicker">Earn more credits</p>
@@ -2176,7 +2440,13 @@
     const defaultState = {
       credits: 1200,
       collection: { "metro-zip": 1 },
+      discovered: ["metro-zip"],
       selectedCarId: "metro-zip",
+      storageCapacity: 10,
+      storageLevel: 1,
+      luckLevel: 0,
+      carsPacked: 0,
+      carsSold: 0,
       licenses: ["neon"],
       bestTimes: {},
       wins: 0,
@@ -2195,12 +2465,25 @@
     const drivingInput = { left: false, right: false, throttle: false, brake: false };
 
     const creditsDisplay = document.querySelector("#creditsDisplay");
+    const storageDisplay = document.querySelector("#storageDisplay");
     const garageCount = document.querySelector("#garageCount");
     const packGrid = document.querySelector("#packGrid");
     const garageGrid = document.querySelector("#garageGrid");
     const garageSummary = document.querySelector("#garageSummary");
     const collectionGrid = document.querySelector("#collectionGrid");
     const collectionSummary = document.querySelector("#collectionSummary");
+    const factoryRank = document.querySelector("#factoryRank");
+    const factoryStored = document.querySelector("#factoryStored");
+    const factoryPacked = document.querySelector("#factoryPacked");
+    const factorySold = document.querySelector("#factorySold");
+    const conveyorCars = document.querySelector("#conveyorCars");
+    const storageLevel = document.querySelector("#storageLevel");
+    const storageDescription = document.querySelector("#storageDescription");
+    const capacityFill = document.querySelector("#capacityFill");
+    const upgradeStorageButton = document.querySelector("#upgradeStorageButton");
+    const luckLevel = document.querySelector("#luckLevel");
+    const luckDescription = document.querySelector("#luckDescription");
+    const upgradeLuckButton = document.querySelector("#upgradeLuckButton");
     const selectedRacer = document.querySelector("#selectedRacer");
     const trackSelect = document.querySelector("#trackSelect");
     const licenseInfo = document.querySelector("#licenseInfo");
@@ -2236,7 +2519,7 @@
 
     garageGrid.addEventListener("click", (event) => {
       const button = event.target.closest("[data-car-id]");
-      if (button) selectCar(button.dataset.carId);
+      if (button) sellCar(button.dataset.carId);
     });
 
     openingBox.addEventListener("click", openPendingPack);
@@ -2255,6 +2538,8 @@
     });
     startRaceButton.addEventListener("click", handleRaceAction);
     raceAgainButton.addEventListener("click", resetRace);
+    upgradeStorageButton.addEventListener("click", upgradeStorage);
+    upgradeLuckButton.addEventListener("click", upgradeLuck);
 
     document.addEventListener("keydown", (event) => {
       const control = keyToControl(event.code);
@@ -2296,7 +2581,6 @@
     });
 
     renderAll();
-    resetRace();
 
     function loadState() {
       try {
@@ -2306,7 +2590,7 @@
         const collection = {};
         Object.entries(saved.collection ?? {}).forEach(([id, level]) => {
           if (getCar(id) && Number.isInteger(level) && level > 0) {
-            collection[id] = Math.min(level, 25);
+            collection[id] = Math.min(level, 9999);
           }
         });
 
@@ -2314,10 +2598,27 @@
           collection["metro-zip"] = 1;
         }
 
+        const discovered = Array.from(new Set([
+          ...Object.keys(collection),
+          ...(Array.isArray(saved.discovered) ? saved.discovered : [])
+        ])).filter((id) => getCar(id));
+        const storedCars = Object.values(collection).reduce((total, count) => total + count, 0);
+        const storageCapacity = Math.max(
+          10,
+          storedCars,
+          validNumber(saved.storageCapacity, defaultState.storageCapacity)
+        );
+
         return {
           credits: validNumber(saved.credits, defaultState.credits),
           collection,
+          discovered,
           selectedCarId: collection[saved.selectedCarId] ? saved.selectedCarId : Object.keys(collection)[0],
+          storageCapacity,
+          storageLevel: validNumber(saved.storageLevel, Math.max(1, storageCapacity / 10)),
+          luckLevel: Math.min(10, validNumber(saved.luckLevel, 0)),
+          carsPacked: validNumber(saved.carsPacked, 0),
+          carsSold: validNumber(saved.carsSold, 0),
           licenses: Array.from(new Set(["neon", ...(Array.isArray(saved.licenses) ? saved.licenses : [])]))
             .filter((id) => TRACKS[id]),
           bestTimes: Object.fromEntries(
@@ -2342,13 +2643,14 @@
     }
 
     function renderAll() {
+      const storedCars = getStorageUsed();
       creditsDisplay.textContent = state.credits.toLocaleString();
-      garageCount.textContent = Object.keys(state.collection).length;
+      storageDisplay.textContent = `${storedCars}/${state.storageCapacity}`;
+      garageCount.textContent = storedCars;
       renderPacks();
       renderGarage();
       renderCollection();
-      renderSelectedRacer();
-      renderTrackDetails();
+      renderFactory();
     }
 
     function renderPacks() {
@@ -2373,7 +2675,7 @@
             <h3>${pack.name}</h3>
             <p>${pack.description}</p>
             <div class="odds" aria-label="Rarity odds">${segments}</div>
-            <button class="buy-button" type="button" data-pack-id="${pack.id}" ${state.credits < pack.price ? "disabled" : ""}>
+            <button class="buy-button" type="button" data-pack-id="${pack.id}" ${state.credits < pack.price || getStorageUsed() >= state.storageCapacity ? "disabled" : ""}>
               Buy pack <span class="price">🪙 ${pack.price.toLocaleString()}</span>
             </button>
           </article>
@@ -2385,22 +2687,22 @@
       const ownedCars = CARS.filter((car) => state.collection[car.id])
         .sort((a, b) => rarityRank(b.rarity) - rarityRank(a.rarity));
 
-      garageSummary.innerHTML = `<strong>${ownedCars.length} / ${CARS.length}</strong> cars collected · <strong>${state.wins}</strong> wins`;
+      garageSummary.innerHTML = `<strong>${getStorageUsed()} / ${state.storageCapacity}</strong> storage used · <strong>${ownedCars.length}</strong> unique cars currently stored`;
       garageGrid.innerHTML = ownedCars.length
         ? ownedCars.map((car) => createCarCard(car)).join("")
         : `<div class="empty-garage">Your garage is empty. Open a pack to find your first car.</div>`;
     }
 
     function createCarCard(car) {
-      const level = state.collection[car.id];
-      const stats = getLeveledStats(car, level);
-      const selected = state.selectedCarId === car.id;
+      const copies = state.collection[car.id];
+      const stats = getLeveledStats(car, 1);
+      const salePrice = getSalePrice(car);
 
       return `
-        <article class="car-card ${selected ? "selected" : ""}" style="--rarity-color:${RARITY_COLORS[car.rarity]}">
+        <article class="car-card" style="--rarity-color:${RARITY_COLORS[car.rarity]}">
           <div class="car-card-top">
             <span class="rarity">${car.rarity}</span>
-            <span class="level">LV ${level}</span>
+            <span class="level">× ${copies}</span>
           </div>
           <div class="car-visual">${createCarVisual(car)}</div>
           <h3>${car.name}</h3>
@@ -2411,7 +2713,7 @@
             ${createStatRow("Grip", stats.grip)}
           </div>
           <button class="select-car" type="button" data-car-id="${car.id}">
-            ${selected ? "✓ Active racer" : "Select car"}
+            Sell one · 🪙 ${salePrice.toLocaleString()}
           </button>
         </article>
       `;
@@ -2429,21 +2731,23 @@
     }
 
     function renderCollection() {
-      const ownedCount = Object.keys(state.collection).length;
-      collectionSummary.innerHTML = `<strong>${ownedCount} / ${CARS.length}</strong> cars collected · ${CARS.length - ownedCount} remaining`;
+      const discovered = new Set(state.discovered);
+      const ownedCount = discovered.size;
+      collectionSummary.innerHTML = `<strong>${ownedCount} / ${CARS.length}</strong> cars discovered · ${CARS.length - ownedCount} remaining`;
       collectionGrid.innerHTML = [...CARS]
         .sort((a, b) => {
-          const ownedDifference = Number(Boolean(state.collection[b.id])) - Number(Boolean(state.collection[a.id]));
+          const ownedDifference = Number(discovered.has(b.id)) - Number(discovered.has(a.id));
           return ownedDifference || rarityRank(b.rarity) - rarityRank(a.rarity) || a.name.localeCompare(b.name);
         })
         .map((car) => {
-          const owned = Boolean(state.collection[car.id]);
+          const owned = discovered.has(car.id);
+          const copies = state.collection[car.id] ?? 0;
           return `
             <article class="collection-card ${owned ? "owned" : "locked"}" style="--rarity-color:${RARITY_COLORS[car.rarity]}">
               <span class="collection-check">${owned ? "✓" : "?"}</span>
               <div class="car-visual">${createCarVisual(car)}</div>
               <h3>${car.name}</h3>
-              <p>${car.rarity}${owned ? ` · LV ${state.collection[car.id]}` : " · Not owned"}</p>
+              <p>${car.rarity}${owned ? ` · ${copies} stored` : " · Not discovered"}</p>
             </article>
           `;
         })
@@ -2506,6 +2810,7 @@
 
       if (name === "garage") renderGarage();
       if (name === "collection") renderCollection();
+      if (name === "factory") renderFactory();
       if (name === "race") {
         renderSelectedRacer();
         resetRace();
@@ -2514,8 +2819,12 @@
 
     function buyPack(packId) {
       const pack = PACKS.find((entry) => entry.id === packId);
+      if (getStorageUsed() >= state.storageCapacity) {
+        showToast("Storage is full. Sell a car or expand the warehouse.");
+        return;
+      }
       if (!pack || state.credits < pack.price) {
-        showToast("Not enough credits. Win races to earn more.");
+        showToast("Not enough credits. Sell cars to fund more packs.");
         return;
       }
 
@@ -2540,25 +2849,38 @@
     }
 
     function rollCar(pack) {
-      const roll = Math.random() * 100;
+      const eligibleCars = CARS.filter((car) => {
+        const series = car.series ?? "core";
+        return (pack.series ? series === pack.series : series === "core") &&
+          (!pack.origins || pack.origins.includes(car.origin)) &&
+          (!pack.brands || pack.brands.includes(getCarBrand(car)));
+      });
+      const rarityMultipliers = {
+        common: Math.max(0.4, 1 - state.luckLevel * 0.06),
+        rare: 1 + state.luckLevel * 0.02,
+        epic: 1 + state.luckLevel * 0.12,
+        legendary: 1 + state.luckLevel * 0.22
+      };
+      const weightedRarities = Object.entries(pack.odds)
+        .filter(([rarity, chance]) => chance > 0 && eligibleCars.some((car) => car.rarity === rarity))
+        .map(([rarity, chance]) => ({
+          rarity,
+          weight: chance * rarityMultipliers[rarity]
+        }));
+      const totalWeight = weightedRarities.reduce((total, entry) => total + entry.weight, 0);
+      const roll = Math.random() * totalWeight;
       let cumulative = 0;
-      let rarity = "common";
+      let rarity = weightedRarities[weightedRarities.length - 1].rarity;
 
-      for (const [name, chance] of Object.entries(pack.odds)) {
-        cumulative += chance;
+      for (const entry of weightedRarities) {
+        cumulative += entry.weight;
         if (roll < cumulative) {
-          rarity = name;
+          rarity = entry.rarity;
           break;
         }
       }
 
-      const choices = CARS.filter((car) => {
-        const series = car.series ?? "core";
-        return car.rarity === rarity &&
-          (pack.series ? series === pack.series : series === "core") &&
-          (!pack.origins || pack.origins.includes(car.origin)) &&
-          (!pack.brands || pack.brands.includes(getCarBrand(car)));
-      });
+      const choices = eligibleCars.filter((car) => car.rarity === rarity);
       return choices[Math.floor(Math.random() * choices.length)];
     }
 
@@ -2569,11 +2891,11 @@
       tapHint.hidden = true;
 
       window.setTimeout(() => {
-        if (pendingDuplicate) {
-          state.collection[pendingCar.id] = Math.min(25, state.collection[pendingCar.id] + 1);
-        } else {
-          state.collection[pendingCar.id] = 1;
+        state.collection[pendingCar.id] = (state.collection[pendingCar.id] ?? 0) + 1;
+        if (!state.discovered.includes(pendingCar.id)) {
+          state.discovered.push(pendingCar.id);
         }
+        state.carsPacked += 1;
 
         saveState();
         openingBox.hidden = true;
@@ -2583,20 +2905,20 @@
     }
 
     function renderReveal() {
-      const level = state.collection[pendingCar.id];
-      const stats = getLeveledStats(pendingCar, level);
+      const copies = state.collection[pendingCar.id];
+      const stats = getLeveledStats(pendingCar, 1);
       revealCard.style.setProperty("--rarity-color", RARITY_COLORS[pendingCar.rarity]);
       revealCard.innerHTML = `
         <div class="reveal-rarity">${pendingCar.rarity} pull</div>
         <div class="car-visual">${createCarVisual(pendingCar)}</div>
         <h2>${pendingCar.name}</h2>
-        <span class="new-badge">${pendingDuplicate ? `Duplicate · upgraded to level ${level}` : "New car!"}</span>
+        <span class="new-badge">${pendingDuplicate ? `Another copy · ${copies} stored` : "New discovery!"}</span>
         <div class="reveal-stats">
           <span><strong>${stats.speed}</strong>Speed</span>
           <span><strong>${stats.acceleration}</strong>Launch</span>
           <span><strong>${stats.grip}</strong>Grip</span>
         </div>
-        <button id="keepCarButton" class="primary-button" type="button">Add to garage</button>
+        <button id="keepCarButton" class="primary-button" type="button">Store car · Value 🪙 ${getSalePrice(pendingCar).toLocaleString()}</button>
       `;
       revealCard.classList.add("active");
       document.querySelector("#keepCarButton").addEventListener("click", closePack);
@@ -2610,13 +2932,100 @@
       pendingDuplicate = false;
     }
 
-    function selectCar(carId) {
+    function sellCar(carId) {
       if (!state.collection[carId]) return;
-      state.selectedCarId = carId;
+      const car = getCar(carId);
+      state.collection[carId] -= 1;
+      if (state.collection[carId] <= 0) {
+        delete state.collection[carId];
+      }
+      state.credits += getSalePrice(car);
+      state.carsSold += 1;
       saveState();
-      renderGarage();
-      renderSelectedRacer();
-      showToast(`${getCar(carId).name} is ready to race.`);
+      renderAll();
+      showToast(`Sold ${car.name} for ${getSalePrice(car).toLocaleString()} credits.`);
+    }
+
+    function getStorageUsed() {
+      return Object.values(state.collection).reduce((total, count) => total + count, 0);
+    }
+
+    function getSalePrice(car) {
+      return {
+        common: 160,
+        rare: 420,
+        epic: 950,
+        legendary: 2200
+      }[car.rarity];
+    }
+
+    function getStorageUpgradeCost() {
+      return Math.round(650 * Math.pow(1.72, state.storageLevel - 1) / 50) * 50;
+    }
+
+    function getLuckUpgradeCost() {
+      return Math.round(1100 * Math.pow(1.65, state.luckLevel) / 50) * 50;
+    }
+
+    function upgradeStorage() {
+      const cost = getStorageUpgradeCost();
+      if (state.credits < cost) {
+        showToast("Not enough credits for the storage expansion.");
+        return;
+      }
+
+      state.credits -= cost;
+      state.storageCapacity += 10;
+      state.storageLevel += 1;
+      saveState();
+      renderAll();
+      showToast("Warehouse expanded by 10 spaces.");
+    }
+
+    function upgradeLuck() {
+      if (state.luckLevel >= 10) return;
+      const cost = getLuckUpgradeCost();
+      if (state.credits < cost) {
+        showToast("Not enough credits for the luck scanner upgrade.");
+        return;
+      }
+
+      state.credits -= cost;
+      state.luckLevel += 1;
+      saveState();
+      renderAll();
+      showToast(`Pack luck upgraded to level ${state.luckLevel}.`);
+    }
+
+    function renderFactory() {
+      const stored = getStorageUsed();
+      const storageCost = getStorageUpgradeCost();
+      const luckCost = getLuckUpgradeCost();
+      const factoryLevel = state.storageLevel + state.luckLevel;
+      const ranks = ["Backyard Workshop", "Small Motor Works", "Regional Factory", "National Manufacturer", "Global Auto Empire"];
+      factoryRank.textContent = ranks[Math.min(ranks.length - 1, Math.floor((factoryLevel - 1) / 3))];
+      factoryStored.textContent = `${stored} / ${state.storageCapacity}`;
+      factoryPacked.textContent = state.carsPacked.toLocaleString();
+      factorySold.textContent = state.carsSold.toLocaleString();
+      storageLevel.textContent = `Level ${state.storageLevel}`;
+      storageDescription.textContent = `Store up to ${state.storageCapacity} individual cars. The next expansion adds 10 more spaces.`;
+      capacityFill.style.width = `${Math.min(100, stored / state.storageCapacity * 100)}%`;
+      upgradeStorageButton.textContent = `Add 10 spaces · 🪙 ${storageCost.toLocaleString()}`;
+      upgradeStorageButton.disabled = state.credits < storageCost;
+      luckLevel.textContent = `Level ${state.luckLevel}`;
+      luckDescription.textContent = state.luckLevel === 0
+        ? "Standard pack odds. Upgrade scanners to improve epic and legendary chances."
+        : `${state.luckLevel * 5}% factory luck boost toward higher rarities.`;
+      upgradeLuckButton.textContent = state.luckLevel >= 10
+        ? "Maximum luck reached"
+        : `Improve luck · 🪙 ${luckCost.toLocaleString()}`;
+      upgradeLuckButton.disabled = state.luckLevel >= 10 || state.credits < luckCost;
+
+      const displayCars = Object.entries(state.collection)
+        .flatMap(([id, count]) => Array.from({ length: Math.min(count, 2) }, () => getCar(id)))
+        .filter(Boolean)
+        .slice(0, 5);
+      conveyorCars.innerHTML = displayCars.map(createCarVisual).join("");
     }
 
     function renderSelectedRacer() {
