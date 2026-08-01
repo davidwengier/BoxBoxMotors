@@ -6,6 +6,8 @@ A mobile-friendly car pack opening and racing game for the browser.
 
 - Buy six packs, including JDM, European, American muscle, and hypercar collections.
 - Collect 22 real production cars across four rarity tiers.
+- Every car is from Ford, Honda, Acura, Porsche, Chevrolet, Hyundai,
+  Lamborghini, Lotus, or Toyota.
 - Cars use distinct hatchback, SUV, roadster, sedan, muscle, supercar, and hypercar shapes.
 - Pull duplicates to level up cars and improve their stats.
 - Select any owned car from the garage.
