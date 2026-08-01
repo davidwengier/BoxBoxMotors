@@ -745,50 +745,57 @@
 
     .track-panel {
       position: relative;
-      min-height: 525px;
+      min-height: 560px;
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 22px;
-      background: #151923;
+      background: #080b11;
       box-shadow: var(--shadow);
+      user-select: none;
     }
 
-    .track-sky {
+    .race-canvas {
       position: absolute;
-      inset: 0 0 46%;
-      background:
-        radial-gradient(circle at 73% 26%, #ffcd48 0 4%, transparent 4.5%),
-        linear-gradient(#151a3b, #8c2e6f 55%, #ed7752);
-      transition: background 250ms ease;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
-    .track-sky.desert {
-      background:
-        radial-gradient(circle at 72% 25%, #fff2a8 0 7%, transparent 7.5%),
-        linear-gradient(#4299c7, #ef9a57);
-    }
-
-    .track-sky.alpine {
-      background:
-        linear-gradient(135deg, transparent 0 40%, #e9f3ff 41% 48%, #647a9e 49% 59%, transparent 60%) 20% 100% / 70% 80% no-repeat,
-        linear-gradient(#8ed4ee, #e8cbdc);
-    }
-
-    .city {
+    .race-hud {
       position: absolute;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      height: 62%;
-      background:
-        linear-gradient(90deg, transparent 0 8%, #191f38 8% 13%, transparent 13% 17%, #1b213a 17% 24%, transparent 24% 31%, #171d34 31% 37%, transparent 37% 70%, #1c213a 70% 78%, transparent 78%);
-      opacity: 0.9;
+      z-index: 7;
+      top: 16px;
+      right: 16px;
+      left: 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .position-hud {
+      padding: 10px 13px;
+      border-left: 3px solid var(--cyan);
+      background: rgb(4 7 12 / 66%);
+      font-size: 0.7rem;
+      font-weight: 1000;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      backdrop-filter: blur(7px);
+    }
+
+    .position-hud strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.6rem;
+      letter-spacing: -0.04em;
     }
 
     .race-status {
       position: absolute;
       z-index: 8;
-      top: 20px;
+      top: 18px;
       left: 50%;
       padding: 8px 17px;
       border: 1px solid rgb(255 255 255 / 20%);
@@ -802,10 +809,43 @@
       backdrop-filter: blur(8px);
     }
 
+    .race-progress {
+      width: 120px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgb(4 7 12 / 66%);
+      backdrop-filter: blur(7px);
+    }
+
+    .race-progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      color: #d8deea;
+      font-size: 0.58rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .race-progress-track {
+      height: 5px;
+      overflow: hidden;
+      border-radius: 5px;
+      background: rgb(255 255 255 / 18%);
+    }
+
+    .race-progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
     .countdown {
       position: absolute;
       z-index: 12;
-      top: 39%;
+      top: 44%;
       left: 50%;
       display: none;
       color: #fff;
@@ -822,111 +862,111 @@
       animation: countdown-pop 750ms ease both;
     }
 
-    .road {
+    .speedometer {
       position: absolute;
+      z-index: 9;
+      right: 18px;
+      bottom: 17px;
+      width: 112px;
+      height: 112px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgb(255 255 255 / 30%);
+      border-radius: 50%;
+      background:
+        conic-gradient(from 225deg, var(--cyan) var(--speed-angle), rgb(255 255 255 / 13%) 0 75%, transparent 0),
+        rgb(5 8 13 / 78%);
+      box-shadow: inset 0 0 0 9px rgb(5 8 13 / 92%), 0 0 25px rgb(0 0 0 / 35%);
+      text-align: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .speedometer strong {
+      display: block;
+      font-size: 2rem;
+      font-style: italic;
+      letter-spacing: -0.07em;
+      line-height: 0.9;
+    }
+
+    .speedometer span {
+      color: var(--muted);
+      font-size: 0.54rem;
+      font-weight: 1000;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .race-controls {
+      position: absolute;
+      z-index: 10;
       right: 0;
       bottom: 0;
       left: 0;
-      height: 70%;
-      padding-top: 17px;
-      background:
-        linear-gradient(90deg, transparent 0 92%, #fff 92% 93%, #161921 93% 94%, #fff 94% 95%, transparent 95%),
-        linear-gradient(10deg, #171a21, #363a44);
-      box-shadow: inset 0 18px 30px rgb(0 0 0 / 40%);
-      transform: perspective(550px) rotateX(14deg);
-      transform-origin: bottom;
+      display: none;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 14px;
+      pointer-events: none;
     }
 
-    .lane {
-      position: relative;
-      height: 31%;
-      border-bottom: 3px dashed rgb(255 255 255 / 25%);
+    .control-group {
+      display: flex;
+      gap: 9px;
+      pointer-events: auto;
     }
 
-    .lane:last-child {
-      border-bottom: 0;
-    }
-
-    .racer {
-      position: absolute;
-      z-index: 4;
-      top: 50%;
-      left: 2%;
-      width: 105px;
-      transform: translateY(-50%);
-      transition: left 90ms linear;
-    }
-
-    .racer .car {
-      width: 105px;
-      height: 40px;
-      transform: scaleX(-1);
-    }
-
-    .racer .car-body {
-      height: 25px;
-      border-width: 2px;
-    }
-
-    .racer .car-cabin {
-      top: 1px;
-      left: 31px;
-      width: 51px;
-      height: 22px;
-      border-width: 2px;
-    }
-
-    .racer .wheel {
-      width: 20px;
-      height: 20px;
-      border-width: 4px;
-    }
-
-    .racer .wheel.front { right: 13px; }
-    .racer .wheel.back { left: 14px; }
-
-    .racer-name {
-      position: absolute;
-      bottom: -22px;
-      left: 50%;
-      width: max-content;
-      padding: 2px 5px;
-      border-radius: 4px;
-      background: rgb(0 0 0 / 60%);
+    .drive-control {
+      width: 62px;
+      height: 62px;
+      border: 2px solid rgb(255 255 255 / 32%);
+      border-radius: 17px;
+      background: rgb(5 8 13 / 65%);
       color: #fff;
-      font-size: 0.55rem;
-      font-weight: 900;
-      transform: translateX(-50%);
-    }
-
-    .racer.player .racer-name {
-      color: var(--cyan);
-    }
-
-    .nitro-button {
-      position: absolute;
-      z-index: 9;
-      right: 20px;
-      bottom: 18px;
-      width: 86px;
-      height: 86px;
-      border: 4px solid #f5fbff;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 25%, #fff, var(--cyan) 25%, #006f90 72%);
-      box-shadow: 0 0 30px rgb(33 230 255 / 40%), inset -8px -8px rgb(0 0 0 / 20%);
-      color: #00151a;
-      font-size: 0.75rem;
-      font-style: italic;
+      font-size: 1.35rem;
       font-weight: 1000;
-      text-transform: uppercase;
-      transform: rotate(-8deg);
+      backdrop-filter: blur(5px);
     }
 
-    .nitro-button:disabled {
-      border-color: #586071;
-      background: #343b48;
-      box-shadow: none;
-      color: #788194;
+    .drive-control.active,
+    .drive-control:active {
+      border-color: var(--cyan);
+      background: rgb(33 230 255 / 30%);
+      transform: scale(0.94);
+    }
+
+    .drive-control.gas {
+      height: 86px;
+      border-color: rgb(100 239 145 / 60%);
+      background: rgb(30 121 60 / 45%);
+      color: var(--green);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .drive-control.brake {
+      height: 73px;
+      border-color: rgb(255 83 100 / 55%);
+      background: rgb(120 25 36 / 45%);
+      color: #ffafb8;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+    }
+
+    .controls-hint {
+      position: absolute;
+      z-index: 8;
+      bottom: 16px;
+      left: 18px;
+      padding: 7px 10px;
+      border-radius: 7px;
+      background: rgb(4 7 12 / 60%);
+      color: rgb(255 255 255 / 68%);
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .race-result {
@@ -1276,24 +1316,43 @@
       }
 
       .track-panel {
-        min-height: 455px;
+        min-height: 520px;
       }
 
-      .racer {
-        width: 82px;
+      .race-controls {
+        display: flex;
       }
 
-      .racer .car {
-        width: 82px;
-        transform: scaleX(-1) scale(0.8);
-        transform-origin: left center;
+      .controls-hint {
+        display: none;
       }
 
-      .nitro-button {
-        width: 73px;
-        height: 73px;
-        right: 12px;
-        bottom: 12px;
+      .speedometer {
+        right: 14px;
+        bottom: 116px;
+        width: 88px;
+        height: 88px;
+      }
+
+      .speedometer strong {
+        font-size: 1.55rem;
+      }
+
+      .race-status {
+        top: 70px;
+        max-width: 80%;
+        overflow: hidden;
+        font-size: 0.62rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .position-hud strong {
+        font-size: 1.25rem;
+      }
+
+      .race-progress {
+        width: 105px;
       }
 
       .reveal-stage {
@@ -1370,7 +1429,7 @@
           <p class="kicker">Earn more credits</p>
           <h2>Race night</h2>
         </div>
-        <p class="section-copy">Your car drives automatically. Hit nitro at the right moment to blast past the competition.</p>
+        <p class="section-copy">Drive from behind the wheel: steer through sweeping roads, control the throttle, brake for the bends, and beat three AI rivals.</p>
       </div>
 
       <div class="race-setup">
@@ -1384,20 +1443,42 @@
               <option value="alpine">Alpine Rush — Grip</option>
             </select>
             <div class="race-prizes">
-              <span><strong>500</strong>1st</span>
-              <span><strong>300</strong>2nd</span>
-              <span><strong>150</strong>3rd</span>
+              <span><strong>600</strong>1st</span>
+              <span><strong>400</strong>2nd</span>
+              <span><strong>150+</strong>Finish</span>
             </div>
           </div>
           <button id="startRaceButton" class="primary-button" type="button">Start race</button>
         </aside>
 
         <div class="track-panel">
-          <div id="trackSky" class="track-sky"><div class="city"></div></div>
+          <canvas id="raceCanvas" class="race-canvas" aria-label="Behind-the-car racing game"></canvas>
+          <div class="race-hud">
+            <div class="position-hud">
+              Position
+              <strong id="positionDisplay">1 / 4</strong>
+            </div>
+            <div class="race-progress">
+              <div class="race-progress-label"><span>Progress</span><span id="progressDisplay">0%</span></div>
+              <div class="race-progress-track"><div id="progressFill" class="race-progress-fill"></div></div>
+            </div>
+          </div>
           <div id="raceStatus" class="race-status">Ready on the grid</div>
           <div id="countdown" class="countdown">3</div>
-          <div id="road" class="road"></div>
-          <button id="nitroButton" class="nitro-button" type="button" disabled>Nitro</button>
+          <div id="speedometer" class="speedometer" style="--speed-angle:0deg">
+            <div><strong id="speedDisplay">0</strong><span>km/h</span></div>
+          </div>
+          <div class="controls-hint">WASD / arrow keys to drive · Space to brake</div>
+          <div class="race-controls" aria-label="Touch driving controls">
+            <div class="control-group">
+              <button class="drive-control" type="button" data-control="left" aria-label="Steer left">←</button>
+              <button class="drive-control" type="button" data-control="right" aria-label="Steer right">→</button>
+            </div>
+            <div class="control-group">
+              <button class="drive-control brake" type="button" data-control="brake">Brake</button>
+              <button class="drive-control gas" type="button" data-control="throttle">Gas</button>
+            </div>
+          </div>
           <div id="raceResult" class="race-result">
             <div>
               <h3 id="raceResultTitle">1st place</h3>
@@ -1479,9 +1560,36 @@
     ];
 
     const TRACKS = {
-      neon: { keyStat: null, label: "Neon Strip" },
-      desert: { keyStat: "speed", label: "Dust Valley" },
-      alpine: { keyStat: "grip", label: "Alpine Rush" }
+      neon: {
+        keyStat: "acceleration",
+        label: "Neon Strip",
+        length: 2400,
+        skyTop: "#141a46",
+        skyBottom: "#e45c87",
+        ground: "#22203b",
+        road: "#242833",
+        edge: "#21e6ff"
+      },
+      desert: {
+        keyStat: "speed",
+        label: "Dust Valley",
+        length: 2800,
+        skyTop: "#3e9ccc",
+        skyBottom: "#f6aa61",
+        ground: "#b66c35",
+        road: "#45434a",
+        edge: "#ffcc33"
+      },
+      alpine: {
+        keyStat: "grip",
+        label: "Alpine Rush",
+        length: 2600,
+        skyTop: "#74c3e8",
+        skyBottom: "#e8d8e4",
+        ground: "#476853",
+        road: "#3b414a",
+        edge: "#f5f8ff"
+      }
     };
 
     const defaultState = {
@@ -1498,9 +1606,10 @@
     let pendingDuplicate = false;
     let raceRunning = false;
     let raceFrame = 0;
-    let raceProgress = null;
-    let nitroUsed = false;
+    let raceSession = null;
+    let raceGeneration = 0;
     let toastTimer = 0;
+    const drivingInput = { left: false, right: false, throttle: false, brake: false };
 
     const creditsDisplay = document.querySelector("#creditsDisplay");
     const garageCount = document.querySelector("#garageCount");
@@ -1509,12 +1618,16 @@
     const garageSummary = document.querySelector("#garageSummary");
     const selectedRacer = document.querySelector("#selectedRacer");
     const trackSelect = document.querySelector("#trackSelect");
-    const trackSky = document.querySelector("#trackSky");
     const startRaceButton = document.querySelector("#startRaceButton");
-    const road = document.querySelector("#road");
+    const raceCanvas = document.querySelector("#raceCanvas");
+    const raceContext = raceCanvas.getContext("2d");
     const countdown = document.querySelector("#countdown");
     const raceStatus = document.querySelector("#raceStatus");
-    const nitroButton = document.querySelector("#nitroButton");
+    const speedometer = document.querySelector("#speedometer");
+    const speedDisplay = document.querySelector("#speedDisplay");
+    const positionDisplay = document.querySelector("#positionDisplay");
+    const progressDisplay = document.querySelector("#progressDisplay");
+    const progressFill = document.querySelector("#progressFill");
     const raceResult = document.querySelector("#raceResult");
     const raceResultTitle = document.querySelector("#raceResultTitle");
     const raceResultCopy = document.querySelector("#raceResultCopy");
@@ -1547,10 +1660,50 @@
       }
     });
 
-    trackSelect.addEventListener("change", updateTrackTheme);
+    trackSelect.addEventListener("change", () => {
+      if (!raceRunning) renderRacePreview();
+    });
     startRaceButton.addEventListener("click", startRace);
     raceAgainButton.addEventListener("click", resetRace);
-    nitroButton.addEventListener("click", useNitro);
+
+    document.addEventListener("keydown", (event) => {
+      const control = keyToControl(event.code);
+      if (!control || !document.querySelector("#raceView").classList.contains("active")) return;
+      event.preventDefault();
+      drivingInput[control] = true;
+      updateControlButtons();
+    });
+
+    document.addEventListener("keyup", (event) => {
+      const control = keyToControl(event.code);
+      if (!control) return;
+      drivingInput[control] = false;
+      updateControlButtons();
+    });
+
+    document.querySelectorAll("[data-control]").forEach((button) => {
+      const control = button.dataset.control;
+      const press = (event) => {
+        event.preventDefault();
+        drivingInput[control] = true;
+        button.classList.add("active");
+        button.setPointerCapture?.(event.pointerId);
+      };
+      const release = (event) => {
+        event.preventDefault();
+        drivingInput[control] = false;
+        button.classList.remove("active");
+      };
+      button.addEventListener("pointerdown", press);
+      button.addEventListener("pointerup", release);
+      button.addEventListener("pointercancel", release);
+      button.addEventListener("lostpointercapture", release);
+    });
+
+    window.addEventListener("blur", clearDrivingInput);
+    window.addEventListener("resize", () => {
+      if (!raceRunning) renderRacePreview();
+    });
 
     renderAll();
     resetRace();
@@ -1841,34 +1994,37 @@
       `;
     }
 
-    function updateTrackTheme() {
-      trackSky.className = `track-sky ${trackSelect.value === "neon" ? "" : trackSelect.value}`;
-    }
-
     function resetRace() {
+      raceGeneration += 1;
       cancelAnimationFrame(raceFrame);
       raceRunning = false;
-      raceProgress = null;
-      nitroUsed = false;
-      nitroButton.disabled = true;
+      raceSession = null;
+      clearDrivingInput();
       startRaceButton.disabled = false;
       raceResult.classList.remove("active");
       raceStatus.textContent = "Ready on the grid";
-      createStartingGrid();
-      updateTrackTheme();
+      speedDisplay.textContent = "0";
+      speedometer.style.setProperty("--speed-angle", "0deg");
+      positionDisplay.textContent = "1 / 4";
+      progressDisplay.textContent = "0%";
+      progressFill.style.width = "0%";
+      renderRacePreview();
     }
 
-    function createStartingGrid() {
+    function renderRacePreview() {
       const player = getCar(state.selectedCarId);
       const rivals = chooseRivals(player);
-      road.innerHTML = [player, ...rivals].map((car, index) => `
-        <div class="lane">
-          <div class="racer ${index === 0 ? "player" : ""}" data-racer="${index}" style="left:2%">
-            ${createCarVisual(car)}
-            <span class="racer-name">${index === 0 ? "YOU · " : ""}${car.name}</span>
-          </div>
-        </div>
-      `).join("");
+      const preview = {
+        track: TRACKS[trackSelect.value],
+        player: { car: player, distance: 0, speed: 0, x: 0 },
+        rivals: rivals.map((car, index) => ({
+          car,
+          distance: 105 - index * 33,
+          speed: 0,
+          lane: [-0.52, 0.48, 0][index]
+        }))
+      };
+      drawRaceScene(preview);
     }
 
     function chooseRivals(player) {
@@ -1879,7 +2035,7 @@
           distance: Math.abs(getPower(getLeveledStats(car, 1)) - playerPower) + Math.random() * 18
         }))
         .sort((a, b) => a.distance - b.distance)
-        .slice(0, 2)
+        .slice(0, 3)
         .map((entry) => entry.car);
     }
 
@@ -1887,11 +2043,15 @@
       if (raceRunning) return;
 
       resetRace();
+      const generation = raceGeneration;
       raceRunning = true;
       startRaceButton.disabled = true;
-      raceStatus.textContent = TRACKS[trackSelect.value].label;
+      raceSession = createRaceSession();
+      raceStatus.textContent = `${raceSession.track.label} · Get ready`;
+      drawRaceScene(raceSession);
 
       for (const value of ["3", "2", "1", "GO!"]) {
+        if (generation !== raceGeneration) return;
         countdown.textContent = value;
         countdown.classList.remove("active");
         void countdown.offsetWidth;
@@ -1899,90 +2059,168 @@
         await wait(value === "GO!" ? 500 : 750);
       }
 
+      if (generation !== raceGeneration) return;
       countdown.classList.remove("active");
-      nitroButton.disabled = false;
-      runRace();
+      raceSession.lastTime = performance.now();
+      runRace(generation);
     }
 
     function wait(milliseconds) {
       return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
     }
 
-    function runRace() {
-      const racers = Array.from(road.querySelectorAll(".racer"));
+    function createRaceSession() {
       const playerCar = getCar(state.selectedCarId);
-      const rivalCars = racers.slice(1).map((racer) => getCarByName(racer.querySelector(".racer-name").textContent));
       const track = TRACKS[trackSelect.value];
-      const progress = [2, 2, 2];
-      raceProgress = progress;
-      const startTime = performance.now();
-      let previousTime = startTime;
+      const playerStats = getLeveledStats(playerCar, state.collection[playerCar.id]);
+      const rivals = chooseRivals(playerCar).map((car, index) => {
+        const stats = getLeveledStats(car, 1);
+        const power = getPower(stats);
+        return {
+          id: `rival-${index}`,
+          car,
+          stats,
+          distance: -7 - index * 5,
+          speed: 0,
+          lane: [-0.5, 0.46, 0][index],
+          targetSpeed: 174 + power * 1.35 + Math.random() * 13,
+          finished: false
+        };
+      });
 
+      return {
+        track,
+        player: {
+          id: "player",
+          car: playerCar,
+          stats: playerStats,
+          distance: 0,
+          speed: 0,
+          x: 0,
+          finished: false
+        },
+        rivals,
+        finishOrder: [],
+        checkpoint: 0,
+        lastTime: performance.now()
+      };
+    }
+
+    function runRace(generation) {
       function frame(now) {
-        if (!raceRunning) return;
+        if (!raceRunning || generation !== raceGeneration || !raceSession) return;
 
-        const delta = Math.min((now - previousTime) / 1000, 0.05);
-        previousTime = now;
-        const allCars = [playerCar, ...rivalCars];
+        const delta = Math.min((now - raceSession.lastTime) / 1000, 0.05);
+        raceSession.lastTime = now;
+        updateRacePhysics(delta);
+        drawRaceScene(raceSession);
+        updateRaceHud();
 
-        allCars.forEach((car, index) => {
-          const level = index === 0 ? state.collection[car.id] : 1;
-          const stats = getLeveledStats(car, level);
-          const keyBonus = track.keyStat ? stats[track.keyStat] * 0.08 : 0;
-          const launchWeight = Math.max(0, 2.5 - (now - startTime) / 1800);
-          const pace = 6.4 + stats.speed * 0.052 + stats.acceleration * 0.018 * launchWeight + stats.grip * 0.013 + keyBonus;
-          const variation = index === 0 ? 1 : 0.92 + Math.random() * 0.13;
-          progress[index] += pace * variation * delta;
-          racers[index].style.left = `${Math.min(88, progress[index])}%`;
-        });
-
-        const leader = progress.indexOf(Math.max(...progress));
-        raceStatus.textContent = leader === 0 ? "You are leading!" : `${leader + 1}${leader === 1 ? "nd" : "rd"} car is ahead`;
-
-        if (progress.some((value) => value >= 88)) {
-          finishRace(progress);
-          return;
+        if (!raceSession.player.finished) {
+          raceFrame = requestAnimationFrame(frame);
         }
-
-        raceFrame = requestAnimationFrame(frame);
       }
 
       raceFrame = requestAnimationFrame(frame);
     }
 
-    function getCarByName(displayName) {
-      const name = displayName.replace(/^YOU · /, "");
-      return CARS.find((car) => car.name === name) ?? CARS[0];
+    function updateRacePhysics(delta) {
+      const { player, rivals, track } = raceSession;
+      const stats = player.stats;
+      const keyBonus = stats[track.keyStat] * 0.13;
+      const topSpeed = 185 + stats.speed * 1.55 + keyBonus;
+      const throttle = drivingInput.throttle ? 1 : 0;
+      const brake = drivingInput.brake ? 1 : 0;
+      const steer = (drivingInput.right ? 1 : 0) - (drivingInput.left ? 1 : 0);
+
+      if (throttle) {
+        const acceleration = 33 + stats.acceleration * 0.48;
+        player.speed += acceleration * (1 - player.speed / (topSpeed * 1.22)) * delta;
+      } else {
+        player.speed -= 17 * delta;
+      }
+
+      if (brake) player.speed -= 112 * delta;
+      player.speed = clamp(player.speed, 0, topSpeed);
+
+      const steeringGrip = 0.72 + stats.grip / 210;
+      player.x += steer * steeringGrip * (0.65 + player.speed / Math.max(topSpeed, 1) * 1.35) * delta;
+      player.x -= getRoadCurve(player.distance, track) * (player.speed / Math.max(topSpeed, 1)) * 0.13 * delta;
+      if (!steer) player.x *= Math.pow(0.995, delta * 60);
+      player.x = clamp(player.x, -1.65, 1.65);
+
+      const offRoad = Math.abs(player.x) > 1;
+      if (offRoad) {
+        player.speed = Math.max(0, player.speed - 82 * delta);
+        raceStatus.textContent = "OFF ROAD · Steer back!";
+      }
+
+      player.distance += player.speed / 3.6 * delta;
+
+      rivals.forEach((rival, index) => {
+        const trackBonus = rival.stats[track.keyStat] * 0.12;
+        const bendPenalty = Math.abs(getRoadCurve(rival.distance, track)) * (100 - rival.stats.grip) * 0.18;
+        const desiredSpeed = rival.targetSpeed + trackBonus - bendPenalty;
+        rival.speed += (desiredSpeed - rival.speed) * Math.min(1, delta * 0.72);
+        rival.distance += rival.speed / 3.6 * delta;
+        rival.lane += Math.sin(rival.distance / 180 + index * 2.1) * delta * 0.08;
+        rival.lane = clamp(rival.lane, -0.62, 0.62);
+
+        const closeAhead = rival.distance - player.distance;
+        if (closeAhead > -2 && closeAhead < 8 && Math.abs(rival.lane - player.x * 0.55) < 0.25) {
+          player.speed *= Math.pow(0.72, delta);
+          player.x += player.x <= rival.lane ? -0.25 * delta : 0.25 * delta;
+        }
+      });
+
+      recordFinishers();
+
+      if (!offRoad) {
+        const position = getPlayerPosition();
+        raceStatus.textContent = position === 1 ? "1st place · Keep pushing!" : `${ordinal(position)} place · Chase them down`;
+      }
+
+      const checkpoint = Math.min(3, Math.floor(player.distance / track.length * 4));
+      if (checkpoint > raceSession.checkpoint && checkpoint < 4) {
+        raceSession.checkpoint = checkpoint;
+        raceStatus.textContent = `Checkpoint ${checkpoint} / 3`;
+      }
     }
 
-    function useNitro() {
-      if (!raceRunning || nitroUsed) return;
+    function recordFinishers() {
+      const racers = [...raceSession.rivals, raceSession.player]
+        .filter((racer) => !racer.finished && racer.distance >= raceSession.track.length)
+        .sort((a, b) => b.distance - a.distance);
 
-      nitroUsed = true;
-      nitroButton.disabled = true;
-      raceProgress[0] += 9;
-      const player = road.querySelector(".racer.player");
-      player.style.left = `${Math.min(88, raceProgress[0])}%`;
-      player.animate(
-        [
-          { filter: "drop-shadow(-10px 0 0 #21e6ff)" },
-          { filter: "drop-shadow(-45px 0 12px #21e6ff)" },
-          { filter: "none" }
-        ],
-        { duration: 650 }
-      );
-      showToast("Nitro fired! +9% burst");
+      racers.forEach((racer) => {
+        racer.finished = true;
+        raceSession.finishOrder.push(racer.id);
+        if (racer.id === "player") finishRace(raceSession.finishOrder.length);
+      });
     }
 
-    function finishRace(progress) {
+    function getPlayerPosition() {
+      const playerDistance = raceSession.player.distance;
+      return 1 + raceSession.rivals.filter((rival) => rival.distance > playerDistance).length;
+    }
+
+    function updateRaceHud() {
+      const { player, track } = raceSession;
+      const progress = clamp(player.distance / track.length * 100, 0, 100);
+      const topSpeed = 185 + player.stats.speed * 1.7;
+      speedDisplay.textContent = Math.round(player.speed);
+      speedometer.style.setProperty("--speed-angle", `${Math.min(270, player.speed / topSpeed * 270)}deg`);
+      positionDisplay.textContent = `${getPlayerPosition()} / 4`;
+      progressDisplay.textContent = `${Math.floor(progress)}%`;
+      progressFill.style.width = `${progress}%`;
+    }
+
+    function finishRace(place) {
       raceRunning = false;
-      raceProgress = null;
-      nitroButton.disabled = true;
       cancelAnimationFrame(raceFrame);
+      clearDrivingInput();
 
-      const sorted = progress.map((value, index) => ({ value, index })).sort((a, b) => b.value - a.value);
-      const place = sorted.findIndex((entry) => entry.index === 0) + 1;
-      const prizes = [500, 300, 150];
+      const prizes = [600, 400, 250, 150];
       const prize = prizes[place - 1];
 
       state.credits += prize;
@@ -1994,13 +2232,337 @@
       raceResultTitle.textContent = `${ordinal(place)} place`;
       raceResultCopy.innerHTML = `Prize: <strong>${prize.toLocaleString()} credits</strong>${place === 1 ? " · Victory!" : ""}`;
       raceResult.classList.add("active");
-      raceStatus.textContent = "Finish";
+      raceStatus.textContent = "Finish line";
     }
 
     function ordinal(value) {
       if (value === 1) return "1st";
       if (value === 2) return "2nd";
-      return "3rd";
+      if (value === 3) return "3rd";
+      return `${value}th`;
+    }
+
+    function keyToControl(code) {
+      if (code === "ArrowLeft" || code === "KeyA") return "left";
+      if (code === "ArrowRight" || code === "KeyD") return "right";
+      if (code === "ArrowUp" || code === "KeyW") return "throttle";
+      if (code === "ArrowDown" || code === "KeyS" || code === "Space") return "brake";
+      return null;
+    }
+
+    function clearDrivingInput() {
+      Object.keys(drivingInput).forEach((control) => {
+        drivingInput[control] = false;
+      });
+      updateControlButtons();
+    }
+
+    function updateControlButtons() {
+      document.querySelectorAll("[data-control]").forEach((button) => {
+        button.classList.toggle("active", drivingInput[button.dataset.control]);
+      });
+    }
+
+    function drawRaceScene(session) {
+      const { width, height } = resizeRaceCanvas();
+      const context = raceContext;
+      const { track, player, rivals } = session;
+      const horizon = height * 0.34;
+      const roadCurve = getRoadCurve(player.distance, track);
+      const topCenter = width / 2 + roadCurve * width * 0.13;
+      const bottomCenter = width / 2 - player.x * width * 0.17;
+      const topHalf = width * 0.045;
+      const bottomHalf = width * 0.62;
+
+      const sky = context.createLinearGradient(0, 0, 0, horizon);
+      sky.addColorStop(0, track.skyTop);
+      sky.addColorStop(1, track.skyBottom);
+      context.fillStyle = sky;
+      context.fillRect(0, 0, width, horizon + 2);
+      drawSun(context, width, height, track);
+      drawMountains(context, width, horizon, track);
+
+      context.fillStyle = track.ground;
+      context.fillRect(0, horizon, width, height - horizon);
+      drawRoadsideScenery(context, width, height, horizon, session, topCenter, bottomCenter, topHalf, bottomHalf);
+
+      const roadPoint = (depth) => {
+        const perspective = Math.pow(clamp(depth, 0, 1), 1.65);
+        return {
+          y: horizon + perspective * (height - horizon),
+          center: topCenter + (bottomCenter - topCenter) * perspective,
+          half: topHalf + (bottomHalf - topHalf) * Math.pow(perspective, 1.08)
+        };
+      };
+
+      const far = roadPoint(0);
+      const near = roadPoint(1);
+      context.fillStyle = track.edge;
+      context.beginPath();
+      context.moveTo(far.center - far.half * 1.12, far.y);
+      context.lineTo(far.center + far.half * 1.12, far.y);
+      context.lineTo(near.center + near.half * 1.06, near.y);
+      context.lineTo(near.center - near.half * 1.06, near.y);
+      context.closePath();
+      context.fill();
+
+      context.fillStyle = track.road;
+      context.beginPath();
+      context.moveTo(far.center - far.half, far.y);
+      context.lineTo(far.center + far.half, far.y);
+      context.lineTo(near.center + near.half, near.y);
+      context.lineTo(near.center - near.half, near.y);
+      context.closePath();
+      context.fill();
+
+      drawRoadMarkings(context, roadPoint, player.distance);
+      drawFinishLine(context, roadPoint, session);
+      drawRivals(context, roadPoint, session);
+      drawSpeedLines(context, width, height, player.speed);
+      drawPlayerCar(context, width, height, player.car, drivingInput);
+    }
+
+    function resizeRaceCanvas() {
+      const rect = raceCanvas.getBoundingClientRect();
+      const width = Math.max(1, rect.width);
+      const height = Math.max(1, rect.height);
+      const scale = Math.min(window.devicePixelRatio || 1, 2);
+      const pixelWidth = Math.round(width * scale);
+      const pixelHeight = Math.round(height * scale);
+
+      if (raceCanvas.width !== pixelWidth || raceCanvas.height !== pixelHeight) {
+        raceCanvas.width = pixelWidth;
+        raceCanvas.height = pixelHeight;
+      }
+
+      raceContext.setTransform(scale, 0, 0, scale, 0, 0);
+      return { width, height };
+    }
+
+    function drawSun(context, width, height, track) {
+      const x = width * 0.76;
+      const y = height * 0.15;
+      const radius = track === TRACKS.neon ? 28 : 38;
+      const glow = context.createRadialGradient(x, y, 2, x, y, radius * 2.4);
+      glow.addColorStop(0, "#fffbd0");
+      glow.addColorStop(0.35, track === TRACKS.neon ? "#ff65b4" : "#ffe28a");
+      glow.addColorStop(1, "transparent");
+      context.fillStyle = glow;
+      context.fillRect(x - radius * 3, y - radius * 3, radius * 6, radius * 6);
+      context.fillStyle = track === TRACKS.neon ? "#ff7fbe" : "#fff1ad";
+      context.beginPath();
+      context.arc(x, y, radius, 0, Math.PI * 2);
+      context.fill();
+    }
+
+    function drawMountains(context, width, horizon, track) {
+      context.fillStyle = track === TRACKS.alpine ? "#8094ac" : "rgb(20 25 42 / 70%)";
+      context.beginPath();
+      context.moveTo(0, horizon);
+      context.lineTo(width * 0.12, horizon * 0.52);
+      context.lineTo(width * 0.23, horizon);
+      context.lineTo(width * 0.39, horizon * 0.42);
+      context.lineTo(width * 0.56, horizon);
+      context.lineTo(width * 0.71, horizon * 0.57);
+      context.lineTo(width * 0.86, horizon);
+      context.lineTo(width, horizon * 0.5);
+      context.lineTo(width, horizon);
+      context.closePath();
+      context.fill();
+
+      if (track === TRACKS.alpine) {
+        context.fillStyle = "#e8f4ff";
+        context.beginPath();
+        context.moveTo(width * 0.32, horizon * 0.61);
+        context.lineTo(width * 0.39, horizon * 0.42);
+        context.lineTo(width * 0.46, horizon * 0.64);
+        context.lineTo(width * 0.4, horizon * 0.57);
+        context.lineTo(width * 0.37, horizon * 0.62);
+        context.closePath();
+        context.fill();
+      }
+    }
+
+    function drawRoadsideScenery(context, width, height, horizon, session, topCenter, bottomCenter, topHalf, bottomHalf) {
+      for (let index = 0; index < 16; index += 1) {
+        const spacing = 135;
+        const ahead = ((index * spacing - session.player.distance) % (spacing * 16) + spacing * 16) % (spacing * 16);
+        if (ahead > 1100) continue;
+        const depth = 1 - ahead / 1100;
+        const perspective = Math.pow(depth, 1.7);
+        const y = horizon + perspective * (height - horizon);
+        const center = topCenter + (bottomCenter - topCenter) * perspective;
+        const half = topHalf + (bottomHalf - topHalf) * perspective;
+        const side = index % 2 === 0 ? -1 : 1;
+        const x = center + side * half * (1.2 + (index % 3) * 0.12);
+        const size = 6 + perspective * 45;
+        drawSceneryObject(context, x, y, size, session.track, index);
+      }
+    }
+
+    function drawSceneryObject(context, x, y, size, track, index) {
+      if (track === TRACKS.neon) {
+        context.fillStyle = index % 3 === 0 ? "#ff3fa4" : "#21e6ff";
+        context.fillRect(x - size * 0.08, y - size * 1.4, size * 0.16, size * 1.4);
+        context.fillStyle = "#111726";
+        context.fillRect(x - size * 0.32, y - size * 1.4, size * 0.64, size * 0.36);
+        return;
+      }
+
+      if (track === TRACKS.desert) {
+        context.fillStyle = "#3f6d42";
+        context.fillRect(x - size * 0.1, y - size, size * 0.2, size);
+        context.fillRect(x - size * 0.38, y - size * 0.72, size * 0.76, size * 0.17);
+        context.fillRect(x - size * 0.34, y - size * 0.72, size * 0.16, size * 0.42);
+        return;
+      }
+
+      context.fillStyle = "#173c32";
+      context.beginPath();
+      context.moveTo(x, y - size * 1.5);
+      context.lineTo(x - size * 0.55, y);
+      context.lineTo(x + size * 0.55, y);
+      context.closePath();
+      context.fill();
+    }
+
+    function drawRoadMarkings(context, roadPoint, distance) {
+      const offset = (distance / 18) % 1;
+      for (let index = 0; index < 20; index += 1) {
+        const start = ((index + offset) % 20) / 20;
+        const end = Math.min(1, start + 0.026 + start * 0.024);
+        const a = roadPoint(start);
+        const b = roadPoint(end);
+
+        [-1 / 3, 1 / 3].forEach((lane) => {
+          context.fillStyle = "rgb(255 255 255 / 72%)";
+          context.beginPath();
+          context.moveTo(a.center + a.half * lane - 1, a.y);
+          context.lineTo(a.center + a.half * lane + 1, a.y);
+          context.lineTo(b.center + b.half * lane + 3, b.y);
+          context.lineTo(b.center + b.half * lane - 3, b.y);
+          context.closePath();
+          context.fill();
+        });
+      }
+    }
+
+    function drawFinishLine(context, roadPoint, session) {
+      const remaining = session.track.length - session.player.distance;
+      if (remaining < 0 || remaining > 700) return;
+      const depth = 1 - remaining / 700;
+      const point = roadPoint(depth);
+      const next = roadPoint(Math.min(1, depth + 0.025));
+      const squares = 12;
+
+      for (let index = 0; index < squares; index += 1) {
+        const leftA = point.center - point.half + point.half * 2 * index / squares;
+        const rightA = point.center - point.half + point.half * 2 * (index + 1) / squares;
+        const leftB = next.center - next.half + next.half * 2 * index / squares;
+        const rightB = next.center - next.half + next.half * 2 * (index + 1) / squares;
+        context.fillStyle = index % 2 === 0 ? "#fff" : "#111";
+        context.beginPath();
+        context.moveTo(leftA, point.y);
+        context.lineTo(rightA, point.y);
+        context.lineTo(rightB, next.y);
+        context.lineTo(leftB, next.y);
+        context.closePath();
+        context.fill();
+      }
+    }
+
+    function drawRivals(context, roadPoint, session) {
+      session.rivals
+        .map((rival) => ({ rival, relative: rival.distance - session.player.distance }))
+        .filter(({ relative }) => relative > -18 && relative < 900)
+        .sort((a, b) => b.relative - a.relative)
+        .forEach(({ rival, relative }) => {
+          const depth = clamp(1 - relative / 900, 0.04, 0.93);
+          const point = roadPoint(depth);
+          const size = 18 + depth * 72;
+          const x = point.center + rival.lane * point.half * 0.72;
+          drawCanvasCar(context, x, point.y, size, rival.car.color, 0, false);
+          context.fillStyle = "rgb(0 0 0 / 55%)";
+          context.fillRect(x - size * 0.46, point.y + size * 0.14, size * 0.92, Math.max(10, size * 0.18));
+          context.fillStyle = "#fff";
+          context.font = `800 ${Math.max(7, size * 0.11)}px system-ui`;
+          context.textAlign = "center";
+          context.fillText(rival.car.name, x, point.y + size * 0.27);
+        });
+    }
+
+    function drawPlayerCar(context, width, height, car, input) {
+      const steer = (input.right ? 1 : 0) - (input.left ? 1 : 0);
+      drawCanvasCar(context, width / 2 + steer * 9, height * 0.86, Math.min(150, width * 0.22), car.color, steer * 0.08, true);
+    }
+
+    function drawCanvasCar(context, x, y, size, color, rotation, isPlayer) {
+      context.save();
+      context.translate(x, y);
+      context.rotate(rotation);
+      context.shadowColor = "rgb(0 0 0 / 55%)";
+      context.shadowBlur = isPlayer ? 22 : 9;
+      context.shadowOffsetY = isPlayer ? 16 : 6;
+
+      context.fillStyle = "#080a0e";
+      context.fillRect(-size * 0.48, -size * 0.04, size * 0.18, size * 0.35);
+      context.fillRect(size * 0.3, -size * 0.04, size * 0.18, size * 0.35);
+
+      context.fillStyle = color;
+      context.beginPath();
+      context.moveTo(-size * 0.48, size * 0.2);
+      context.lineTo(-size * 0.38, -size * 0.28);
+      context.lineTo(-size * 0.22, -size * 0.48);
+      context.lineTo(size * 0.22, -size * 0.48);
+      context.lineTo(size * 0.38, -size * 0.28);
+      context.lineTo(size * 0.48, size * 0.2);
+      context.lineTo(size * 0.36, size * 0.35);
+      context.lineTo(-size * 0.36, size * 0.35);
+      context.closePath();
+      context.fill();
+
+      context.shadowColor = "transparent";
+      context.fillStyle = "#172938";
+      context.beginPath();
+      context.moveTo(-size * 0.2, -size * 0.39);
+      context.lineTo(size * 0.2, -size * 0.39);
+      context.lineTo(size * 0.3, -size * 0.12);
+      context.lineTo(-size * 0.3, -size * 0.12);
+      context.closePath();
+      context.fill();
+
+      context.fillStyle = "#ff344d";
+      context.fillRect(-size * 0.35, size * 0.12, size * 0.15, size * 0.07);
+      context.fillRect(size * 0.2, size * 0.12, size * 0.15, size * 0.07);
+      context.fillStyle = "#15171d";
+      context.fillRect(-size * 0.18, size * 0.23, size * 0.36, size * 0.07);
+      context.restore();
+    }
+
+    function drawSpeedLines(context, width, height, speed) {
+      if (speed < 230) return;
+      const strength = clamp((speed - 230) / 100, 0, 1);
+      context.strokeStyle = `rgb(255 255 255 / ${0.12 + strength * 0.2})`;
+      context.lineWidth = 2;
+      for (let index = 0; index < 16; index += 1) {
+        const x = (index * 83 + speed * 2) % width;
+        const y = height * 0.25 + (index % 6) * height * 0.1;
+        context.beginPath();
+        context.moveTo(x, y);
+        context.lineTo(x + (index < 8 ? -1 : 1) * (25 + strength * 55), y + 20);
+        context.stroke();
+      }
+    }
+
+    function getRoadCurve(distance, track) {
+      const base = Math.sin(distance / 310) * 0.72 + Math.sin(distance / 125) * 0.22;
+      if (track === TRACKS.desert) return base * 0.72;
+      if (track === TRACKS.alpine) return base * 1.2;
+      return base;
+    }
+
+    function clamp(value, minimum, maximum) {
+      return Math.max(minimum, Math.min(maximum, value));
     }
 
     function showToast(message) {

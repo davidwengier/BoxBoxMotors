@@ -8,7 +8,8 @@ A mobile-friendly car pack opening and racing game for the browser.
 - Collect 12 fictional cars across four rarity tiers.
 - Pull duplicates to level up cars and improve their stats.
 - Select any owned car from the garage.
-- Race on three circuits and use nitro to compete for credits.
+- Drive from a behind-the-car view with steering, throttle, and braking.
+- Race three AI opponents across three circuits to earn credits.
 - Progress is saved in browser `localStorage`.
 
 ## Technology
