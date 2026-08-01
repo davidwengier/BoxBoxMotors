@@ -743,6 +743,28 @@
       font-size: 0.8rem;
     }
 
+    .license-info {
+      min-height: 38px;
+      margin-top: 12px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #171d29;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .license-info strong {
+      color: var(--text);
+    }
+
+    .license-info.locked {
+      border-color: #66561c;
+      color: #c8b461;
+    }
+
     .track-panel {
       position: relative;
       min-height: 560px;
@@ -1427,9 +1449,9 @@
       <div class="section-heading">
         <div>
           <p class="kicker">Earn more credits</p>
-          <h2>Race night</h2>
+          <h2>Time attack</h2>
         </div>
-        <p class="section-copy">Drive from behind the wheel: steer through sweeping roads, control the throttle, brake for the bends, and beat three AI rivals.</p>
+        <p class="section-copy">Set the fastest time you can. Better laps pay more credits, and advanced circuit licenses unlock tougher tracks with bigger rewards.</p>
       </div>
 
       <div class="race-setup">
@@ -1438,25 +1460,22 @@
           <div class="setup-card">
             <label for="trackSelect">Choose a circuit</label>
             <select id="trackSelect" class="track-select">
-              <option value="neon">Neon Strip — Balanced</option>
-              <option value="desert">Dust Valley — Speed</option>
-              <option value="alpine">Alpine Rush — Grip</option>
+              <option value="neon">Neon Strip</option>
+              <option value="desert">Dust Valley</option>
+              <option value="alpine">Alpine Rush</option>
             </select>
-            <div class="race-prizes">
-              <span><strong>600</strong>1st</span>
-              <span><strong>400</strong>2nd</span>
-              <span><strong>150+</strong>Finish</span>
-            </div>
+            <div id="licenseInfo" class="license-info"></div>
+            <div id="racePrizes" class="race-prizes"></div>
           </div>
-          <button id="startRaceButton" class="primary-button" type="button">Start race</button>
+          <button id="startRaceButton" class="primary-button" type="button">Start time trial</button>
         </aside>
 
         <div class="track-panel">
           <canvas id="raceCanvas" class="race-canvas" aria-label="Behind-the-car racing game"></canvas>
           <div class="race-hud">
             <div class="position-hud">
-              Position
-              <strong id="positionDisplay">1 / 4</strong>
+              Lap time
+              <strong id="positionDisplay">0:00.000</strong>
             </div>
             <div class="race-progress">
               <div class="race-progress-label"><span>Progress</span><span id="progressDisplay">0%</span></div>
@@ -1481,9 +1500,9 @@
           </div>
           <div id="raceResult" class="race-result">
             <div>
-              <h3 id="raceResultTitle">1st place</h3>
+              <h3 id="raceResultTitle">Lap complete</h3>
               <p id="raceResultCopy">Prize: <strong>500 credits</strong></p>
-              <button id="raceAgainButton" class="primary-button" type="button">Race again</button>
+              <button id="raceAgainButton" class="primary-button" type="button">Run again</button>
             </div>
           </div>
         </div>
@@ -1568,7 +1587,10 @@
         skyBottom: "#e45c87",
         ground: "#22203b",
         road: "#242833",
-        edge: "#21e6ff"
+        edge: "#21e6ff",
+        licenseCost: 0,
+        targets: [42, 52, 65],
+        payouts: [650, 450, 275, 150]
       },
       desert: {
         keyStat: "speed",
@@ -1578,7 +1600,10 @@
         skyBottom: "#f6aa61",
         ground: "#b66c35",
         road: "#45434a",
-        edge: "#ffcc33"
+        edge: "#ffcc33",
+        licenseCost: 1500,
+        targets: [46, 57, 70],
+        payouts: [1100, 750, 450, 250]
       },
       alpine: {
         keyStat: "grip",
@@ -1588,7 +1613,10 @@
         skyBottom: "#e8d8e4",
         ground: "#476853",
         road: "#3b414a",
-        edge: "#f5f8ff"
+        edge: "#f5f8ff",
+        licenseCost: 4000,
+        targets: [44, 56, 72],
+        payouts: [1800, 1200, 700, 350]
       }
     };
 
@@ -1596,6 +1624,8 @@
       credits: 1200,
       collection: { "metro-zip": 1 },
       selectedCarId: "metro-zip",
+      licenses: ["neon"],
+      bestTimes: {},
       wins: 0,
       races: 0
     };
@@ -1618,6 +1648,8 @@
     const garageSummary = document.querySelector("#garageSummary");
     const selectedRacer = document.querySelector("#selectedRacer");
     const trackSelect = document.querySelector("#trackSelect");
+    const licenseInfo = document.querySelector("#licenseInfo");
+    const racePrizes = document.querySelector("#racePrizes");
     const startRaceButton = document.querySelector("#startRaceButton");
     const raceCanvas = document.querySelector("#raceCanvas");
     const raceContext = raceCanvas.getContext("2d");
@@ -1661,9 +1693,12 @@
     });
 
     trackSelect.addEventListener("change", () => {
-      if (!raceRunning) renderRacePreview();
+      if (!raceRunning) {
+        renderTrackDetails();
+        renderRacePreview();
+      }
     });
-    startRaceButton.addEventListener("click", startRace);
+    startRaceButton.addEventListener("click", handleRaceAction);
     raceAgainButton.addEventListener("click", resetRace);
 
     document.addEventListener("keydown", (event) => {
@@ -1728,6 +1763,12 @@
           credits: validNumber(saved.credits, defaultState.credits),
           collection,
           selectedCarId: collection[saved.selectedCarId] ? saved.selectedCarId : Object.keys(collection)[0],
+          licenses: Array.from(new Set(["neon", ...(Array.isArray(saved.licenses) ? saved.licenses : [])]))
+            .filter((id) => TRACKS[id]),
+          bestTimes: Object.fromEntries(
+            Object.entries(saved.bestTimes ?? {})
+              .filter(([id, time]) => TRACKS[id] && Number.isFinite(time) && time > 0)
+          ),
           wins: validNumber(saved.wins, 0),
           races: validNumber(saved.races, 0)
         };
@@ -1751,6 +1792,7 @@
       renderPacks();
       renderGarage();
       renderSelectedRacer();
+      renderTrackDetails();
     }
 
     function renderPacks() {
@@ -1994,49 +2036,75 @@
       `;
     }
 
+    function renderTrackDetails() {
+      const trackId = trackSelect.value;
+      const track = TRACKS[trackId];
+      const licensed = state.licenses.includes(trackId);
+      const bestTime = state.bestTimes[trackId];
+
+      licenseInfo.classList.toggle("locked", !licensed);
+      licenseInfo.innerHTML = licensed
+        ? `<strong>Licensed</strong> · Best: ${bestTime ? formatLapTime(bestTime) : "No time set"}`
+        : `<strong>🔒 License required</strong> · 🪙 ${track.licenseCost.toLocaleString()}`;
+
+      racePrizes.innerHTML = `
+        <span><strong>${formatTarget(track.targets[0])}</strong>🪙 ${track.payouts[0]}</span>
+        <span><strong>${formatTarget(track.targets[1])}</strong>🪙 ${track.payouts[1]}</span>
+        <span><strong>${formatTarget(track.targets[2])}</strong>🪙 ${track.payouts[2]}</span>
+      `;
+
+      startRaceButton.textContent = licensed
+        ? "Start time trial"
+        : `Buy license · 🪙 ${track.licenseCost.toLocaleString()}`;
+      startRaceButton.disabled = !licensed && state.credits < track.licenseCost;
+    }
+
+    function handleRaceAction() {
+      const trackId = trackSelect.value;
+      const track = TRACKS[trackId];
+      if (state.licenses.includes(trackId)) {
+        startRace();
+        return;
+      }
+
+      if (state.credits < track.licenseCost) {
+        showToast(`You need ${track.licenseCost.toLocaleString()} credits for this license.`);
+        return;
+      }
+
+      state.credits -= track.licenseCost;
+      state.licenses.push(trackId);
+      saveState();
+      renderAll();
+      renderRacePreview();
+      showToast(`${track.label} license purchased!`);
+    }
+
     function resetRace() {
       raceGeneration += 1;
       cancelAnimationFrame(raceFrame);
       raceRunning = false;
       raceSession = null;
       clearDrivingInput();
-      startRaceButton.disabled = false;
       raceResult.classList.remove("active");
-      raceStatus.textContent = "Ready on the grid";
+      raceStatus.textContent = "Ready for a flying lap";
       speedDisplay.textContent = "0";
       speedometer.style.setProperty("--speed-angle", "0deg");
-      positionDisplay.textContent = "1 / 4";
+      positionDisplay.textContent = "0:00.000";
       progressDisplay.textContent = "0%";
       progressFill.style.width = "0%";
+      renderTrackDetails();
       renderRacePreview();
     }
 
     function renderRacePreview() {
       const player = getCar(state.selectedCarId);
-      const rivals = chooseRivals(player);
       const preview = {
         track: TRACKS[trackSelect.value],
         player: { car: player, distance: 0, speed: 0, x: 0 },
-        rivals: rivals.map((car, index) => ({
-          car,
-          distance: 105 - index * 33,
-          speed: 0,
-          lane: [-0.52, 0.48, 0][index]
-        }))
+        rivals: []
       };
       drawRaceScene(preview);
-    }
-
-    function chooseRivals(player) {
-      const playerPower = getPower(getLeveledStats(player, state.collection[player.id]));
-      return CARS.filter((car) => car.id !== player.id)
-        .map((car) => ({
-          car,
-          distance: Math.abs(getPower(getLeveledStats(car, 1)) - playerPower) + Math.random() * 18
-        }))
-        .sort((a, b) => a.distance - b.distance)
-        .slice(0, 3)
-        .map((entry) => entry.car);
     }
 
     async function startRace() {
@@ -2047,7 +2115,7 @@
       raceRunning = true;
       startRaceButton.disabled = true;
       raceSession = createRaceSession();
-      raceStatus.textContent = `${raceSession.track.label} · Get ready`;
+      raceStatus.textContent = `${raceSession.track.label} · Time trial`;
       drawRaceScene(raceSession);
 
       for (const value of ["3", "2", "1", "GO!"]) {
@@ -2061,6 +2129,7 @@
 
       if (generation !== raceGeneration) return;
       countdown.classList.remove("active");
+      raceSession.startTime = performance.now();
       raceSession.lastTime = performance.now();
       runRace(generation);
     }
@@ -2073,20 +2142,6 @@
       const playerCar = getCar(state.selectedCarId);
       const track = TRACKS[trackSelect.value];
       const playerStats = getLeveledStats(playerCar, state.collection[playerCar.id]);
-      const rivals = chooseRivals(playerCar).map((car, index) => {
-        const stats = getLeveledStats(car, 1);
-        const power = getPower(stats);
-        return {
-          id: `rival-${index}`,
-          car,
-          stats,
-          distance: -7 - index * 5,
-          speed: 0,
-          lane: [-0.5, 0.46, 0][index],
-          targetSpeed: 174 + power * 1.35 + Math.random() * 13,
-          finished: false
-        };
-      });
 
       return {
         track,
@@ -2099,9 +2154,10 @@
           x: 0,
           finished: false
         },
-        rivals,
-        finishOrder: [],
+        rivals: [],
         checkpoint: 0,
+        elapsed: 0,
+        startTime: 0,
         lastTime: performance.now()
       };
     }
@@ -2125,16 +2181,15 @@
     }
 
     function updateRacePhysics(delta) {
-      const { player, rivals, track } = raceSession;
+      const { player, track } = raceSession;
       const stats = player.stats;
-      const keyBonus = stats[track.keyStat] * 0.13;
-      const topSpeed = 185 + stats.speed * 1.55 + keyBonus;
+      const topSpeed = getTopSpeed(stats, track);
       const throttle = drivingInput.throttle ? 1 : 0;
       const brake = drivingInput.brake ? 1 : 0;
       const steer = (drivingInput.right ? 1 : 0) - (drivingInput.left ? 1 : 0);
 
       if (throttle) {
-        const acceleration = 33 + stats.acceleration * 0.48;
+        const acceleration = 52 + stats.acceleration * 0.62;
         player.speed += acceleration * (1 - player.speed / (topSpeed * 1.22)) * delta;
       } else {
         player.speed -= 17 * delta;
@@ -2151,33 +2206,24 @@
 
       const offRoad = Math.abs(player.x) > 1;
       if (offRoad) {
-        player.speed = Math.max(0, player.speed - 82 * delta);
+        player.speed = Math.max(0, player.speed - 48 * delta);
         raceStatus.textContent = "OFF ROAD · Steer back!";
       }
 
       player.distance += player.speed / 3.6 * delta;
+      raceSession.elapsed = (performance.now() - raceSession.startTime) / 1000;
 
-      rivals.forEach((rival, index) => {
-        const trackBonus = rival.stats[track.keyStat] * 0.12;
-        const bendPenalty = Math.abs(getRoadCurve(rival.distance, track)) * (100 - rival.stats.grip) * 0.18;
-        const desiredSpeed = rival.targetSpeed + trackBonus - bendPenalty;
-        rival.speed += (desiredSpeed - rival.speed) * Math.min(1, delta * 0.72);
-        rival.distance += rival.speed / 3.6 * delta;
-        rival.lane += Math.sin(rival.distance / 180 + index * 2.1) * delta * 0.08;
-        rival.lane = clamp(rival.lane, -0.62, 0.62);
-
-        const closeAhead = rival.distance - player.distance;
-        if (closeAhead > -2 && closeAhead < 8 && Math.abs(rival.lane - player.x * 0.55) < 0.25) {
-          player.speed *= Math.pow(0.72, delta);
-          player.x += player.x <= rival.lane ? -0.25 * delta : 0.25 * delta;
-        }
-      });
-
-      recordFinishers();
+      if (player.distance >= track.length) {
+        player.finished = true;
+        finishRace(raceSession.elapsed);
+        return;
+      }
 
       if (!offRoad) {
-        const position = getPlayerPosition();
-        raceStatus.textContent = position === 1 ? "1st place · Keep pushing!" : `${ordinal(position)} place · Chase them down`;
+        const nextTarget = track.targets.find((target) => raceSession.elapsed <= target);
+        raceStatus.textContent = nextTarget
+          ? `Target pace · Under ${formatTarget(nextTarget)}`
+          : "Finish the lap for a base reward";
       }
 
       const checkpoint = Math.min(3, Math.floor(player.distance / track.length * 4));
@@ -2187,59 +2233,41 @@
       }
     }
 
-    function recordFinishers() {
-      const racers = [...raceSession.rivals, raceSession.player]
-        .filter((racer) => !racer.finished && racer.distance >= raceSession.track.length)
-        .sort((a, b) => b.distance - a.distance);
-
-      racers.forEach((racer) => {
-        racer.finished = true;
-        raceSession.finishOrder.push(racer.id);
-        if (racer.id === "player") finishRace(raceSession.finishOrder.length);
-      });
-    }
-
-    function getPlayerPosition() {
-      const playerDistance = raceSession.player.distance;
-      return 1 + raceSession.rivals.filter((rival) => rival.distance > playerDistance).length;
-    }
-
     function updateRaceHud() {
       const { player, track } = raceSession;
       const progress = clamp(player.distance / track.length * 100, 0, 100);
-      const topSpeed = 185 + player.stats.speed * 1.7;
+      const topSpeed = getTopSpeed(player.stats, track);
       speedDisplay.textContent = Math.round(player.speed);
       speedometer.style.setProperty("--speed-angle", `${Math.min(270, player.speed / topSpeed * 270)}deg`);
-      positionDisplay.textContent = `${getPlayerPosition()} / 4`;
+      positionDisplay.textContent = formatLapTime(raceSession.elapsed);
       progressDisplay.textContent = `${Math.floor(progress)}%`;
       progressFill.style.width = `${progress}%`;
     }
 
-    function finishRace(place) {
+    function finishRace(lapTime) {
       raceRunning = false;
       cancelAnimationFrame(raceFrame);
       clearDrivingInput();
 
-      const prizes = [600, 400, 250, 150];
-      const prize = prizes[place - 1];
+      const trackId = trackSelect.value;
+      const track = TRACKS[trackId];
+      const tier = track.targets.findIndex((target) => lapTime <= target);
+      const payoutIndex = tier === -1 ? 3 : tier;
+      const prize = track.payouts[payoutIndex];
+      const previousBest = state.bestTimes[trackId];
+      const isPersonalBest = !previousBest || lapTime < previousBest;
 
       state.credits += prize;
       state.races += 1;
-      if (place === 1) state.wins += 1;
+      if (tier === 0) state.wins += 1;
+      if (isPersonalBest) state.bestTimes[trackId] = lapTime;
       saveState();
       renderAll();
 
-      raceResultTitle.textContent = `${ordinal(place)} place`;
-      raceResultCopy.innerHTML = `Prize: <strong>${prize.toLocaleString()} credits</strong>${place === 1 ? " · Victory!" : ""}`;
+      raceResultTitle.textContent = formatLapTime(lapTime);
+      raceResultCopy.innerHTML = `${getTimeTierName(payoutIndex)} · <strong>${prize.toLocaleString()} credits</strong>${isPersonalBest ? " · New personal best!" : ""}`;
       raceResult.classList.add("active");
       raceStatus.textContent = "Finish line";
-    }
-
-    function ordinal(value) {
-      if (value === 1) return "1st";
-      if (value === 2) return "2nd";
-      if (value === 3) return "3rd";
-      return `${value}th`;
     }
 
     function keyToControl(code) {
@@ -2559,6 +2587,28 @@
       if (track === TRACKS.desert) return base * 0.72;
       if (track === TRACKS.alpine) return base * 1.2;
       return base;
+    }
+
+    function getTopSpeed(stats, track) {
+      return 195 + stats.speed * 1.55 + stats[track.keyStat] * 0.13;
+    }
+
+    function formatLapTime(totalSeconds) {
+      const safeSeconds = Math.max(0, totalSeconds);
+      const minutes = Math.floor(safeSeconds / 60);
+      const seconds = Math.floor(safeSeconds % 60);
+      const milliseconds = Math.floor((safeSeconds % 1) * 1000);
+      return `${minutes}:${String(seconds).padStart(2, "0")}.${String(milliseconds).padStart(3, "0")}`;
+    }
+
+    function formatTarget(totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return minutes > 0 ? `< ${minutes}:${String(seconds).padStart(2, "0")}` : `< ${seconds}s`;
+    }
+
+    function getTimeTierName(index) {
+      return ["Gold time", "Silver time", "Bronze time", "Completed"][index];
     }
 
     function clamp(value, minimum, maximum) {
