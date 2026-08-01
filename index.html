@@ -97,12 +97,29 @@
       height: 46px;
       display: grid;
       place-items: center;
-      border: 2px solid var(--cyan);
-      border-radius: 14px;
-      background: rgb(33 230 255 / 10%);
-      box-shadow: 0 0 24px rgb(33 230 255 / 20%);
-      font-size: 1.5rem;
-      transform: rotate(-5deg);
+      overflow: hidden;
+      border: 3px solid #04070b;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, #101722 0 32%, transparent 33%),
+        conic-gradient(from 15deg, var(--cyan) 0 13%, #111722 13% 25%, var(--pink) 25% 38%, #111722 38% 50%, var(--cyan) 50% 63%, #111722 63% 75%, var(--pink) 75% 88%, #111722 88%);
+      box-shadow: 0 0 0 2px var(--cyan), 0 0 24px rgb(33 230 255 / 24%);
+      transform: rotate(-8deg);
+    }
+
+    .brand-mark span {
+      display: grid;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      border-radius: 50%;
+      background: #06090e;
+      color: #fff;
+      font-size: 0.7rem;
+      font-style: italic;
+      font-weight: 1000;
+      letter-spacing: -0.08em;
+      transform: rotate(8deg);
     }
 
     .brand h1 {
@@ -360,6 +377,21 @@
       font-size: 2rem;
       font-style: italic;
       font-weight: 1000;
+    }
+
+    .box-body .brick-pack-logo {
+      width: 84px;
+      height: 58px;
+      border: 4px solid #090b10;
+      border-radius: 6px;
+      background:
+        radial-gradient(circle, #ff6c70 0 5px, #b91620 5.5px 8px, transparent 8.5px) 4px -4px / 24px 22px,
+        #e52a32;
+      box-shadow: inset 0 -9px rgb(0 0 0 / 22%);
+      color: #fff;
+      font-size: 0.62rem;
+      letter-spacing: 0.04em;
+      text-shadow: 1px 1px #7c0d13;
     }
 
     .pack-tier {
@@ -1667,7 +1699,7 @@
   <main class="app">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark">🏁</div>
+        <div class="brand-mark" aria-label="Box Box Racing logo"><span>BB</span></div>
         <div>
           <h1>Box Box <span>Racing</span></h1>
           <p>Collect. Tune. Race.</p>
@@ -1919,16 +1951,16 @@
       makeCar("lego-lotus-evija", "LEGO Lotus Evija", "Lotus", "epic", "Brick-Built Hypercar", "europe", "brick", "#e7c72d", 84, 91, 79, "lego"),
       makeCar("lego-toyota-supra", "LEGO Toyota GR Supra", "Toyota", "epic", "Brick-Built Sports", "japan", "brick", "#f2c52b", 80, 82, 76, "lego"),
 
-      makeCar("ff-toyota-supra", "Fast & Furious Toyota Supra Mk IV", "Toyota", "legendary", "Movie Hero Car", "japan", "supercar", "#ef812f", 92, 91, 84, "fast"),
-      makeCar("ff-honda-civic", "Fast & Furious Honda Civic EJ1", "Honda", "common", "Movie Street Car", "japan", "sedan", "#202329", 63, 72, 66, "fast"),
-      makeCar("ff-honda-s2000", "Fast & Furious Honda S2000", "Honda", "rare", "Movie Roadster", "japan", "roadster", "#ef4b9a", 76, 81, 73, "fast"),
-      makeCar("ff-acura-nsx", "Fast & Furious Acura NSX", "Acura", "epic", "Movie Supercar", "japan", "supercar", "#2e333c", 85, 86, 82, "fast"),
-      makeCar("ff-ford-mustang", "Fast & Furious Ford Mustang Fastback", "Ford", "epic", "Drift Movie Car", "usa", "muscle", "#4b5968", 82, 78, 69, "fast"),
-      makeCar("ff-ford-escort", "Fast & Furious Ford Escort RS1600", "Ford", "rare", "Movie Rally Car", "usa", "hatch", "#4288cf", 72, 79, 78, "fast"),
-      makeCar("ff-chevelle", "Fast & Furious Chevrolet Chevelle SS", "Chevrolet", "rare", "Movie Muscle", "usa", "muscle", "#35383b", 78, 75, 65, "fast"),
-      makeCar("ff-yenko-camaro", "Fast & Furious Chevrolet Camaro Yenko", "Chevrolet", "epic", "Movie Muscle", "usa", "muscle", "#3774c8", 84, 80, 70, "fast"),
-      makeCar("ff-f150-lightning", "Fast & Furious Ford F-150 Lightning", "Ford", "rare", "Movie Truck", "usa", "suv", "#e74a42", 70, 73, 65, "fast"),
-      makeCar("ff-corvette-grand-sport", "Fast & Furious Chevrolet Corvette Grand Sport", "Chevrolet", "epic", "Movie Supercar", "usa", "supercar", "#4b99cb", 86, 84, 80, "fast")
+      makeCar("ff-toyota-supra", "Fast & Furious 1994 Toyota Supra Mk IV", "Toyota", "legendary", "Brian's Hero Car", "japan", "supercar", "#ef812f", 92, 91, 84, "fast"),
+      makeCar("ff-honda-civic", "Fast & Furious 1993 Honda Civic EJ1", "Honda", "common", "Heist Street Car", "japan", "sedan", "#202329", 63, 72, 66, "fast"),
+      makeCar("ff-honda-s2000", "Fast & Furious 2000 Honda S2000", "Honda", "rare", "Suki's Roadster", "japan", "roadster", "#ef4b9a", 76, 81, 73, "fast"),
+      makeCar("ff-acura-nsx", "Fast & Furious 2003 Acura NSX", "Acura", "epic", "Mia's Supercar", "japan", "supercar", "#2e333c", 85, 86, 82, "fast"),
+      makeCar("ff-ford-mustang", "Fast & Furious 1967 Ford Mustang Fastback", "Ford", "epic", "Tokyo Drift Car", "usa", "muscle", "#4b5968", 82, 78, 69, "fast"),
+      makeCar("ff-ford-escort", "Fast & Furious 1970 Ford Escort RS1600", "Ford", "rare", "Rally Movie Car", "usa", "hatch", "#4288cf", 72, 79, 78, "fast"),
+      makeCar("ff-chevelle", "Fast & Furious 1970 Chevrolet Chevelle SS", "Chevrolet", "rare", "Dom's Muscle Car", "usa", "muscle", "#35383b", 78, 75, 65, "fast"),
+      makeCar("ff-yenko-camaro", "Fast & Furious 1969 Chevrolet Camaro Yenko", "Chevrolet", "epic", "2 Fast Hero Car", "usa", "muscle", "#3774c8", 84, 80, 70, "fast"),
+      makeCar("ff-f150-lightning", "Fast & Furious 1999 Ford F-150 SVT Lightning", "Ford", "rare", "Brian's Workshop Truck", "usa", "suv", "#e74a42", 70, 73, 65, "fast"),
+      makeCar("ff-corvette-grand-sport", "Fast & Furious 1963 Chevrolet Corvette Grand Sport", "Chevrolet", "epic", "Fast Five Movie Car", "usa", "supercar", "#4b99cb", 86, 84, 80, "fast")
     ];
 
     const CARS = [...CORE_CARS, ...ADDITIONAL_CARS];
@@ -2080,7 +2112,7 @@
         tier: "Brick-built collection",
         description: "Ten blocky collectible versions with an exclusive brick body style.",
         price: 1000,
-        symbol: "🧱",
+        symbol: "4×2",
         color: "#f2d12b",
         series: "lego",
         odds: { common: 25, rare: 40, epic: 28, legendary: 7 }
@@ -2319,7 +2351,12 @@
     }
 
     function renderPacks() {
-      packGrid.innerHTML = PACKS.map((pack) => {
+      const packsByPrice = PACKS
+        .map((pack, originalIndex) => ({ pack, originalIndex }))
+        .sort((left, right) => left.pack.price - right.pack.price || left.originalIndex - right.originalIndex)
+        .map(({ pack }) => pack);
+
+      packGrid.innerHTML = packsByPrice.map((pack) => {
         const segments = Object.entries(pack.odds)
           .filter(([, chance]) => chance > 0)
           .map(([rarity, chance]) => `<span class="${rarity}" style="width:${chance}%"></span>`)
@@ -2329,7 +2366,7 @@
           <article class="pack ${pack.id}" style="--pack-color:${pack.color};--pack-glow:${pack.color}22">
             <div class="pack-art" aria-hidden="true">
               <div class="box-lid"></div>
-              <div class="box-body"><span>${pack.symbol}</span></div>
+              <div class="box-body"><span class="${pack.id === "lego" ? "brick-pack-logo" : ""}">${pack.symbol}</span></div>
             </div>
             <div class="pack-tier">${pack.tier}</div>
             <h3>${pack.name}</h3>
@@ -2490,7 +2527,9 @@
 
       openingBox.className = `opening-box ${pack.id}`;
       openingBox.style.setProperty("--pack-color", pack.color);
-      openingBox.querySelector(".box-body span").textContent = pack.symbol;
+      const openingSymbol = openingBox.querySelector(".box-body span");
+      openingSymbol.className = pack.id === "lego" ? "brick-pack-logo" : "";
+      openingSymbol.textContent = pack.symbol;
       openingBox.classList.remove("opening");
       openingBox.hidden = false;
       tapHint.hidden = false;
