@@ -4,8 +4,9 @@ A mobile-friendly car pack opening and racing game for the browser.
 
 ## Gameplay
 
-- Buy Street, Sport, and Elite car packs.
-- Collect 12 fictional cars across four rarity tiers.
+- Buy six packs, including JDM, European, American muscle, and hypercar collections.
+- Collect 22 real production cars across four rarity tiers.
+- Cars use distinct hatchback, SUV, roadster, sedan, muscle, supercar, and hypercar shapes.
 - Pull duplicates to level up cars and improve their stats.
 - Select any owned car from the garage.
 - Drive time trials from a behind-the-car view with steering, throttle, and braking.

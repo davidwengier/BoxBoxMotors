@@ -571,6 +571,90 @@
       transform: skewX(-10deg);
     }
 
+    .car.hatch .car-cabin {
+      top: 0;
+      left: 31px;
+      width: 87px;
+      height: 33px;
+      border-radius: 27px 18px 0 0;
+    }
+
+    .car.suv {
+      height: 66px;
+    }
+
+    .car.suv .car-body {
+      height: 39px;
+      border-radius: 12px 18px 8px 8px;
+    }
+
+    .car.suv .car-cabin {
+      top: 0;
+      left: 29px;
+      width: 91px;
+      height: 36px;
+      border-radius: 17px 18px 0 0;
+      transform: none;
+    }
+
+    .car.roadster .car-cabin {
+      top: 16px;
+      left: 55px;
+      width: 48px;
+      height: 17px;
+      border-radius: 22px 20px 0 0;
+    }
+
+    .car.roadster .car-body {
+      height: 29px;
+      border-radius: 13px 39px 8px 12px;
+    }
+
+    .car.sedan .car-cabin {
+      left: 39px;
+      width: 77px;
+      border-radius: 25px 20px 0 0;
+    }
+
+    .car.muscle .car-cabin {
+      top: 8px;
+      left: 61px;
+      width: 53px;
+      height: 25px;
+      border-radius: 10px 16px 0 0;
+    }
+
+    .car.muscle .car-body {
+      height: 31px;
+      border-radius: 8px 20px 7px 7px;
+    }
+
+    .car.supercar,
+    .car.hypercar {
+      height: 48px;
+    }
+
+    .car.supercar .car-cabin,
+    .car.hypercar .car-cabin {
+      top: 12px;
+      left: 52px;
+      width: 58px;
+      height: 20px;
+      border-radius: 30px 24px 0 0;
+    }
+
+    .car.supercar .car-body,
+    .car.hypercar .car-body {
+      height: 25px;
+      border-radius: 12px 45px 7px 14px;
+    }
+
+    .car.hypercar .car-body {
+      background:
+        linear-gradient(100deg, transparent 0 58%, rgb(8 10 15 / 35%) 59% 66%, rgb(255 255 255 / 23%) 67% 73%, transparent 74%),
+        var(--car-color);
+    }
+
     .wheel {
       position: absolute;
       z-index: 3;
@@ -1534,47 +1618,93 @@
     };
 
     const CARS = [
-      { id: "metro-zip", name: "Metro Zip", rarity: "common", class: "City", color: "#f05b62", speed: 48, acceleration: 63, grip: 65 },
-      { id: "dust-runner", name: "Dust Runner", rarity: "common", class: "Rally", color: "#e39a42", speed: 56, acceleration: 54, grip: 62 },
-      { id: "pocket-rocket", name: "Pocket Rocket", rarity: "common", class: "Sport", color: "#4cd985", speed: 62, acceleration: 59, grip: 48 },
-      { id: "night-fox", name: "Night Fox", rarity: "rare", class: "Street", color: "#5b61ed", speed: 70, acceleration: 69, grip: 62 },
-      { id: "rally-bee", name: "Rally Bee", rarity: "rare", class: "Rally", color: "#ffd129", speed: 65, acceleration: 72, grip: 74 },
-      { id: "neon-viper", name: "Neon Viper", rarity: "rare", class: "Tuner", color: "#1fe0e5", speed: 76, acceleration: 68, grip: 61 },
-      { id: "apex-r", name: "Apex R", rarity: "epic", class: "Track", color: "#f23c85", speed: 84, acceleration: 79, grip: 81 },
-      { id: "thunder-gt", name: "Thunder GT", rarity: "epic", class: "Grand Tourer", color: "#7684ff", speed: 88, acceleration: 75, grip: 73 },
-      { id: "solar-drift", name: "Solar Drift", rarity: "epic", class: "Drift", color: "#ff7426", speed: 80, acceleration: 86, grip: 78 },
-      { id: "crimson-wraith", name: "Crimson Wraith", rarity: "legendary", class: "Hyper", color: "#ff223e", speed: 96, acceleration: 92, grip: 87 },
-      { id: "tempest-x", name: "Tempest X", rarity: "legendary", class: "Prototype", color: "#b14dff", speed: 93, acceleration: 96, grip: 91 },
-      { id: "aurora-one", name: "Aurora One", rarity: "legendary", class: "Electric", color: "#e9faff", speed: 94, acceleration: 94, grip: 95 }
+      { id: "metro-zip", name: "Volkswagen Golf GTI", rarity: "common", class: "Hot Hatch", origin: "europe", body: "hatch", color: "#f05b62", speed: 48, acceleration: 63, grip: 65 },
+      { id: "dust-runner", name: "Ford Bronco", rarity: "common", class: "Off-Road SUV", origin: "usa", body: "suv", color: "#e39a42", speed: 56, acceleration: 54, grip: 62 },
+      { id: "pocket-rocket", name: "Mazda MX-5 Miata", rarity: "common", class: "Roadster", origin: "japan", body: "roadster", color: "#df3445", speed: 62, acceleration: 59, grip: 68 },
+      { id: "civic-type-r", name: "Honda Civic Type R", rarity: "common", class: "Hot Hatch", origin: "japan", body: "hatch", color: "#f4f5f6", speed: 61, acceleration: 62, grip: 65 },
+      { id: "mini-cooper-s", name: "Mini Cooper S", rarity: "common", class: "Hot Hatch", origin: "europe", body: "hatch", color: "#43a96f", speed: 54, acceleration: 66, grip: 67 },
+      { id: "night-fox", name: "Nissan Skyline GT-R R34", rarity: "rare", class: "JDM Coupe", origin: "japan", body: "sedan", color: "#5b61ed", speed: 70, acceleration: 69, grip: 67 },
+      { id: "rally-bee", name: "Subaru Impreza WRX STI", rarity: "rare", class: "Rally Sedan", origin: "japan", body: "sedan", color: "#2368d8", speed: 65, acceleration: 72, grip: 74 },
+      { id: "neon-viper", name: "Toyota GR Supra", rarity: "rare", class: "Sports Coupe", origin: "japan", body: "supercar", color: "#f2c62d", speed: 76, acceleration: 68, grip: 66 },
+      { id: "bmw-m3", name: "BMW M3 Competition", rarity: "rare", class: "Sport Sedan", origin: "europe", body: "sedan", color: "#52a1e0", speed: 75, acceleration: 73, grip: 71 },
+      { id: "challenger-hellcat", name: "Dodge Challenger Hellcat", rarity: "rare", class: "Muscle", origin: "usa", body: "muscle", color: "#7fd13b", speed: 81, acceleration: 70, grip: 58 },
+      { id: "apex-r", name: "Porsche 911 GT3 RS", rarity: "epic", class: "Track Car", origin: "europe", body: "supercar", color: "#f23c85", speed: 84, acceleration: 79, grip: 86 },
+      { id: "thunder-gt", name: "Ford Mustang Shelby GT500", rarity: "epic", class: "Muscle", origin: "usa", body: "muscle", color: "#7684ff", speed: 88, acceleration: 75, grip: 70 },
+      { id: "solar-drift", name: "Mazda RX-7 FD", rarity: "epic", class: "JDM Sports", origin: "japan", body: "supercar", color: "#ff7426", speed: 80, acceleration: 86, grip: 78 },
+      { id: "corvette-c8", name: "Chevrolet Corvette C8", rarity: "epic", class: "Supercar", origin: "usa", body: "supercar", color: "#e8b323", speed: 86, acceleration: 83, grip: 80 },
+      { id: "audi-r8", name: "Audi R8 V10", rarity: "epic", class: "Supercar", origin: "europe", body: "supercar", color: "#a5afb9", speed: 88, acceleration: 82, grip: 82 },
+      { id: "crimson-wraith", name: "Ferrari SF90 Stradale", rarity: "legendary", class: "Hybrid Hypercar", origin: "europe", body: "hypercar", color: "#ff223e", speed: 96, acceleration: 92, grip: 87 },
+      { id: "tempest-x", name: "Lamborghini Revuelto", rarity: "legendary", class: "V12 Hypercar", origin: "europe", body: "hypercar", color: "#b14dff", speed: 93, acceleration: 96, grip: 91 },
+      { id: "aurora-one", name: "Rimac Nevera", rarity: "legendary", class: "Electric Hypercar", origin: "europe", body: "hypercar", color: "#e9faff", speed: 94, acceleration: 99, grip: 95 },
+      { id: "bugatti-chiron", name: "Bugatti Chiron Super Sport", rarity: "legendary", class: "Hypercar", origin: "europe", body: "hypercar", color: "#4c8ccf", speed: 100, acceleration: 91, grip: 88 },
+      { id: "mercedes-amg-one", name: "Mercedes-AMG ONE", rarity: "legendary", class: "Track Hypercar", origin: "europe", body: "hypercar", color: "#5bc5b5", speed: 97, acceleration: 95, grip: 99 },
+      { id: "gtr-nismo", name: "Nissan GT-R Nismo", rarity: "legendary", class: "JDM Supercar", origin: "japan", body: "supercar", color: "#d5d8dc", speed: 92, acceleration: 94, grip: 93 },
+      { id: "ford-gt", name: "Ford GT", rarity: "legendary", class: "Supercar", origin: "usa", body: "supercar", color: "#3472d4", speed: 95, acceleration: 91, grip: 92 }
     ];
 
     const PACKS = [
       {
         id: "street",
-        name: "Street Box",
-        tier: "Starter tier",
-        description: "Affordable rides with a chance to find something special.",
+        name: "Daily Driver Box",
+        tier: "Starter collection",
+        description: "Affordable real-world cars with a small chance of a major upgrade.",
         price: 300,
-        symbol: "S",
-        odds: { common: 65, rare: 28, epic: 6, legendary: 1 }
+        symbol: "D",
+        color: "#aeb8c8",
+        odds: { common: 68, rare: 26, epic: 5, legendary: 1 }
       },
       {
-        id: "sport",
-        name: "Sport Pack",
-        tier: "Performance tier",
-        description: "Better odds for rare and epic performance machines.",
-        price: 800,
+        id: "jdm",
+        name: "JDM Pack",
+        tier: "Japanese icons",
+        description: "Tuner legends from Honda, Mazda, Nissan, Subaru, and Toyota.",
+        price: 700,
+        symbol: "J",
+        color: "#ff4f63",
+        origins: ["japan"],
+        odds: { common: 30, rare: 48, epic: 18, legendary: 4 }
+      },
+      {
+        id: "euro",
+        name: "Euro Performance",
+        tier: "European performance",
+        description: "German precision, Italian drama, and some of Europe's fastest cars.",
+        price: 950,
+        symbol: "E",
+        color: "#39a4ff",
+        origins: ["europe"],
+        odds: { common: 18, rare: 42, epic: 30, legendary: 10 }
+      },
+      {
+        id: "muscle",
+        name: "American Muscle",
+        tier: "Power collection",
+        description: "Big engines and bold shapes from Ford, Dodge, and Chevrolet.",
+        price: 950,
+        symbol: "V8",
+        color: "#ff7b30",
+        origins: ["usa"],
+        odds: { common: 18, rare: 42, epic: 30, legendary: 10 }
+      },
+      {
+        id: "track",
+        name: "Track Day Pack",
+        tier: "Competition tier",
+        description: "Rare-or-better cars built to chase faster circuit times.",
+        price: 1600,
         symbol: "R",
-        odds: { common: 20, rare: 52, epic: 24, legendary: 4 }
+        color: "#b568ff",
+        odds: { common: 0, rare: 35, epic: 52, legendary: 13 }
       },
       {
-        id: "elite",
-        name: "Elite Vault",
-        tier: "Premium tier",
-        description: "Only rare or better. Your best shot at a legendary hypercar.",
-        price: 1800,
+        id: "hyper",
+        name: "Hypercar Vault",
+        tier: "Ultimate tier",
+        description: "A guaranteed legendary from the fastest road cars in the world.",
+        price: 3500,
         symbol: "X",
-        odds: { common: 0, rare: 35, epic: 48, legendary: 17 }
+        color: "#ffb62e",
+        odds: { common: 0, rare: 0, epic: 0, legendary: 100 }
       }
     ];
 
@@ -1803,7 +1933,7 @@
           .join("");
 
         return `
-          <article class="pack ${pack.id}">
+          <article class="pack ${pack.id}" style="--pack-color:${pack.color};--pack-glow:${pack.color}22">
             <div class="pack-art" aria-hidden="true">
               <div class="box-lid"></div>
               <div class="box-body"><span>${pack.symbol}</span></div>
@@ -1858,7 +1988,7 @@
 
     function createCarVisual(car) {
       return `
-        <div class="car" style="--car-color:${car.color}" aria-label="${car.name}">
+        <div class="car ${car.body}" style="--car-color:${car.color}" aria-label="${car.name}">
           <span class="car-cabin"></span>
           <span class="car-body"></span>
           <span class="wheel back"></span>
@@ -1933,7 +2063,7 @@
       renderAll();
 
       openingBox.className = `opening-box ${pack.id}`;
-      openingBox.style.setProperty("--pack-color", getPackColor(pack.id));
+      openingBox.style.setProperty("--pack-color", pack.color);
       openingBox.querySelector(".box-body span").textContent = pack.symbol;
       openingBox.classList.remove("opening");
       openingBox.hidden = false;
@@ -1941,12 +2071,6 @@
       revealCard.classList.remove("active");
       packModal.classList.add("active");
       openingBox.focus();
-    }
-
-    function getPackColor(packId) {
-      if (packId === "elite") return RARITY_COLORS.legendary;
-      if (packId === "sport") return RARITY_COLORS.rare;
-      return RARITY_COLORS.common;
     }
 
     function rollCar(pack) {
@@ -1962,7 +2086,10 @@
         }
       }
 
-      const choices = CARS.filter((car) => car.rarity === rarity);
+      const choices = CARS.filter((car) => (
+        car.rarity === rarity &&
+        (!pack.origins || pack.origins.includes(car.origin))
+      ));
       return choices[Math.floor(Math.random() * choices.length)];
     }
 
@@ -2508,7 +2635,7 @@
           const point = roadPoint(depth);
           const size = 18 + depth * 72;
           const x = point.center + rival.lane * point.half * 0.72;
-          drawCanvasCar(context, x, point.y, size, rival.car.color, 0, false);
+          drawCanvasCar(context, x, point.y, size, rival.car, 0, false);
           context.fillStyle = "rgb(0 0 0 / 55%)";
           context.fillRect(x - size * 0.46, point.y + size * 0.14, size * 0.92, Math.max(10, size * 0.18));
           context.fillStyle = "#fff";
@@ -2520,10 +2647,20 @@
 
     function drawPlayerCar(context, width, height, car, input) {
       const steer = (input.right ? 1 : 0) - (input.left ? 1 : 0);
-      drawCanvasCar(context, width / 2 + steer * 9, height * 0.86, Math.min(150, width * 0.22), car.color, steer * 0.08, true);
+      drawCanvasCar(context, width / 2 + steer * 9, height * 0.86, Math.min(150, width * 0.22), car, steer * 0.08, true);
     }
 
-    function drawCanvasCar(context, x, y, size, color, rotation, isPlayer) {
+    function drawCanvasCar(context, x, y, size, car, rotation, isPlayer) {
+      const profiles = {
+        hatch: { roofY: -0.55, roofHalf: 0.31, shoulderHalf: 0.42, bodyTop: -0.22, tail: 0.42 },
+        suv: { roofY: -0.62, roofHalf: 0.34, shoulderHalf: 0.44, bodyTop: -0.3, tail: 0.43 },
+        roadster: { roofY: -0.29, roofHalf: 0.18, shoulderHalf: 0.43, bodyTop: -0.18, tail: 0.38 },
+        sedan: { roofY: -0.49, roofHalf: 0.29, shoulderHalf: 0.43, bodyTop: -0.22, tail: 0.4 },
+        muscle: { roofY: -0.4, roofHalf: 0.23, shoulderHalf: 0.46, bodyTop: -0.19, tail: 0.39 },
+        supercar: { roofY: -0.34, roofHalf: 0.22, shoulderHalf: 0.48, bodyTop: -0.15, tail: 0.34 },
+        hypercar: { roofY: -0.3, roofHalf: 0.19, shoulderHalf: 0.5, bodyTop: -0.13, tail: 0.31 }
+      };
+      const profile = profiles[car.body] ?? profiles.sedan;
       context.save();
       context.translate(x, y);
       context.rotate(rotation);
@@ -2535,14 +2672,14 @@
       context.fillRect(-size * 0.48, -size * 0.04, size * 0.18, size * 0.35);
       context.fillRect(size * 0.3, -size * 0.04, size * 0.18, size * 0.35);
 
-      context.fillStyle = color;
+      context.fillStyle = car.color;
       context.beginPath();
-      context.moveTo(-size * 0.48, size * 0.2);
-      context.lineTo(-size * 0.38, -size * 0.28);
-      context.lineTo(-size * 0.22, -size * 0.48);
-      context.lineTo(size * 0.22, -size * 0.48);
-      context.lineTo(size * 0.38, -size * 0.28);
-      context.lineTo(size * 0.48, size * 0.2);
+      context.moveTo(-size * profile.shoulderHalf, size * 0.2);
+      context.lineTo(-size * profile.tail, size * profile.bodyTop);
+      context.lineTo(-size * profile.roofHalf, size * profile.roofY);
+      context.lineTo(size * profile.roofHalf, size * profile.roofY);
+      context.lineTo(size * profile.tail, size * profile.bodyTop);
+      context.lineTo(size * profile.shoulderHalf, size * 0.2);
       context.lineTo(size * 0.36, size * 0.35);
       context.lineTo(-size * 0.36, size * 0.35);
       context.closePath();
@@ -2551,10 +2688,10 @@
       context.shadowColor = "transparent";
       context.fillStyle = "#172938";
       context.beginPath();
-      context.moveTo(-size * 0.2, -size * 0.39);
-      context.lineTo(size * 0.2, -size * 0.39);
-      context.lineTo(size * 0.3, -size * 0.12);
-      context.lineTo(-size * 0.3, -size * 0.12);
+      context.moveTo(-size * profile.roofHalf * 0.82, size * (profile.roofY + 0.07));
+      context.lineTo(size * profile.roofHalf * 0.82, size * (profile.roofY + 0.07));
+      context.lineTo(size * Math.min(0.31, profile.tail * 0.78), size * (profile.bodyTop + 0.08));
+      context.lineTo(-size * Math.min(0.31, profile.tail * 0.78), size * (profile.bodyTop + 0.08));
       context.closePath();
       context.fill();
 
