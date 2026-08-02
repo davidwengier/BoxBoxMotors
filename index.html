@@ -3114,6 +3114,17 @@
       makeCar("toyota-land-cruiser", "Toyota Land Cruiser GR Sport", "Toyota", "common", "Off-Road SUV", "japan", "suv", "#d7c4a0", 55, 50, 67),
       makeCar("toyota-2000gt", "Toyota 2000GT", "Toyota", "legendary", "Classic Sports", "japan", "roadster", "#e8e6dc", 82, 78, 88),
 
+      makeCar("jaguar-e-type", "Jaguar E-Type Series 1", "Jaguar", "rare", "Classic Sports Car", "europe", "roadster", "#3f876d", 74, 70, 78),
+      makeCar("jaguar-d-type", "Jaguar D-Type", "Jaguar", "legendary", "Le Mans Race Car", "europe", "roadster", "#2f8068", 88, 83, 91),
+      makeCar("jaguar-xkss", "Jaguar XKSS", "Jaguar", "legendary", "Road-Going Racer", "europe", "roadster", "#3d8b68", 86, 82, 88),
+      makeCar("jaguar-xj220", "Jaguar XJ220", "Jaguar", "legendary", "1990s Supercar", "europe", "supercar", "#74a0a5", 94, 86, 84),
+      makeCar("jaguar-xjs-v12", "Jaguar XJS V12", "Jaguar", "common", "Grand Tourer", "europe", "sedan", "#8a3c45", 62, 58, 65),
+      makeCar("jaguar-xkrs-gt", "Jaguar XKR-S GT", "Jaguar", "epic", "Track Grand Tourer", "europe", "supercar", "#eeeae1", 87, 84, 86),
+      makeCar("jaguar-f-type-svr", "Jaguar F-Type SVR", "Jaguar", "epic", "Performance Coupe", "europe", "supercar", "#397fc5", 89, 88, 85),
+      makeCar("jaguar-project-8", "Jaguar XE SV Project 8", "Jaguar", "epic", "Track Saloon", "europe", "sedan", "#e36a32", 86, 89, 88),
+      makeCar("jaguar-ipace-etrophy", "Jaguar I-PACE eTROPHY", "Jaguar", "rare", "Electric Race SUV", "europe", "suv", "#4c9fc3", 77, 91, 79),
+      makeCar("jaguar-fpace-svr", "Jaguar F-PACE SVR", "Jaguar", "common", "Performance SUV", "europe", "suv", "#596a52", 72, 78, 70),
+
       makeCar("lego-ford-mustang", "LEGO Ford Mustang Dark Horse", "Ford", "common", "Speed Champions Muscle", "usa", "brick", "#315bc5", 55, 68, 62, "lego"),
       makeCar("lego-ford-gt", "LEGO Aston Martin Valkyrie AMR Pro", "Aston Martin", "legendary", "Speed Champions Hypercar", "europe", "brick", "#36a85a", 90, 88, 86, "lego"),
       makeCar("lego-honda-s2000", "LEGO Aston Martin Vantage GT3", "Aston Martin", "rare", "Speed Champions Race Car", "europe", "brick", "#b9d94a", 76, 79, 78, "lego"),
@@ -3290,6 +3301,17 @@
         color: "#ed4149",
         brands: ["Toyota"],
         odds: { common: 28, rare: 45, epic: 22, legendary: 5 }
+      },
+      {
+        id: "jaguar",
+        name: "Jaguar Heritage",
+        tier: "Manufacturer pack",
+        description: "British racing legends, grand tourers, supercars, and modern SV performance.",
+        price: 1200,
+        symbol: "J",
+        color: "#4ba47e",
+        brands: ["Jaguar"],
+        odds: { common: 20, rare: 35, epic: 32, legendary: 13 }
       },
       {
         id: "exotic",
@@ -4204,7 +4226,7 @@
 
     function getCarBrand(car) {
       if (car.brand) return car.brand;
-      return ["Ford", "Honda", "Acura", "Porsche", "Chevrolet", "Hyundai", "Lamborghini", "Lotus", "Toyota"]
+      return ["Ford", "Honda", "Acura", "Porsche", "Chevrolet", "Hyundai", "Lamborghini", "Lotus", "Toyota", "Jaguar"]
         .find((brand) => car.name.startsWith(brand));
     }
 

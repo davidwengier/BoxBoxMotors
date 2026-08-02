@@ -4,14 +4,14 @@ A mobile-friendly car pack opening and auto rental tycoon game for the browser.
 
 ## Gameplay
 
-- Buy 17 packs, including manufacturer collections, real racing go-karts,
+- Buy 18 packs, including manufacturer collections, real racing go-karts,
   2025 Formula 1 cars, LEGO cars, and Fast & Furious movie cars.
 - Buy packs individually or open a stack of five at once.
 - Each pack has a stable pool of no more than 20 different cars.
 - View every car available in a pack and track pack-specific collection completion.
-- Collect 120 cars across four rarity tiers.
+- Collect 130 cars across four rarity tiers.
 - The main production collection uses Ford, Honda, Acura, Porsche, Chevrolet,
-  Hyundai, Lamborghini, Lotus, and Toyota, while special packs use licensed
+  Hyundai, Lamborghini, Lotus, Toyota, and Jaguar, while special packs use licensed
   movie cars and real LEGO Speed Champions models.
 - Cars use distinct hatchback, SUV, roadster, sedan, muscle, supercar,
   hypercar, brick-built, go-kart, and open-wheel Formula 1 shapes.
