@@ -857,6 +857,114 @@
       content: "";
     }
 
+    .car.kart {
+      width: 132px;
+      height: 42px;
+    }
+
+    .car.kart .car-body {
+      right: 14px;
+      bottom: 5px;
+      left: 14px;
+      height: 17px;
+      border-radius: 9px 18px 5px 9px;
+      clip-path: polygon(0 35%, 18% 0, 86% 8%, 100% 58%, 91% 100%, 3% 100%);
+    }
+
+    .car.kart .car-cabin {
+      top: 5px;
+      left: 52px;
+      width: 31px;
+      height: 24px;
+      border: 3px solid #080a0f;
+      border-radius: 45% 45% 8px 8px;
+      background: #202a38;
+      transform: none;
+    }
+
+    .car.kart::before {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      left: 58px;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #080a0f;
+      border-radius: 50%;
+      background: var(--car-color);
+      content: "";
+    }
+
+    .car.kart .wheel {
+      bottom: 0;
+      width: 22px;
+      height: 22px;
+      border-width: 5px;
+    }
+
+    .car.kart .wheel.back { left: 5px; }
+    .car.kart .wheel.front { right: 5px; }
+
+    .car.formula {
+      width: 168px;
+      height: 48px;
+    }
+
+    .car.formula .car-body {
+      right: 10px;
+      bottom: 9px;
+      left: 10px;
+      height: 19px;
+      border-radius: 5px 38px 5px 12px;
+      clip-path: polygon(0 32%, 15% 18%, 47% 0, 72% 18%, 100% 38%, 92% 100%, 4% 100%);
+    }
+
+    .car.formula .car-cabin {
+      top: 9px;
+      left: 70px;
+      width: 33px;
+      height: 20px;
+      border-radius: 50% 50% 5px 5px;
+      background: #131923;
+      transform: none;
+    }
+
+    .car.formula::before {
+      position: absolute;
+      z-index: 2;
+      top: 8px;
+      left: 78px;
+      width: 14px;
+      height: 14px;
+      border: 3px solid #080a0f;
+      border-radius: 50%;
+      background: #edf2f7;
+      content: "";
+    }
+
+    .car.formula::after {
+      position: absolute;
+      z-index: 2;
+      right: 0;
+      bottom: 14px;
+      width: 31px;
+      height: 6px;
+      border: 3px solid #080a0f;
+      background: var(--car-color);
+      box-shadow: -139px -3px 0 -1px var(--car-color);
+      content: "";
+    }
+
+    .car.formula .wheel {
+      bottom: 0;
+      width: 30px;
+      height: 30px;
+      border-width: 7px;
+    }
+
+    .car.formula .wheel.back { left: 25px; }
+    .car.formula .wheel.front { right: 21px; }
+
     .wheel {
       position: absolute;
       z-index: 3;
@@ -3011,6 +3119,28 @@
       makeCar("lego-lotus-evija", "LEGO BMW M4 GT3", "BMW", "rare", "Speed Champions Race Car", "europe", "brick", "#f2f1e9", 79, 82, 81, "lego"),
       makeCar("lego-toyota-supra", "LEGO Audi S1 e-tron quattro", "Audi", "epic", "Speed Champions Rally EV", "europe", "brick", "#e94b41", 82, 88, 84, "lego"),
 
+      makeCar("kart-tony-401r", "Tony Kart Racer 401R", "Tony Kart", "epic", "OK Racing Kart", "europe", "kart", "#54a83f", 72, 91, 88, "kart"),
+      makeCar("kart-crg-road-rebel", "CRG Road Rebel", "CRG", "epic", "KZ Shifter Kart", "europe", "kart", "#e43c38", 76, 94, 86, "kart"),
+      makeCar("kart-birel-ry32", "Birel ART RY32-S16", "Birel ART", "rare", "Shifter Kart", "europe", "kart", "#d83a3c", 70, 88, 85, "kart"),
+      makeCar("kart-kr1", "Kart Republic KR1", "Kart Republic", "epic", "KZ Racing Kart", "europe", "kart", "#42a1d8", 75, 93, 89, "kart"),
+      makeCar("kart-sodi-sigma", "Sodi Sigma RS3", "Sodi", "rare", "Racing Kart", "europe", "kart", "#30343b", 68, 87, 86, "kart"),
+      makeCar("kart-praga-dragon", "Praga Dragon EVO 3", "Praga", "rare", "Racing Kart", "europe", "kart", "#3e89d0", 69, 89, 84, "kart"),
+      makeCar("kart-kosmic-mercury", "Kosmic Mercury RR", "Kosmic", "rare", "OK Racing Kart", "europe", "kart", "#d5c5a3", 70, 90, 87, "kart"),
+      makeCar("kart-exprit-noesis", "Exprit Noesis RR", "Exprit", "rare", "OK Racing Kart", "europe", "kart", "#ef7135", 69, 90, 86, "kart"),
+      makeCar("kart-margay-ignite", "Margay Ignite K3", "Margay", "common", "Club Racing Kart", "usa", "kart", "#347fc5", 61, 82, 80, "kart"),
+      makeCar("kart-crg-black-mirror", "CRG Black Mirror", "CRG", "common", "Mini Racing Kart", "europe", "kart", "#171b22", 57, 85, 82, "kart"),
+
+      makeCar("f1-mclaren-mcl39", "McLaren MCL39", "McLaren", "legendary", "2025 Formula 1 Car", "europe", "formula", "#f28a25", 99, 99, 97, "f1"),
+      makeCar("f1-ferrari-sf25", "Ferrari SF-25", "Ferrari", "legendary", "2025 Formula 1 Car", "europe", "formula", "#e52f32", 98, 98, 96, "f1"),
+      makeCar("f1-red-bull-rb21", "Red Bull Racing RB21", "Red Bull Racing", "legendary", "2025 Formula 1 Car", "europe", "formula", "#3045a4", 98, 99, 96, "f1"),
+      makeCar("f1-mercedes-w16", "Mercedes W16", "Mercedes", "legendary", "2025 Formula 1 Car", "europe", "formula", "#52cbb6", 98, 98, 97, "f1"),
+      makeCar("f1-aston-amr25", "Aston Martin AMR25", "Aston Martin", "epic", "2025 Formula 1 Car", "europe", "formula", "#23866f", 95, 96, 94, "f1"),
+      makeCar("f1-alpine-a525", "Alpine A525", "Alpine", "epic", "2025 Formula 1 Car", "europe", "formula", "#e66aa4", 94, 96, 93, "f1"),
+      makeCar("f1-haas-vf25", "Haas VF-25", "Haas", "epic", "2025 Formula 1 Car", "usa", "formula", "#eceae2", 94, 95, 92, "f1"),
+      makeCar("f1-racing-bulls-vcarb02", "Racing Bulls VCARB 02", "Racing Bulls", "epic", "2025 Formula 1 Car", "europe", "formula", "#e7eef5", 94, 96, 93, "f1"),
+      makeCar("f1-williams-fw47", "Williams FW47", "Williams", "epic", "2025 Formula 1 Car", "europe", "formula", "#357bd2", 95, 96, 94, "f1"),
+      makeCar("f1-sauber-c45", "Sauber C45", "Sauber", "epic", "2025 Formula 1 Car", "europe", "formula", "#79c941", 93, 95, 92, "f1"),
+
       makeCar("ff-toyota-supra", "Fast & Furious 1994 Toyota Supra Mk IV", "Toyota", "legendary", "Brian's Hero Car", "japan", "supercar", "#ef812f", 92, 91, 84, "fast"),
       makeCar("ff-honda-civic", "Fast & Furious 1993 Honda Civic EJ1", "Honda", "common", "Heist Street Car", "japan", "sedan", "#202329", 63, 72, 66, "fast"),
       makeCar("ff-honda-s2000", "Fast & Furious 2000 Honda S2000", "Honda", "rare", "Suki's Roadster", "japan", "roadster", "#ef4b9a", 76, 81, 73, "fast"),
@@ -3167,6 +3297,17 @@
         odds: { common: 8, rare: 25, epic: 47, legendary: 20 }
       },
       {
+        id: "go-kart",
+        name: "Go-Kart Pack",
+        tier: "Grassroots racing",
+        description: "Real racing chassis from leading kart manufacturers around the world.",
+        price: 500,
+        symbol: "K",
+        color: "#66d14f",
+        series: "kart",
+        odds: { common: 20, rare: 55, epic: 25, legendary: 0 }
+      },
+      {
         id: "lego",
         name: "LEGO Car Pack",
         tier: "Brick-built collection",
@@ -3176,6 +3317,17 @@
         color: "#f2d12b",
         series: "lego",
         odds: { common: 25, rare: 40, epic: 28, legendary: 7 }
+      },
+      {
+        id: "f1",
+        name: "Formula 1 Pack",
+        tier: "Grand Prix collection",
+        description: "All ten official 2025 Formula 1 team chassis in one elite pack.",
+        price: 2500,
+        symbol: "F1",
+        color: "#f03b45",
+        series: "f1",
+        odds: { common: 0, rare: 0, epic: 60, legendary: 40 }
       },
       {
         id: "fast-furious",
