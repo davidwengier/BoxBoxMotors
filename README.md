@@ -2,6 +2,8 @@
 
 A mobile-friendly car pack opening and auto rental tycoon game for the browser.
 
+Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
+
 ## Gameplay
 
 - Buy 18 packs, including manufacturer collections, real racing go-karts,
