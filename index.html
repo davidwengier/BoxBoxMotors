@@ -3342,7 +3342,8 @@
       epic: "#b568ff",
       legendary: "#ffb62e",
       mythic: "#ff3045",
-      limited: "#ff64ce"
+      limited: "#ff64ce",
+      secret: "#ffffff"
     };
 
     const CORE_CARS = [
@@ -3564,7 +3565,23 @@
       makeCar("ff-corvette-grand-sport", "Fast & Furious 1963 Chevrolet Corvette Grand Sport", "Chevrolet", "epic", "Fast Five Movie Car", "usa", "supercar", "#4b99cb", 86, 84, 80, "fast")
     ];
 
-    const CARS = [...CORE_CARS, ...ADDITIONAL_CARS];
+    const COLLECTIBLE_CARS = [...CORE_CARS, ...ADDITIONAL_CARS];
+    const COLLECTION_REWARD_ID = "the-dugmobile";
+    const COLLECTION_REWARD = makeCar(
+      COLLECTION_REWARD_ID,
+      "The DugMobile",
+      "Dug",
+      "secret",
+      "Ultimate Collection Reward",
+      "secret",
+      "hypercar",
+      "#050505",
+      100,
+      100,
+      100,
+      "reward"
+    );
+    const CARS = [...COLLECTIBLE_CARS, COLLECTION_REWARD];
 
     const PACKS = [
       {
@@ -3823,6 +3840,7 @@
       maintenanceWorkers: 0,
       workerPartProgress: 0,
       workerLastTick: 0,
+      dugMobileAwarded: false,
       day: 1,
       dayRevenue: 0,
       dayRentals: 0,
@@ -4098,6 +4116,9 @@
           workerLastTick: Number.isFinite(saved.workerLastTick) && saved.workerLastTick > 0
             ? saved.workerLastTick
             : Date.now(),
+          dugMobileAwarded: saved.dugMobileAwarded === true
+            || Boolean(collection[COLLECTION_REWARD_ID])
+            || discovered.includes(COLLECTION_REWARD_ID),
           day: Math.max(1, validNumber(saved.day, 1)),
           dayRevenue: validNumber(saved.dayRevenue, 0),
           dayRentals: validNumber(saved.dayRentals, 0),
@@ -4129,6 +4150,7 @@
     }
 
     function renderAll() {
+      grantCollectionReward();
       const storedCars = getStorageUsed();
       creditsDisplay.textContent = state.credits.toLocaleString();
       storageDisplay.textContent = `${storedCars}/${state.storageCapacity}`;
@@ -4309,9 +4331,15 @@
 
     function renderCollection() {
       const discovered = new Set(state.discovered);
-      const ownedCount = discovered.size;
-      collectionSummary.innerHTML = `<strong>${ownedCount} / ${CARS.length}</strong> cars discovered · ${CARS.length - ownedCount} remaining`;
-      collectionGrid.innerHTML = [...CARS]
+      const ownedCount = COLLECTIBLE_CARS.filter((car) => discovered.has(car.id)).length;
+      const collectionComplete = ownedCount === COLLECTIBLE_CARS.length;
+      collectionSummary.innerHTML = collectionComplete
+        ? `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> cars discovered · Collection complete! The DugMobile unlocked.`
+        : `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> cars discovered · ${COLLECTIBLE_CARS.length - ownedCount} remaining`;
+      const displayedCars = state.dugMobileAwarded
+        ? [...COLLECTIBLE_CARS, COLLECTION_REWARD]
+        : [...COLLECTIBLE_CARS];
+      collectionGrid.innerHTML = displayedCars
         .sort((a, b) => {
           const ownedDifference = Number(discovered.has(b.id)) - Number(discovered.has(a.id));
           return ownedDifference || rarityRank(b.rarity) - rarityRank(a.rarity) || a.name.localeCompare(b.name);
@@ -4324,7 +4352,7 @@
               <span class="collection-check">${owned ? "✓" : "?"}</span>
               <div class="car-visual">${createCarVisual(car)}</div>
               <h3>${car.name}</h3>
-              <p class="collection-rarity">${car.rarity}${owned ? ` · ${copies} stored` : " · Not discovered"}</p>
+              <p class="collection-rarity">${car.rarity}${owned ? ` · ${copies} stored` : " · Not discovered"}${car.id === COLLECTION_REWARD_ID ? " · One-time reward" : ""}</p>
             </article>
           `;
         })
@@ -4661,7 +4689,7 @@
     }
 
     function rarityRank(rarity) {
-      return ["common", "rare", "epic", "legendary", "mythic", "limited"].indexOf(rarity);
+      return ["common", "rare", "epic", "legendary", "mythic", "limited", "secret"].indexOf(rarity);
     }
 
     function getCar(id) {
@@ -4918,6 +4946,7 @@
     }
 
     function getSalePrice(car) {
+      if (car.id === COLLECTION_REWARD_ID) return 100000;
       return {
         common: 160,
         rare: 420,
@@ -4929,7 +4958,22 @@
     }
 
     function getRentalFee(car) {
+      if (car.id === COLLECTION_REWARD_ID) return 5000;
       return Math.round(getSalePrice(car) * 0.28 / 10) * 20;
+    }
+
+    function grantCollectionReward() {
+      if (state.dugMobileAwarded) return false;
+      const discovered = new Set(state.discovered);
+      if (!COLLECTIBLE_CARS.every((car) => discovered.has(car.id))) return false;
+
+      state.dugMobileAwarded = true;
+      state.collection[COLLECTION_REWARD_ID] = 1;
+      state.discovered.push(COLLECTION_REWARD_ID);
+      state.storageCapacity = Math.max(state.storageCapacity, getStorageUsed());
+      saveState();
+      showToast("All 200 cars collected! The secret DugMobile is now in your garage.");
+      return true;
     }
 
     function getStorageUpgradeCost() {
