@@ -1378,19 +1378,22 @@
       color: var(--cyan);
     }
 
-    .garage-toolbar .collection-summary {
-      margin-bottom: 0;
-    }
-
     .reset-game-button {
-      max-width: 220px;
+      width: auto;
+      flex: 0 0 auto;
+      padding: 9px 12px;
       background: var(--red);
-      box-shadow: 0 7px 0 #8d1827;
+      box-shadow: 0 4px 0 #8d1827;
       color: #fff;
+      font-size: 0.65rem;
     }
 
     .reset-game-button:hover {
-      box-shadow: 0 9px 0 #8d1827;
+      box-shadow: 0 6px 0 #8d1827;
+    }
+
+    .reset-game-button:active {
+      box-shadow: 0 1px 0 #8d1827;
     }
 
     .collection-grid {
@@ -3144,6 +3147,7 @@
           <h1>Box Box <span>Motors</span></h1>
           <p>Open. Rent. Service.</p>
         </div>
+        <button id="resetGameButton" class="primary-button reset-game-button" type="button">Reset</button>
       </div>
       <div class="wallet" aria-label="Your credits">
         <span class="wallet-icon">🪙</span>
@@ -3196,10 +3200,7 @@
         </div>
         <p class="section-copy">Every obtainable car appears here. Cars are automatically checked off the moment you open them from a pack.</p>
       </div>
-      <div class="garage-toolbar">
-        <div id="collectionSummary" class="collection-summary"></div>
-        <button id="resetGameButton" class="primary-button reset-game-button" type="button">Reset game</button>
-      </div>
+      <div id="collectionSummary" class="collection-summary"></div>
       <div id="collectionGrid" class="collection-grid"></div>
     </section>
 

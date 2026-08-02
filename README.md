@@ -24,7 +24,8 @@ A mobile-friendly car pack opening and auto rental tycoon game for the browser.
 - The DugMobile keeps its black generated car body with a continuous row of
   matching Dug stickers from rear to front, tucked behind both wheel arches,
   and no coloured accent stripe.
-- Reset all saved progress from the Collection page after confirming the warning.
+- Reset the entire saved game from beside the Box Box Motors logo after
+  confirming the warning.
 - Store every packed copy as an individual car, including unlimited duplicates.
 - Rent cars from the auto group to passive customers, with the cheapest available cars chosen first.
 - Serve ten visually distinct customer types with varied clothing, skin tones,
