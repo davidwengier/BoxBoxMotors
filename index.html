@@ -1024,6 +1024,245 @@
     .wheel.front { right: 19px; }
     .wheel.back { left: 21px; }
 
+    .wheel::before {
+      position: absolute;
+      inset: 3px;
+      border: 2px solid #9da8b7;
+      border-radius: 50%;
+      background: #242b35;
+      content: "";
+    }
+
+    .wheel::after {
+      position: absolute;
+      inset: 7px;
+      border-radius: 50%;
+      background:
+        repeating-conic-gradient(#c7d0db 0 10deg, #3a4350 10deg 28deg);
+      content: "";
+      box-shadow: inset 0 0 0 3px #242a32;
+    }
+
+    .car-grille,
+    .car-headlight,
+    .car-taillight,
+    .car-accent,
+    .car-spoiler,
+    .car-badge {
+      position: absolute;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .car-grille {
+      right: 4px;
+      bottom: 15px;
+      width: 20px;
+      height: 8px;
+      border: 2px solid #080a0f;
+      border-radius: 8px 3px 3px 8px;
+      background:
+        repeating-linear-gradient(90deg, #151b23 0 2px, #596474 2px 3px);
+    }
+
+    .car-headlight {
+      right: 13px;
+      bottom: 29px;
+      width: 15px;
+      height: 6px;
+      border: 2px solid #080a0f;
+      border-radius: 60% 20% 60% 20%;
+      background: #eaf8ff;
+      box-shadow: 0 0 6px rgb(206 244 255 / 65%);
+    }
+
+    .car-taillight {
+      bottom: 27px;
+      left: 4px;
+      width: 10px;
+      height: 7px;
+      border: 2px solid #080a0f;
+      border-radius: 3px;
+      background: #f23f50;
+      box-shadow: 0 0 5px rgb(242 63 80 / 55%);
+    }
+
+    .car-accent {
+      right: 22px;
+      bottom: 20px;
+      left: 18px;
+      height: 3px;
+      border-radius: 3px;
+      background: var(--car-accent, rgb(255 255 255 / 58%));
+      opacity: 0.75;
+      transform: rotate(var(--accent-angle, -1deg));
+    }
+
+    .car-spoiler {
+      top: 5px;
+      left: 5px;
+      display: none;
+      width: 35px;
+      height: 7px;
+      border: solid #080a0f;
+      border-width: 3px 2px 0;
+      background: var(--car-color);
+      transform: rotate(-3deg);
+    }
+
+    .car-badge {
+      right: 42px;
+      bottom: 27px;
+      display: grid;
+      min-width: 14px;
+      height: 12px;
+      place-items: center;
+      padding: 0 2px;
+      border: 1px solid rgb(5 7 10 / 80%);
+      border-radius: 3px;
+      background: rgb(238 242 247 / 82%);
+      color: #10141b;
+      font-size: 5px;
+      font-style: normal;
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .car.aero .car-spoiler,
+    .car.race-livery .car-spoiler {
+      display: block;
+    }
+
+    .car.classic .car-body {
+      box-shadow: inset 0 -6px rgb(0 0 0 / 18%), inset 0 3px rgb(255 255 255 / 20%);
+    }
+
+    .car.classic .car-grille {
+      background: repeating-linear-gradient(90deg, #d9dee5 0 2px, #444d59 2px 3px);
+    }
+
+    .car.round-lights .car-headlight {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .car.long-hood .car-cabin {
+      left: 67px;
+      width: 49px;
+    }
+
+    .car.wedge .car-body {
+      clip-path: polygon(0 42%, 18% 19%, 73% 0, 100% 33%, 96% 100%, 2% 100%);
+    }
+
+    .car.dual-stripe .car-body {
+      background:
+        linear-gradient(90deg, transparent 43%, var(--car-accent) 44% 48%, transparent 49% 53%, var(--car-accent) 54% 58%, transparent 59%),
+        linear-gradient(100deg, transparent 0 72%, rgb(255 255 255 / 23%) 73% 79%, transparent 80%),
+        var(--car-color);
+    }
+
+    .car.electric .car-grille {
+      border-radius: 8px;
+      background: linear-gradient(90deg, #202a36, #3d5367);
+    }
+
+    .car.offroad .car-body {
+      border-bottom-width: 5px;
+      box-shadow: inset 0 -10px rgb(0 0 0 / 28%);
+    }
+
+    .car.offroad .wheel {
+      border-style: dashed;
+    }
+
+    .car.formula .car-grille,
+    .car.formula .car-headlight,
+    .car.formula .car-taillight,
+    .car.formula .car-badge,
+    .car.formula .car-spoiler,
+    .car.kart .car-grille,
+    .car.kart .car-headlight,
+    .car.kart .car-taillight,
+    .car.kart .car-badge,
+    .car.kart .car-spoiler {
+      display: none;
+    }
+
+    .car.formula .car-accent,
+    .car.kart .car-accent {
+      right: 30px;
+      bottom: 17px;
+      left: 28px;
+      height: 4px;
+    }
+
+    .car.brick .car-grille,
+    .car.brick .car-badge {
+      image-rendering: pixelated;
+    }
+
+    .car.brand-porsche .car-cabin {
+      border-radius: 38px 30px 0 0;
+    }
+
+    .car.brand-porsche .car-body {
+      border-radius: 22px 38px 9px 18px;
+    }
+
+    .car.brand-lamborghini .car-cabin,
+    .car.brand-lotus .car-cabin {
+      top: 12px;
+      height: 19px;
+      transform: skewX(-20deg);
+    }
+
+    .car.brand-jaguar .car-body {
+      border-radius: 14px 48px 8px 20px;
+    }
+
+    .car.brand-chevrolet .car-grille,
+    .car.brand-ford .car-grille {
+      width: 27px;
+      height: 10px;
+    }
+
+    .car.brand-honda .car-headlight,
+    .car.brand-acura .car-headlight,
+    .car.brand-hyundai .car-headlight {
+      width: 20px;
+      height: 5px;
+      border-radius: 70% 15% 50% 15%;
+    }
+
+    .car.brand-toyota .car-grille {
+      height: 11px;
+      border-radius: 50% 10% 10% 50%;
+    }
+
+    .car.brand-ferrari .car-body,
+    .car.brand-mclaren .car-body,
+    .car.brand-aston-martin .car-body {
+      border-radius: 10px 50px 6px 18px;
+    }
+
+    .car.detail-1 .car-accent {
+      right: 38px;
+      left: 35px;
+      height: 5px;
+    }
+
+    .car.detail-2 .car-accent {
+      bottom: 25px;
+      opacity: 0.9;
+    }
+
+    .car.detail-3 .car-grille {
+      background:
+        repeating-linear-gradient(0deg, #151b23 0 2px, #667384 2px 3px);
+    }
+
     .car-card h3 {
       margin-bottom: 3px;
       font-size: 1.25rem;
@@ -1812,6 +2051,10 @@
     }
 
     .customer {
+      --customer-skin: #d69a72;
+      --customer-shirt: var(--pink);
+      --customer-pants: #080b10;
+      --customer-hair: #33251f;
       position: absolute;
       z-index: 8;
       bottom: 58px;
@@ -1833,7 +2076,7 @@
       height: 24px;
       border: 3px solid #080b10;
       border-radius: 50%;
-      background: #d69a72;
+      background: var(--customer-skin);
     }
 
     .customer-body {
@@ -1844,7 +2087,7 @@
       height: 38px;
       border: 3px solid #080b10;
       border-radius: 10px 10px 3px 3px;
-      background: var(--pink);
+      background: var(--customer-shirt);
     }
 
     .customer-legs {
@@ -1853,8 +2096,69 @@
       left: 10px;
       width: 24px;
       height: 25px;
-      border: solid #080b10;
+      border: solid var(--customer-pants);
       border-width: 0 7px;
+    }
+
+    .customer-hair {
+      position: absolute;
+      z-index: 2;
+      top: -2px;
+      left: 9px;
+      width: 26px;
+      height: 11px;
+      border: 3px solid #080b10;
+      border-radius: 15px 15px 5px 5px;
+      background: var(--customer-hair);
+    }
+
+    .customer-accessory {
+      position: absolute;
+      z-index: 3;
+      display: none;
+    }
+
+    .customer.hat .customer-accessory {
+      top: -7px;
+      left: 5px;
+      display: block;
+      width: 35px;
+      height: 9px;
+      border: 3px solid #080b10;
+      border-radius: 5px 8px 2px 2px;
+      background: var(--customer-shirt);
+    }
+
+    .customer.glasses .customer-accessory {
+      top: 9px;
+      left: 9px;
+      display: block;
+      width: 27px;
+      height: 8px;
+      border: solid #080b10;
+      border-width: 3px 7px;
+      background: transparent;
+    }
+
+    .customer.headphones .customer-accessory {
+      top: 4px;
+      left: 4px;
+      display: block;
+      width: 36px;
+      height: 22px;
+      border: 4px solid #080b10;
+      border-bottom: 0;
+      border-radius: 18px 18px 0 0;
+    }
+
+    .customer.long-hair .customer-hair {
+      height: 29px;
+      border-radius: 15px 15px 9px 9px;
+    }
+
+    .customer.jacket .customer-body {
+      background:
+        linear-gradient(90deg, var(--customer-shirt) 0 45%, #e9edf4 46% 54%, var(--customer-shirt) 55%);
     }
 
     .customer-message {
@@ -2898,6 +3202,8 @@
           <div class="conveyor" aria-hidden="true"></div>
           <div id="customer" class="customer" aria-hidden="true">
             <span class="customer-head"></span>
+            <span class="customer-hair"></span>
+            <span class="customer-accessory"></span>
             <span class="customer-body"></span>
             <span class="customer-legs"></span>
           </div>
@@ -3556,6 +3862,19 @@
       { id: "restock", icon: "🅿️", title: "Return to lot", description: "Mark the car available for rental again." }
     ];
 
+    const CUSTOMER_PROFILES = [
+      { label: "A student", style: "headphones", skin: "#b97852", shirt: "#4f8ed5", pants: "#202735", hair: "#241b17" },
+      { label: "A collector", style: "glasses jacket", skin: "#e0aa80", shirt: "#7d4e9f", pants: "#171b22", hair: "#5b3a28" },
+      { label: "A parent", style: "long-hair", skin: "#c88762", shirt: "#49a66d", pants: "#303847", hair: "#35231d" },
+      { label: "A tourist", style: "hat", skin: "#f0bd91", shirt: "#e7863e", pants: "#33415a", hair: "#9a6b3e" },
+      { label: "A business driver", style: "jacket", skin: "#8f573e", shirt: "#3f4d65", pants: "#121720", hair: "#181515" },
+      { label: "A racing fan", style: "hat jacket", skin: "#d79a70", shirt: "#d83f4c", pants: "#252b35", hair: "#4a3021" },
+      { label: "A mechanic", style: "glasses", skin: "#6f422f", shirt: "#d5a735", pants: "#253044", hair: "#171719" },
+      { label: "An influencer", style: "long-hair glasses", skin: "#e4ad86", shirt: "#da5f9e", pants: "#382d49", hair: "#141218" },
+      { label: "A commuter", style: "", skin: "#a86f50", shirt: "#46a0a8", pants: "#26313a", hair: "#2c201b" },
+      { label: "A weekend racer", style: "headphones jacket", skin: "#f1c39c", shirt: "#6b72d9", pants: "#202633", hair: "#b07943" }
+    ];
+
     let state = loadState();
     let pendingPack = null;
     let pendingCars = [];
@@ -3567,6 +3886,7 @@
     let toastTimer = 0;
     let customerVisitInProgress = false;
     let customerTimers = [];
+    let lastCustomerProfile = -1;
     let maintenanceSession = null;
     const drivingInput = { left: false, right: false, throttle: false, brake: false };
 
@@ -3961,14 +4281,73 @@
     }
 
     function createCarVisual(car) {
+      const profile = getCarVisualProfile(car);
       return `
-        <div class="car ${car.body}" style="--car-color:${car.color}" aria-label="${car.name}">
+        <div class="car ${car.body} ${profile.classes}" style="--car-color:${car.color};--car-accent:${profile.accent};--accent-angle:${profile.accentAngle}deg" data-car-id="${car.id}" aria-label="${car.name}">
           <span class="car-cabin"></span>
           <span class="car-body"></span>
+          <span class="car-accent"></span>
+          <span class="car-grille"></span>
+          <span class="car-headlight"></span>
+          <span class="car-taillight"></span>
+          <span class="car-spoiler"></span>
+          <span class="car-badge">${profile.badge}</span>
           <span class="wheel back"></span>
           <span class="wheel front"></span>
         </div>
       `;
+    }
+
+    function getCarVisualProfile(car) {
+      const brand = getCarBrand(car) ?? car.brand ?? "custom";
+      const brandClass = brand.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const descriptor = `${car.name} ${car.class}`.toLowerCase();
+      const hash = stablePackScore("visual", car.id);
+      const classes = [`brand-${brandClass}`, `detail-${hash % 4}`];
+      const isClassic = /classic|19[0-8]\d|e-type|d-type|xkss|gt40|c-type|miura|2000gt|bel air|chevelle|cobra|ae86|sports 800/.test(descriptor);
+      const isRaceCar = /race|rally|track|prototype|formula|tcr|gt3|gtp|le mans|group [abc]|touring/.test(descriptor);
+      const isElectric = /electric|ioniq|e-tron|evija|taycan|eletre|emeya|i-pace|rn22e|zdx/.test(descriptor);
+      const isOffroad = car.body === "suv" || /truck|off-road|adventure|raptor|dakar/.test(descriptor);
+      const isLongHood = ["Ford", "Chevrolet", "Jaguar"].includes(brand) && ["muscle", "roadster", "sedan"].includes(car.body);
+      const isWedge = ["Lamborghini", "Lotus", "McLaren", "Ferrari"].includes(brand) || car.body === "hypercar";
+      const hasRoundLights = ["Porsche", "Jaguar", "Lotus"].includes(brand) || isClassic;
+      const hasDualStripe = ["Ford", "Chevrolet"].includes(brand) && hash % 2 === 0;
+
+      if (isClassic) classes.push("classic");
+      if (isRaceCar) classes.push("aero", "race-livery");
+      if (isElectric) classes.push("electric");
+      if (isOffroad) classes.push("offroad");
+      if (isLongHood) classes.push("long-hood");
+      if (isWedge) classes.push("wedge");
+      if (hasRoundLights) classes.push("round-lights");
+      if (hasDualStripe) classes.push("dual-stripe");
+
+      const accents = ["#f3f5f7", "#151a22", "#ffd23f", "#ff4e5f", "#34d5e8", "#72e28c"];
+      const badgeLabels = {
+        Ford: "F",
+        Honda: "H",
+        Acura: "A",
+        Porsche: "P",
+        Chevrolet: "CH",
+        Hyundai: "N",
+        Lamborghini: "L",
+        Lotus: "LO",
+        Toyota: "T",
+        Jaguar: "J",
+        McLaren: "M",
+        Ferrari: "FR",
+        "Aston Martin": "AM",
+        BMW: "B",
+        Audi: "AU",
+        Mercedes: "MB",
+        "Mercedes-AMG": "AMG"
+      };
+      return {
+        classes: classes.join(" "),
+        accent: accents[hash % accents.length],
+        accentAngle: hash % 5 - 2,
+        badge: badgeLabels[brand] ?? brand.slice(0, 2).toUpperCase()
+      };
     }
 
     function renderCollection() {
@@ -4778,11 +5157,12 @@
         return;
       }
 
+      const shopper = applyRandomCustomer();
       customerVisitInProgress = true;
       customer.classList.remove("visiting");
       void customer.offsetWidth;
       customer.classList.add("visiting");
-      customerMessage.textContent = "A customer is browsing the lot...";
+      customerMessage.textContent = `${shopper.label} is browsing the lot...`;
       customerMessage.classList.add("active");
 
       customerTimers.push(window.setTimeout(() => {
@@ -4799,8 +5179,8 @@
         state.customersServed += 1;
         saveState();
         renderAll();
-        customerMessage.textContent = `Rented ${car.name} for ${price.toLocaleString()} credits.`;
-        showToast(`Customer rented ${car.name} for one day.`);
+        customerMessage.textContent = `${shopper.label} rented ${car.name} for ${price.toLocaleString()} credits.`;
+        showToast(`${shopper.label} rented ${car.name} for one day.`);
       }, 2300));
 
       customerTimers.push(window.setTimeout(() => {
@@ -4809,6 +5189,21 @@
         customerVisitInProgress = false;
         customerTimers = [];
       }, 5500));
+    }
+
+    function applyRandomCustomer() {
+      let profileIndex = Math.floor(Math.random() * CUSTOMER_PROFILES.length);
+      if (CUSTOMER_PROFILES.length > 1 && profileIndex === lastCustomerProfile) {
+        profileIndex = (profileIndex + 1) % CUSTOMER_PROFILES.length;
+      }
+      lastCustomerProfile = profileIndex;
+      const profile = CUSTOMER_PROFILES[profileIndex];
+      customer.className = `customer ${profile.style}`.trim();
+      customer.style.setProperty("--customer-skin", profile.skin);
+      customer.style.setProperty("--customer-shirt", profile.shirt);
+      customer.style.setProperty("--customer-pants", profile.pants);
+      customer.style.setProperty("--customer-hair", profile.hair);
+      return profile;
     }
 
     function getCheapestStoredCar() {

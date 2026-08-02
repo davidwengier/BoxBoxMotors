@@ -16,9 +16,13 @@ A mobile-friendly car pack opening and auto rental tycoon game for the browser.
   movie cars and real LEGO Speed Champions models.
 - Cars use distinct hatchback, SUV, roadster, sedan, muscle, supercar,
   hypercar, brick-built, go-kart, and open-wheel Formula 1 shapes.
+- Car artwork adds model-specific aero, lighting, grilles, stripes, badges,
+  wheel designs, era details, and brand styling across all 200 cars.
 - Track every obtainable car on an automatic collection checklist.
 - Store every packed copy as an individual car, including unlimited duplicates.
 - Rent cars from the auto group to passive customers, with the cheapest available cars chosen first.
+- Serve ten visually distinct customer types with varied clothing, skin tones,
+  hairstyles, and accessories.
 - Close the rental desk at any time to stop new rentals.
 - Sleep to end the day, return every rented car, and see the day's income and rental totals.
 - Process each returned car through interactive scanning, meter-based washing, refuelling,
