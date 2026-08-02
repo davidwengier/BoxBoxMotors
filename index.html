@@ -1310,36 +1310,6 @@
       text-transform: uppercase;
     }
 
-    .stats {
-      display: grid;
-      gap: 7px;
-      margin-bottom: 17px;
-    }
-
-    .stat-row {
-      display: grid;
-      grid-template-columns: 47px 1fr 25px;
-      align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 0.62rem;
-      font-weight: 900;
-      text-transform: uppercase;
-    }
-
-    .stat-track {
-      height: 5px;
-      overflow: hidden;
-      border-radius: 4px;
-      background: #2b3445;
-    }
-
-    .stat-fill {
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--cyan-dark), var(--cyan));
-    }
-
     .select-car {
       width: 100%;
       padding: 10px;
@@ -2366,13 +2336,6 @@
       text-transform: uppercase;
     }
 
-    .power {
-      color: var(--yellow);
-      font-size: 0.75rem;
-      font-weight: 900;
-      text-transform: uppercase;
-    }
-
     .race-prizes {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -2879,23 +2842,6 @@
       font-size: 0.68rem;
       font-weight: 1000;
       text-transform: uppercase;
-    }
-
-    .reveal-stats {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 0.7rem;
-      font-weight: 900;
-      text-transform: uppercase;
-    }
-
-    .reveal-stats strong {
-      display: block;
-      color: var(--text);
-      font-size: 1.2rem;
     }
 
     .toast {
@@ -4328,7 +4274,6 @@
       const available = getAvailableCount(car.id);
       const rented = getRentedCount(car.id);
       const awaitingService = getMaintenanceCount(car.id);
-      const stats = getLeveledStats(car, 1);
       const salePrice = getSalePrice(car);
 
       return `
@@ -4340,13 +4285,8 @@
           <div class="car-visual">${createCarVisual(car)}</div>
           <h3>${car.name}</h3>
           ${car.limited ? `<span class="limited-badge">Limited Edition</span>` : ""}
-          <p class="car-class">${car.class} · ${getPower(stats)} power</p>
+          <p class="car-class">${car.class}</p>
           <p class="car-class">${available} available${rented ? ` · ${rented} rented` : ""}${awaitingService ? ` · ${awaitingService} need service` : ""}</p>
-          <div class="stats">
-            ${createStatRow("Speed", stats.speed)}
-            ${createStatRow("Launch", stats.acceleration)}
-            ${createStatRow("Grip", stats.grip)}
-          </div>
           <button class="select-car" type="button" data-car-id="${car.id}" ${available <= 0 ? "disabled" : ""}>
             ${available > 0 ? `Sell one · 🪙 ${salePrice.toLocaleString()}` : "No available copies"}
           </button>
@@ -4747,16 +4687,6 @@
       customerTimers.push(window.setTimeout(processCustomerVisit, 900));
     }
 
-    function createStatRow(label, value) {
-      return `
-        <div class="stat-row">
-          <span>${label}</span>
-          <span class="stat-track"><span class="stat-fill" style="width:${Math.min(value, 100)}%"></span></span>
-          <span>${value}</span>
-        </div>
-      `;
-    }
-
     function getLeveledStats(car, level) {
       const bonus = Math.max(0, level - 1) * 2;
       return {
@@ -4764,10 +4694,6 @@
         acceleration: Math.min(100, car.acceleration + bonus),
         grip: Math.min(100, car.grip + bonus)
       };
-    }
-
-    function getPower(stats) {
-      return Math.round((stats.speed + stats.acceleration + stats.grip) / 3);
     }
 
     function rarityRank(rarity) {
@@ -4939,7 +4865,6 @@
     function renderReveal() {
       if (pendingResults.length === 1) {
         const { car, isNew, copies } = pendingResults[0];
-        const stats = getLeveledStats(car, 1);
         revealCard.classList.toggle("rarity-limited", car.rarity === "limited");
         revealCard.style.setProperty("--rarity-color", RARITY_COLORS[car.rarity]);
         revealCard.innerHTML = `
@@ -4948,11 +4873,6 @@
           <h2>${car.name}</h2>
           ${car.limited ? `<span class="limited-badge">Limited Edition</span>` : ""}
           <span class="new-badge">${isNew ? "New discovery!" : `Another copy · ${copies} stored`}</span>
-          <div class="reveal-stats">
-            <span><strong>${stats.speed}</strong>Speed</span>
-            <span><strong>${stats.acceleration}</strong>Launch</span>
-            <span><strong>${stats.grip}</strong>Grip</span>
-          </div>
           <button id="keepCarButton" class="primary-button" type="button">Store car · Value 🪙 ${getSalePrice(car).toLocaleString()}</button>
         `;
       } else {
@@ -5320,13 +5240,11 @@
     function renderSelectedRacer() {
       const car = getCar(state.selectedCarId);
       const level = state.collection[car.id];
-      const stats = getLeveledStats(car, level);
       selectedRacer.style.setProperty("--rarity-color", RARITY_COLORS[car.rarity]);
       selectedRacer.innerHTML = `
         <div class="rarity" style="color:${RARITY_COLORS[car.rarity]}">${car.rarity} · Level ${level}</div>
         <div class="car-visual">${createCarVisual(car)}</div>
         <h3>${car.name}</h3>
-        <div class="power">${getPower(stats)} power</div>
       `;
     }
 
