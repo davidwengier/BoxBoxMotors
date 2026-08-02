@@ -1047,8 +1047,7 @@
     .car-headlight,
     .car-taillight,
     .car-accent,
-    .car-spoiler,
-    .car-badge {
+    .car-spoiler {
       position: absolute;
       z-index: 4;
       pointer-events: none;
@@ -1110,24 +1109,6 @@
       transform: rotate(-3deg);
     }
 
-    .car-badge {
-      right: 42px;
-      bottom: 27px;
-      display: grid;
-      min-width: 14px;
-      height: 12px;
-      place-items: center;
-      padding: 0 2px;
-      border: 1px solid rgb(5 7 10 / 80%);
-      border-radius: 3px;
-      background: rgb(238 242 247 / 82%);
-      color: #10141b;
-      font-size: 5px;
-      font-style: normal;
-      font-weight: 1000;
-      line-height: 1;
-    }
-
     .car.aero .car-spoiler,
     .car.race-livery .car-spoiler {
       display: block;
@@ -1180,12 +1161,10 @@
     .car.formula .car-grille,
     .car.formula .car-headlight,
     .car.formula .car-taillight,
-    .car.formula .car-badge,
     .car.formula .car-spoiler,
     .car.kart .car-grille,
     .car.kart .car-headlight,
     .car.kart .car-taillight,
-    .car.kart .car-badge,
     .car.kart .car-spoiler {
       display: none;
     }
@@ -1198,8 +1177,7 @@
       height: 4px;
     }
 
-    .car.brick .car-grille,
-    .car.brick .car-badge {
+    .car.brick .car-grille {
       image-rendering: pixelated;
     }
 
@@ -4291,7 +4269,6 @@
           <span class="car-headlight"></span>
           <span class="car-taillight"></span>
           <span class="car-spoiler"></span>
-          <span class="car-badge">${profile.badge}</span>
           <span class="wheel back"></span>
           <span class="wheel front"></span>
         </div>
@@ -4323,30 +4300,10 @@
       if (hasDualStripe) classes.push("dual-stripe");
 
       const accents = ["#f3f5f7", "#151a22", "#ffd23f", "#ff4e5f", "#34d5e8", "#72e28c"];
-      const badgeLabels = {
-        Ford: "F",
-        Honda: "H",
-        Acura: "A",
-        Porsche: "P",
-        Chevrolet: "CH",
-        Hyundai: "N",
-        Lamborghini: "L",
-        Lotus: "LO",
-        Toyota: "T",
-        Jaguar: "J",
-        McLaren: "M",
-        Ferrari: "FR",
-        "Aston Martin": "AM",
-        BMW: "B",
-        Audi: "AU",
-        Mercedes: "MB",
-        "Mercedes-AMG": "AMG"
-      };
       return {
         classes: classes.join(" "),
         accent: accents[hash % accents.length],
-        accentAngle: hash % 5 - 2,
-        badge: badgeLabels[brand] ?? brand.slice(0, 2).toUpperCase()
+        accentAngle: hash % 5 - 2
       };
     }
 

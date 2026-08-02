@@ -16,7 +16,7 @@ A mobile-friendly car pack opening and auto rental tycoon game for the browser.
   movie cars and real LEGO Speed Champions models.
 - Cars use distinct hatchback, SUV, roadster, sedan, muscle, supercar,
   hypercar, brick-built, go-kart, and open-wheel Formula 1 shapes.
-- Car artwork adds model-specific aero, lighting, grilles, stripes, badges,
+- Car artwork adds model-specific aero, lighting, grilles, stripes,
   wheel designs, era details, and brand styling across all 200 cars.
 - Track every obtainable car on an automatic collection checklist.
 - Store every packed copy as an individual car, including unlimited duplicates.
