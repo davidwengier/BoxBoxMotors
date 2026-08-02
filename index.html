@@ -25,6 +25,7 @@
       --rare: #39a4ff;
       --epic: #b568ff;
       --legendary: #ffb62e;
+      --mythic: #ff3045;
       --shadow: 0 22px 65px rgb(0 0 0 / 45%);
     }
 
@@ -436,6 +437,7 @@
     .odds .rare { background: var(--rare); }
     .odds .epic { background: var(--epic); }
     .odds .legendary { background: var(--legendary); }
+    .odds .mythic { background: var(--mythic); }
 
     .buy-button,
     .primary-button {
@@ -624,6 +626,21 @@
       color: var(--muted);
       font-size: 0.66rem;
       font-weight: 900;
+    }
+
+    .limited-badge {
+      display: inline-block;
+      margin: 2px 0 7px;
+      padding: 4px 7px;
+      border: 1px solid #ffdd66;
+      border-radius: 7px;
+      background: rgb(255 196 45 / 13%);
+      color: #ffdd66;
+      font-size: 0.56rem;
+      font-style: normal;
+      font-weight: 1000;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .car-visual {
@@ -3018,7 +3035,8 @@
       common: "#aeb8c8",
       rare: "#39a4ff",
       epic: "#b568ff",
-      legendary: "#ffb62e"
+      legendary: "#ffb62e",
+      mythic: "#ff3045"
     };
 
     const CORE_CARS = [
@@ -3054,6 +3072,8 @@
       makeCar("ford-mustang-boss302", "Ford Mustang Boss 302", "Ford", "epic", "Classic Muscle", "usa", "muscle", "#ff6d2d", 82, 76, 72),
       makeCar("ford-shelby-cobra", "Ford Shelby Cobra 427", "Ford", "epic", "Roadster", "usa", "roadster", "#266ed6", 86, 84, 69),
       makeCar("ford-gt40", "Ford GT40 Mk II", "Ford", "legendary", "Le Mans Legend", "usa", "supercar", "#4aa6df", 94, 89, 90),
+      makeCar("ford-gt-mkiv", "Ford GT Mk IV", "Ford", "mythic", "Track-Only Hypercar", "usa", "hypercar", "#d93b3d", 100, 98, 97),
+      makeCar("ford-gt-holman-moody", "Ford GT Holman Moody Heritage Edition", "Ford", "legendary", "Limited Edition Supercar", "usa", "supercar", "#d9b34c", 95, 92, 92, "core", true),
 
       makeCar("honda-fit-rs", "Honda Fit RS", "Honda", "common", "Sport Hatch", "japan", "hatch", "#f4d445", 49, 64, 65),
       makeCar("honda-prelude", "Honda Prelude Type SH", "Honda", "common", "Sports Coupe", "japan", "sedan", "#d8414d", 58, 62, 67),
@@ -3062,12 +3082,15 @@
       makeCar("honda-s660", "Honda S660", "Honda", "common", "Kei Roadster", "japan", "roadster", "#f3f3ee", 48, 68, 71),
       makeCar("honda-crx-si", "Honda CR-X Si", "Honda", "common", "Lightweight Hatch", "japan", "hatch", "#ef4d46", 53, 65, 70),
       makeCar("honda-accord-euror", "Honda Accord Euro R", "Honda", "rare", "Sport Sedan", "japan", "sedan", "#e7e9ed", 68, 71, 74),
+      makeCar("honda-nsx-r-gt", "Honda NSX-R GT", "Honda", "mythic", "Homologation Special", "japan", "supercar", "#f2f0e8", 95, 96, 98),
+      makeCar("honda-s2000-cr", "Honda S2000 CR", "Honda", "rare", "Limited Edition Roadster", "japan", "roadster", "#4c8fd5", 74, 80, 84, "core", true),
 
       makeCar("acura-rsx", "Acura RSX Type S", "Acura", "common", "Sport Liftback", "japan", "hatch", "#476dc5", 62, 68, 69),
       makeCar("acura-tlx", "Acura TLX Type S", "Acura", "rare", "Sport Sedan", "japan", "sedan", "#d04b55", 74, 72, 76),
       makeCar("acura-integra-r", "Acura Integra Type R", "Acura", "rare", "JDM Icon", "japan", "hatch", "#f1f0e8", 69, 75, 80),
       makeCar("acura-nsx-1991", "Acura NSX 1991", "Acura", "epic", "Supercar", "japan", "supercar", "#d93838", 84, 82, 86),
       makeCar("acura-zdx", "Acura ZDX Type S", "Acura", "rare", "Performance SUV", "japan", "suv", "#6469bd", 72, 79, 73),
+      makeCar("acura-arx-06", "Acura ARX-06", "Acura", "mythic", "GTP Prototype", "usa", "hypercar", "#e33c42", 100, 99, 100),
 
       makeCar("porsche-718-cayman", "Porsche 718 Cayman GTS", "Porsche", "rare", "Sports Car", "europe", "supercar", "#f2c334", 78, 77, 84),
       makeCar("porsche-boxster-spyder", "Porsche 718 Spyder RS", "Porsche", "rare", "Roadster", "europe", "roadster", "#68b5df", 79, 79, 85),
@@ -3076,6 +3099,8 @@
       makeCar("porsche-carrera-gt", "Porsche Carrera GT", "Porsche", "legendary", "Analog Hypercar", "europe", "hypercar", "#c9cdd0", 96, 90, 92),
       makeCar("porsche-cayenne-turbo", "Porsche Cayenne Turbo GT", "Porsche", "rare", "Performance SUV", "europe", "suv", "#6a8d42", 80, 78, 75),
       makeCar("porsche-taycan-turbo", "Porsche Taycan Turbo S", "Porsche", "epic", "Electric Sedan", "europe", "sedan", "#9b6cca", 87, 95, 84),
+      makeCar("porsche-919-evo", "Porsche 919 Hybrid Evo", "Porsche", "mythic", "Record-Breaking Prototype", "europe", "hypercar", "#eef0ed", 100, 100, 100),
+      makeCar("porsche-911-st", "Porsche 911 S/T", "Porsche", "epic", "Limited Edition Sports Car", "europe", "supercar", "#d2c7a7", 88, 87, 91, "core", true),
 
       makeCar("chevrolet-camaro-ss", "Chevrolet Camaro SS", "Chevrolet", "rare", "Muscle", "usa", "muscle", "#e7b928", 76, 72, 66),
       makeCar("chevrolet-camaro-zl1", "Chevrolet Camaro ZL1", "Chevrolet", "epic", "Track Muscle", "usa", "muscle", "#4b79d8", 87, 82, 80),
@@ -3084,6 +3109,7 @@
       makeCar("chevrolet-bel-air", "Chevrolet Bel Air", "Chevrolet", "common", "Classic Cruiser", "usa", "sedan", "#50b7bc", 48, 45, 53),
       makeCar("chevrolet-chevelle", "Chevrolet Chevelle SS", "Chevrolet", "rare", "Classic Muscle", "usa", "muscle", "#743fa8", 72, 68, 58),
       makeCar("chevrolet-silverado-zr2", "Chevrolet Silverado ZR2", "Chevrolet", "common", "Off-Road Truck", "usa", "suv", "#d4533f", 58, 54, 65),
+      makeCar("chevrolet-corvette-c8r", "Chevrolet Corvette C8.R", "Chevrolet", "mythic", "Endurance Race Car", "usa", "hypercar", "#e7c82f", 98, 97, 99),
 
       makeCar("hyundai-veloster-n", "Hyundai Veloster N", "Hyundai", "common", "Hot Hatch", "korea", "hatch", "#58a4d7", 61, 69, 70),
       makeCar("hyundai-kona-n", "Hyundai Kona N", "Hyundai", "common", "Sport SUV", "korea", "suv", "#ef5350", 60, 67, 68),
@@ -3091,6 +3117,8 @@
       makeCar("hyundai-genesis-coupe", "Hyundai Genesis Coupe", "Hyundai", "common", "Sports Coupe", "korea", "sedan", "#4a6eab", 64, 63, 65),
       makeCar("hyundai-tiburon", "Hyundai Tiburon GT", "Hyundai", "common", "Sports Coupe", "korea", "sedan", "#db3c45", 55, 58, 62),
       makeCar("hyundai-n-vision-74", "Hyundai N Vision 74", "Hyundai", "epic", "Hydrogen Concept", "korea", "supercar", "#e6e8df", 86, 90, 84),
+      makeCar("hyundai-n-2025-vgt", "Hyundai N 2025 Vision Gran Turismo", "Hyundai", "mythic", "Hydrogen Prototype", "korea", "hypercar", "#4a9fd1", 99, 100, 98),
+      makeCar("hyundai-i30n-drive-n", "Hyundai i30 N Drive-N Limited Edition", "Hyundai", "rare", "Limited Edition Hot Hatch", "korea", "hatch", "#262a31", 70, 76, 76, "core", true),
 
       makeCar("lamborghini-huracan-evo", "Lamborghini Huracan EVO", "Lamborghini", "epic", "V10 Supercar", "europe", "supercar", "#f2b72c", 90, 88, 86),
       makeCar("lamborghini-huracan-sto", "Lamborghini Huracan STO", "Lamborghini", "epic", "Track Supercar", "europe", "supercar", "#4ba6d8", 91, 89, 92),
@@ -3098,6 +3126,7 @@
       makeCar("lamborghini-countach", "Lamborghini Countach LPI 800-4", "Lamborghini", "legendary", "Hybrid Supercar", "europe", "hypercar", "#f4f1e7", 95, 94, 89),
       makeCar("lamborghini-gallardo", "Lamborghini Gallardo Superleggera", "Lamborghini", "epic", "V10 Supercar", "europe", "supercar", "#e4d126", 87, 84, 83),
       makeCar("lamborghini-urus", "Lamborghini Urus Performante", "Lamborghini", "epic", "Super SUV", "europe", "suv", "#6c9e42", 85, 83, 75),
+      makeCar("lamborghini-essenza", "Lamborghini Essenza SCV12", "Lamborghini", "mythic", "Track-Only V12", "europe", "hypercar", "#48a84e", 100, 98, 99),
 
       makeCar("lotus-elise", "Lotus Elise S1", "Lotus", "common", "Lightweight Roadster", "europe", "roadster", "#f0b928", 65, 75, 88),
       makeCar("lotus-exige", "Lotus Exige Cup 430", "Lotus", "rare", "Track Car", "europe", "supercar", "#49a85b", 80, 82, 91),
@@ -3105,6 +3134,7 @@
       makeCar("lotus-emeya", "Lotus Emeya R", "Lotus", "epic", "Electric GT", "europe", "sedan", "#835fd0", 88, 94, 86),
       makeCar("lotus-eletre", "Lotus Eletre R", "Lotus", "epic", "Electric SUV", "europe", "suv", "#d9c049", 86, 92, 80),
       makeCar("lotus-esprit", "Lotus Esprit V8", "Lotus", "rare", "Classic Supercar", "europe", "supercar", "#d9443f", 79, 76, 82),
+      makeCar("lotus-type-66", "Lotus Type 66", "Lotus", "mythic", "Can-Am Track Special", "europe", "hypercar", "#d63c3e", 98, 97, 100),
 
       makeCar("toyota-gr-corolla", "Toyota GR Corolla", "Toyota", "rare", "Rally Hatch", "japan", "hatch", "#eeeeea", 70, 76, 78),
       makeCar("toyota-celica-gt4", "Toyota Celica GT-Four", "Toyota", "rare", "Rally Coupe", "japan", "sedan", "#d64042", 68, 72, 77),
@@ -3113,6 +3143,7 @@
       makeCar("toyota-ae86", "Toyota AE86 Corolla", "Toyota", "common", "Drift Classic", "japan", "hatch", "#f2eee4", 54, 62, 70),
       makeCar("toyota-land-cruiser", "Toyota Land Cruiser GR Sport", "Toyota", "common", "Off-Road SUV", "japan", "suv", "#d7c4a0", 55, 50, 67),
       makeCar("toyota-2000gt", "Toyota 2000GT", "Toyota", "legendary", "Classic Sports", "japan", "roadster", "#e8e6dc", 82, 78, 88),
+      makeCar("toyota-gr010", "Toyota GR010 Hybrid", "Toyota", "mythic", "Le Mans Hypercar", "japan", "hypercar", "#e33b3e", 100, 99, 99),
 
       makeCar("jaguar-e-type", "Jaguar E-Type Series 1", "Jaguar", "rare", "Classic Sports Car", "europe", "roadster", "#3f876d", 74, 70, 78),
       makeCar("jaguar-d-type", "Jaguar D-Type", "Jaguar", "legendary", "Le Mans Race Car", "europe", "roadster", "#2f8068", 88, 83, 91),
@@ -3124,6 +3155,8 @@
       makeCar("jaguar-project-8", "Jaguar XE SV Project 8", "Jaguar", "epic", "Track Saloon", "europe", "sedan", "#e36a32", 86, 89, 88),
       makeCar("jaguar-ipace-etrophy", "Jaguar I-PACE eTROPHY", "Jaguar", "rare", "Electric Race SUV", "europe", "suv", "#4c9fc3", 77, 91, 79),
       makeCar("jaguar-fpace-svr", "Jaguar F-PACE SVR", "Jaguar", "common", "Performance SUV", "europe", "suv", "#596a52", 72, 78, 70),
+      makeCar("jaguar-xjr9", "Jaguar XJR-9", "Jaguar", "mythic", "Group C Prototype", "europe", "hypercar", "#6d4ba5", 100, 97, 99),
+      makeCar("jaguar-ftype-zp", "Jaguar F-Type ZP Edition", "Jaguar", "epic", "Limited Edition Coupe", "europe", "supercar", "#486f85", 90, 88, 87, "core", true),
 
       makeCar("lego-ford-mustang", "LEGO Ford Mustang Dark Horse", "Ford", "common", "Speed Champions Muscle", "usa", "brick", "#315bc5", 55, 68, 62, "lego"),
       makeCar("lego-ford-gt", "LEGO Aston Martin Valkyrie AMR Pro", "Aston Martin", "legendary", "Speed Champions Hypercar", "europe", "brick", "#36a85a", 90, 88, 86, "lego"),
@@ -3234,7 +3267,7 @@
         price: 3500,
         symbol: "X",
         color: "#ffb62e",
-        odds: { common: 0, rare: 0, epic: 0, legendary: 100 }
+        odds: { common: 0, rare: 0, epic: 0, legendary: 90, mythic: 10 }
       },
       {
         id: "ford",
@@ -3245,7 +3278,7 @@
         symbol: "F",
         color: "#3184d8",
         brands: ["Ford"],
-        odds: { common: 28, rare: 45, epic: 22, legendary: 5 }
+        odds: { common: 27, rare: 44, epic: 22, legendary: 5, mythic: 2 }
       },
       {
         id: "honda-acura",
@@ -3256,7 +3289,7 @@
         symbol: "H",
         color: "#e9414b",
         brands: ["Honda", "Acura"],
-        odds: { common: 34, rare: 43, epic: 19, legendary: 4 }
+        odds: { common: 33, rare: 42, epic: 19, legendary: 4, mythic: 2 }
       },
       {
         id: "porsche",
@@ -3267,7 +3300,7 @@
         symbol: "P",
         color: "#d2b359",
         brands: ["Porsche"],
-        odds: { common: 0, rare: 50, epic: 38, legendary: 12 }
+        odds: { common: 0, rare: 48, epic: 37, legendary: 13, mythic: 2 }
       },
       {
         id: "chevrolet",
@@ -3278,7 +3311,7 @@
         symbol: "C",
         color: "#e1bd32",
         brands: ["Chevrolet"],
-        odds: { common: 24, rare: 42, epic: 28, legendary: 6 }
+        odds: { common: 23, rare: 41, epic: 28, legendary: 6, mythic: 2 }
       },
       {
         id: "hyundai",
@@ -3289,7 +3322,7 @@
         symbol: "N",
         color: "#5caedb",
         brands: ["Hyundai"],
-        odds: { common: 57, rare: 33, epic: 10, legendary: 0 }
+        odds: { common: 55, rare: 33, epic: 10, legendary: 0, mythic: 2 }
       },
       {
         id: "toyota",
@@ -3300,7 +3333,7 @@
         symbol: "T",
         color: "#ed4149",
         brands: ["Toyota"],
-        odds: { common: 28, rare: 45, epic: 22, legendary: 5 }
+        odds: { common: 27, rare: 44, epic: 22, legendary: 5, mythic: 2 }
       },
       {
         id: "jaguar",
@@ -3311,7 +3344,7 @@
         symbol: "J",
         color: "#4ba47e",
         brands: ["Jaguar"],
-        odds: { common: 20, rare: 35, epic: 32, legendary: 13 }
+        odds: { common: 19, rare: 34, epic: 32, legendary: 13, mythic: 2 }
       },
       {
         id: "exotic",
@@ -3322,7 +3355,7 @@
         symbol: "E",
         color: "#82d343",
         brands: ["Lamborghini", "Lotus"],
-        odds: { common: 8, rare: 25, epic: 47, legendary: 20 }
+        odds: { common: 7, rare: 24, epic: 46, legendary: 20, mythic: 3 }
       },
       {
         id: "go-kart",
@@ -3806,6 +3839,7 @@
             <span class="pack-content-check">${collected ? "✓" : "?"}</span>
             <div class="car-visual">${createCarVisual(car)}</div>
             <strong>${car.name}</strong>
+            ${car.limited ? `<em class="limited-badge">Limited Edition</em>` : ""}
             <span>${car.rarity} · ${collected ? "Collected" : "Not collected"}</span>
           </article>
         `;
@@ -3834,6 +3868,7 @@
           </div>
           <div class="car-visual">${createCarVisual(car)}</div>
           <h3>${car.name}</h3>
+          ${car.limited ? `<span class="limited-badge">Limited Edition</span>` : ""}
           <p class="car-class">${car.class} · ${getPower(stats)} power</p>
           <p class="car-class">${available} available${rented ? ` · ${rented} rented` : ""}${awaitingService ? ` · ${awaitingService} need service` : ""}</p>
           <div class="stats">
@@ -3876,7 +3911,7 @@
               <span class="collection-check">${owned ? "✓" : "?"}</span>
               <div class="car-visual">${createCarVisual(car)}</div>
               <h3>${car.name}</h3>
-              <p>${car.rarity}${owned ? ` · ${copies} stored` : " · Not discovered"}</p>
+              <p>${car.rarity}${car.limited ? " · Limited Edition" : ""}${owned ? ` · ${copies} stored` : " · Not discovered"}</p>
             </article>
           `;
         })
@@ -4213,15 +4248,15 @@
     }
 
     function rarityRank(rarity) {
-      return ["common", "rare", "epic", "legendary"].indexOf(rarity);
+      return ["common", "rare", "epic", "legendary", "mythic"].indexOf(rarity);
     }
 
     function getCar(id) {
       return CARS.find((car) => car.id === id);
     }
 
-    function makeCar(id, name, brand, rarity, className, origin, body, color, speed, acceleration, grip, series = "core") {
-      return { id, name, brand, rarity, class: className, origin, body, color, speed, acceleration, grip, series };
+    function makeCar(id, name, brand, rarity, className, origin, body, color, speed, acceleration, grip, series = "core", limited = false) {
+      return { id, name, brand, rarity, class: className, origin, body, color, speed, acceleration, grip, series, limited };
     }
 
     function getCarBrand(car) {
@@ -4328,7 +4363,8 @@
         common: Math.max(0.4, 1 - state.luckLevel * 0.06),
         rare: 1 + state.luckLevel * 0.02,
         epic: 1 + state.luckLevel * 0.12,
-        legendary: 1 + state.luckLevel * 0.22
+        legendary: 1 + state.luckLevel * 0.22,
+        mythic: 1 + state.luckLevel * 0.3
       };
       const weightedRarities = Object.entries(pack.odds)
         .filter(([rarity, chance]) => chance > 0 && eligibleCars.some((car) => car.rarity === rarity))
@@ -4384,6 +4420,7 @@
           <div class="reveal-rarity">${car.rarity} pull</div>
           <div class="car-visual">${createCarVisual(car)}</div>
           <h2>${car.name}</h2>
+          ${car.limited ? `<span class="limited-badge">Limited Edition</span>` : ""}
           <span class="new-badge">${isNew ? "New discovery!" : `Another copy · ${copies} stored`}</span>
           <div class="reveal-stats">
             <span><strong>${stats.speed}</strong>Speed</span>
@@ -4405,6 +4442,7 @@
               <div class="bulk-result" style="--result-color:${RARITY_COLORS[car.rarity]}">
                 <div class="car-visual">${createCarVisual(car)}</div>
                 <strong>${car.name}</strong>
+                ${car.limited ? `<em class="limited-badge">Limited</em>` : ""}
                 <span>${isNew ? "New!" : `${state.collection[car.id]} stored`} · ${car.rarity}</span>
               </div>
             `).join("")}
@@ -4467,7 +4505,8 @@
         common: 160,
         rare: 420,
         epic: 950,
-        legendary: 2200
+        legendary: 2200,
+        mythic: 5000
       }[car.rarity];
     }
 
