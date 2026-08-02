@@ -1235,27 +1235,6 @@
       transform: scale(1.15);
     }
 
-    .dirt-spot {
-      position: absolute;
-      display: grid;
-      width: 34px;
-      height: 34px;
-      place-items: center;
-      border: 2px solid #29190e;
-      border-radius: 50%;
-      background: #7d552f;
-      color: #f1d6a5;
-      font-size: 0.75rem;
-      font-weight: 1000;
-      box-shadow: 0 3px 0 #3f2816;
-    }
-
-    .dirt-spot[data-service-item="dirt-1"] { top: 19%; left: 22%; }
-    .dirt-spot[data-service-item="dirt-2"] { top: 48%; left: 37%; }
-    .dirt-spot[data-service-item="dirt-3"] { top: 24%; right: 24%; }
-    .dirt-spot[data-service-item="dirt-4"] { right: 13%; bottom: 18%; }
-    .dirt-spot[data-service-item="dirt-5"] { bottom: 14%; left: 15%; }
-
     .fuel-gauge {
       height: 30px;
       overflow: hidden;
@@ -1269,6 +1248,10 @@
       height: 100%;
       background: linear-gradient(90deg, var(--yellow), var(--green));
       transition: width 180ms ease;
+    }
+
+    .cleaning-fill {
+      background: linear-gradient(90deg, #397bda, var(--cyan));
     }
 
     .fuel-readout {
@@ -3467,6 +3450,7 @@
         carId,
         step: 0,
         completedItems: [],
+        cleaningLevel: 0,
         fuelLevel: 0,
         parkingBay: Math.floor(Math.random() * 3)
       };
@@ -3531,14 +3515,13 @@
       if (task.id === "clean") {
         return `
           <div class="service-interaction">
-            <p class="interaction-instruction">Tap all five dirt spots to wash the car.</p>
+            <p class="interaction-instruction">Wash the car until the cleaning meter reaches 100%.</p>
             <div class="cleaning-stage">
               ${createCarVisual(car)}
-              ${[1, 2, 3, 4, 5]
-                .filter((spot) => !completed.has(`dirt-${spot}`))
-                .map((spot) => `<button class="dirt-spot" type="button" data-service-item="dirt-${spot}">✦</button>`)
-                .join("")}
             </div>
+            <div class="fuel-readout">${maintenanceSession.cleaningLevel}% clean</div>
+            <div class="fuel-gauge"><div class="fuel-fill cleaning-fill" style="width:${maintenanceSession.cleaningLevel}%"></div></div>
+            <button class="primary-button" type="button" data-service-action="wash">🧽 Wash car</button>
           </div>
         `;
       }
@@ -3616,6 +3599,16 @@
         return;
       }
 
+      if (currentTask.id === "clean" && control.dataset.serviceAction === "wash") {
+        maintenanceSession.cleaningLevel = Math.min(100, maintenanceSession.cleaningLevel + 20);
+        if (maintenanceSession.cleaningLevel >= 100) {
+          completeServiceTask();
+        } else {
+          renderServiceGame(`Cleaning raised to ${maintenanceSession.cleaningLevel}%. Keep washing.`);
+        }
+        return;
+      }
+
       if (currentTask.id === "restock" && control.dataset.parkingBay !== undefined) {
         if (Number(control.dataset.parkingBay) === maintenanceSession.parkingBay) {
           completeServiceTask();
@@ -3642,6 +3635,7 @@
       }
 
       maintenanceSession.completedItems = [];
+      maintenanceSession.cleaningLevel = 0;
       maintenanceSession.fuelLevel = 0;
       renderServiceGame(`${currentTask.title} complete. Continue processing the return.`);
     }
