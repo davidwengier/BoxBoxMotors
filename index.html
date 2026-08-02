@@ -278,11 +278,11 @@
 
     .pack {
       position: relative;
-      min-height: 480px;
+      min-height: 600px;
       display: flex;
       overflow: hidden;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: flex-start;
       padding: 24px;
       border: 1px solid var(--line);
       border-radius: 24px;
@@ -324,17 +324,17 @@
     }
 
     .pack-art {
-      position: absolute;
-      top: 48px;
-      left: 50%;
+      position: relative;
       width: 180px;
       height: 205px;
-      transform: translateX(-50%) rotate(-4deg);
+      flex: 0 0 205px;
+      margin: 4px auto 15px;
+      transform: rotate(-4deg);
       transition: transform 220ms ease;
     }
 
     .pack:hover .pack-art {
-      transform: translateX(-50%) translateY(-8px) rotate(2deg) scale(1.04);
+      transform: translateY(-8px) rotate(2deg) scale(1.04);
     }
 
     .box-lid,
