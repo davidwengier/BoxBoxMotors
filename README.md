@@ -10,8 +10,9 @@ A mobile-friendly car pack opening and auto rental tycoon game for the browser.
 - Each pack has a stable pool of no more than 20 different cars.
 - View every car available in a pack and track pack-specific collection completion.
 - Collect 100 cars across four rarity tiers.
-- Every car is from Ford, Honda, Acura, Porsche, Chevrolet, Hyundai,
-  Lamborghini, Lotus, or Toyota.
+- The main production collection uses Ford, Honda, Acura, Porsche, Chevrolet,
+  Hyundai, Lamborghini, Lotus, and Toyota, while special packs use licensed
+  movie cars and real LEGO Speed Champions models.
 - Cars use distinct hatchback, SUV, roadster, sedan, muscle, supercar,
   hypercar, and brick-built shapes.
 - Track every obtainable car on an automatic collection checklist.
