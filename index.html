@@ -1149,6 +1149,133 @@
       text-align: center;
     }
 
+    .service-interaction {
+      min-height: 130px;
+      margin: 14px 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgb(5 9 14 / 78%);
+    }
+
+    .scan-grid,
+    .inspection-grid,
+    .parking-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .scan-item,
+    .inspection-item,
+    .parking-bay {
+      min-height: 72px;
+      padding: 9px;
+      border: 2px solid #303949;
+      border-radius: 10px;
+      background: #151c27;
+      color: var(--text);
+      font-size: 0.65rem;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .scan-item.complete,
+    .inspection-item.complete {
+      border-color: var(--green);
+      background: rgb(24 91 48 / 45%);
+      color: var(--green);
+    }
+
+    .scan-item span,
+    .inspection-item span {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1.2rem;
+    }
+
+    .cleaning-stage {
+      position: relative;
+      display: grid;
+      min-height: 145px;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 12px;
+      background: linear-gradient(#202b3b, #101620);
+    }
+
+    .cleaning-stage .car {
+      transform: scale(1.15);
+    }
+
+    .dirt-spot {
+      position: absolute;
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 2px solid #29190e;
+      border-radius: 50%;
+      background: #7d552f;
+      color: #f1d6a5;
+      font-size: 0.75rem;
+      font-weight: 1000;
+      box-shadow: 0 3px 0 #3f2816;
+    }
+
+    .dirt-spot[data-service-item="dirt-1"] { top: 19%; left: 22%; }
+    .dirt-spot[data-service-item="dirt-2"] { top: 48%; left: 37%; }
+    .dirt-spot[data-service-item="dirt-3"] { top: 24%; right: 24%; }
+    .dirt-spot[data-service-item="dirt-4"] { right: 13%; bottom: 18%; }
+    .dirt-spot[data-service-item="dirt-5"] { bottom: 14%; left: 15%; }
+
+    .fuel-gauge {
+      height: 30px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 3px solid #090c12;
+      border-radius: 9px;
+      background: #242c39;
+    }
+
+    .fuel-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--yellow), var(--green));
+      transition: width 180ms ease;
+    }
+
+    .fuel-readout {
+      margin-bottom: 10px;
+      color: var(--yellow);
+      font-size: 1.15rem;
+      font-weight: 1000;
+      text-align: center;
+    }
+
+    .inspection-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .parking-bay {
+      min-height: 90px;
+      border-style: dashed;
+      font-size: 0.72rem;
+    }
+
+    .parking-bay.target {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: inset 0 0 20px rgb(33 230 255 / 9%);
+    }
+
+    .interaction-instruction {
+      margin: 0 0 11px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
     .day-report-card {
       width: min(520px, 100%);
       padding: 34px;
@@ -2947,8 +3074,8 @@
       if (button) startMaintenance(button.dataset.maintainId);
     });
     serviceGame.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-service-action]");
-      if (button) advanceMaintenance(button.dataset.serviceAction);
+      const control = event.target.closest("[data-service-item], [data-service-action], [data-parking-bay]");
+      if (control) handleServiceInteraction(control);
     });
 
     openingBox.addEventListener("click", openPendingPack);
@@ -3028,7 +3155,10 @@
           }
         });
 
-        if (Object.keys(collection).length === 0) {
+        const hasSavedCollection = saved.collection
+          && typeof saved.collection === "object"
+          && !Array.isArray(saved.collection);
+        if (!hasSavedCollection) {
           collection["metro-zip"] = 1;
         }
 
@@ -3243,7 +3373,10 @@
       if (!state.maintenanceQueue.includes(carId)) return;
       maintenanceSession = {
         carId,
-        step: 0
+        step: 0,
+        completedItems: [],
+        fuelLevel: 0,
+        parkingBay: Math.floor(Math.random() * 3)
       };
       renderServiceGame();
     }
@@ -3276,17 +3409,133 @@
             `;
           }).join("")}
         </div>
+        ${renderServiceInteraction(currentTask, car)}
         <p class="service-message">${message}</p>
-        <button class="primary-button" type="button" data-service-action="${currentTask.id}">
-          ${currentTask.icon} ${currentTask.title}
-        </button>
       `;
     }
 
-    function advanceMaintenance(action) {
+    function renderServiceInteraction(task, car) {
+      const completed = new Set(maintenanceSession.completedItems);
+      if (task.id === "check-in") {
+        const scans = [
+          ["rental-tag", "🏷️", "Rental tag"],
+          ["mileage", "🔢", "Mileage"],
+          ["fuel-reading", "⛽", "Fuel reading"]
+        ];
+        return `
+          <div class="service-interaction">
+            <p class="interaction-instruction">Tap each item to scan the returned car into the system.</p>
+            <div class="scan-grid">
+              ${scans.map(([id, icon, label]) => `
+                <button class="scan-item ${completed.has(id) ? "complete" : ""}" type="button" data-service-item="${id}">
+                  <span>${completed.has(id) ? "✓" : icon}</span>${label}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if (task.id === "clean") {
+        return `
+          <div class="service-interaction">
+            <p class="interaction-instruction">Tap all five dirt spots to wash the car.</p>
+            <div class="cleaning-stage">
+              ${createCarVisual(car)}
+              ${[1, 2, 3, 4, 5]
+                .filter((spot) => !completed.has(`dirt-${spot}`))
+                .map((spot) => `<button class="dirt-spot" type="button" data-service-item="dirt-${spot}">✦</button>`)
+                .join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if (task.id === "refuel") {
+        return `
+          <div class="service-interaction">
+            <p class="interaction-instruction">Pump fuel until the tank reaches 100%.</p>
+            <div class="fuel-readout">${maintenanceSession.fuelLevel}% full</div>
+            <div class="fuel-gauge"><div class="fuel-fill" style="width:${maintenanceSession.fuelLevel}%"></div></div>
+            <button class="primary-button" type="button" data-service-action="pump">⛽ Pump fuel</button>
+          </div>
+        `;
+      }
+
+      if (task.id === "inspect") {
+        const checks = [
+          ["tyres", "🛞", "Tyres"],
+          ["brakes", "🛑", "Brakes"],
+          ["lights", "💡", "Lights"],
+          ["glass", "🪟", "Glass"]
+        ];
+        return `
+          <div class="service-interaction">
+            <p class="interaction-instruction">Inspect every safety item before approving the car.</p>
+            <div class="inspection-grid">
+              ${checks.map(([id, icon, label]) => `
+                <button class="inspection-item ${completed.has(id) ? "complete" : ""}" type="button" data-service-item="${id}">
+                  <span>${completed.has(id) ? "✓" : icon}</span>${label}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="service-interaction">
+          <p class="interaction-instruction">Park the car in highlighted Bay ${maintenanceSession.parkingBay + 1}.</p>
+          <div class="parking-grid">
+            ${[0, 1, 2].map((bay) => `
+              <button class="parking-bay ${bay === maintenanceSession.parkingBay ? "target" : ""}" type="button" data-parking-bay="${bay}">
+                Bay ${bay + 1}
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function handleServiceInteraction(control) {
       if (!maintenanceSession) return;
       const currentTask = SERVICE_TASKS[maintenanceSession.step];
-      if (!currentTask || currentTask.id !== action) return;
+      if (!currentTask) return;
+
+      if (control.dataset.serviceItem) {
+        if (maintenanceSession.completedItems.includes(control.dataset.serviceItem)) return;
+        maintenanceSession.completedItems.push(control.dataset.serviceItem);
+        const requiredItems = { "check-in": 3, clean: 5, inspect: 4 }[currentTask.id];
+        if (maintenanceSession.completedItems.length >= requiredItems) {
+          completeServiceTask();
+        } else {
+          renderServiceGame(`${maintenanceSession.completedItems.length} of ${requiredItems} items complete.`);
+        }
+        return;
+      }
+
+      if (currentTask.id === "refuel" && control.dataset.serviceAction === "pump") {
+        maintenanceSession.fuelLevel = Math.min(100, maintenanceSession.fuelLevel + 20);
+        if (maintenanceSession.fuelLevel >= 100) {
+          completeServiceTask();
+        } else {
+          renderServiceGame(`Fuel level raised to ${maintenanceSession.fuelLevel}%. Keep pumping.`);
+        }
+        return;
+      }
+
+      if (currentTask.id === "restock" && control.dataset.parkingBay !== undefined) {
+        if (Number(control.dataset.parkingBay) === maintenanceSession.parkingBay) {
+          completeServiceTask();
+        } else {
+          renderServiceGame(`Wrong space. Park this car in Bay ${maintenanceSession.parkingBay + 1}.`);
+        }
+      }
+    }
+
+    function completeServiceTask() {
+      if (!maintenanceSession) return;
+      const currentTask = SERVICE_TASKS[maintenanceSession.step];
 
       maintenanceSession.step += 1;
       if (maintenanceSession.step >= SERVICE_TASKS.length) {
@@ -3300,6 +3549,8 @@
         return;
       }
 
+      maintenanceSession.completedItems = [];
+      maintenanceSession.fuelLevel = 0;
       renderServiceGame(`${currentTask.title} complete. Continue processing the return.`);
     }
 
