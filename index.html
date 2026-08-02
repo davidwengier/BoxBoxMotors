@@ -672,18 +672,14 @@
       margin: 9px 0 3px;
     }
 
-    .dugmobile-livery {
-      position: absolute;
-      z-index: 6;
-      bottom: 12px;
-      left: 58px;
-      width: 34px;
-      height: 29px;
-      border: 2px solid #080a0f;
-      border-radius: 7px;
-      background: url("https://wengier.com/InfiniteGummies/Dug.png") center / cover no-repeat;
-      box-shadow: 0 0 0 1px rgb(255 255 255 / 26%);
-      transform: skewX(-4deg);
+    .car.dugmobile.dugmobile .car-body {
+      background:
+        linear-gradient(100deg, transparent 0 72%, rgb(255 255 255 / 23%) 73% 79%, transparent 80%),
+        url("https://wengier.com/InfiniteGummies/Dug.png") center / 100% 100% no-repeat;
+    }
+
+    .car.dugmobile.dugmobile .car-spoiler {
+      background: #eda552;
     }
 
     .car {
@@ -4319,7 +4315,6 @@
           <span class="car-headlight"></span>
           <span class="car-taillight"></span>
           <span class="car-spoiler"></span>
-          ${isDugMobile ? `<span class="dugmobile-livery" role="img" aria-label="Dug livery"></span>` : ""}
           <span class="wheel back"></span>
           <span class="wheel front"></span>
         </div>
