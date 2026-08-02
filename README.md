@@ -9,7 +9,7 @@ A mobile-friendly car pack opening and auto rental tycoon game for the browser.
 - Buy packs individually or open a stack of five at once.
 - Each pack has a stable pool of no more than 20 different cars.
 - View every car available in a pack and track pack-specific collection completion.
-- Collect 145 cars across six rarity tiers, including ten red Mythic cars.
+- Collect 200 cars across six rarity tiers, including ten red Mythic cars.
 - Find five rainbow Limited-rarity production cars in existing packs.
 - The main production collection uses Ford, Honda, Acura, Porsche, Chevrolet,
   Hyundai, Lamborghini, Lotus, Toyota, and Jaguar, while special packs use licensed
