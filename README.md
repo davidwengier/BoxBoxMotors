@@ -1,6 +1,6 @@
 # Box Box Motors
 
-A mobile-friendly car pack opening and auto dealership tycoon game for the browser.
+A mobile-friendly car pack opening and auto rental tycoon game for the browser.
 
 ## Gameplay
 
@@ -13,9 +13,11 @@ A mobile-friendly car pack opening and auto dealership tycoon game for the brows
   hypercar, and brick-built shapes.
 - Track every obtainable car on an automatic collection checklist.
 - Store every packed copy as an individual car, including unlimited duplicates.
-- Sell cars from the garage to earn credits.
-- Open the auto group for passive customers who buy the cheapest cars first.
-- Close the dealership at any time to stop automatic customer sales.
+- Rent cars from the auto group to passive customers, with the cheapest available cars chosen first.
+- Close the rental desk at any time to stop new rentals.
+- Sleep to end the day, return every rented car, and see the day's income and rental totals.
+- Complete three timed maintenance checks before a returned car can be rented again.
+- Sell available cars from the garage when you want immediate credits.
 - Start with 10 storage spaces and buy larger warehouse expansions.
 - Upgrade sourcing luck for better epic and legendary chances.
 - Grow the operation from a backyard car yard into a global dealer empire.

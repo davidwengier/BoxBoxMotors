@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Open car packs, grow an auto group, store cars, and sell to passive customers.">
+  <meta name="description" content="Open car packs, grow an auto group, rent cars, and service every return.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>Box Box Motors</title>
   <style>
@@ -177,7 +177,7 @@
 
     .nav {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 8px;
       max-width: 780px;
       margin: 0 auto 34px;
@@ -966,6 +966,218 @@
       font-weight: 1000;
       letter-spacing: 0.1em;
       text-transform: uppercase;
+    }
+
+    .maintenance-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+    }
+
+    .maintenance-queue,
+    .service-bay {
+      min-height: 430px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .maintenance-queue h3,
+    .service-bay h3 {
+      margin-bottom: 5px;
+      font-size: 1.25rem;
+      font-style: italic;
+      text-transform: uppercase;
+    }
+
+    .maintenance-queue > p,
+    .service-bay > p {
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.45;
+    }
+
+    .maintenance-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .maintenance-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+
+    .maintenance-item strong {
+      display: block;
+      font-size: 0.78rem;
+    }
+
+    .maintenance-item span {
+      color: var(--yellow);
+      font-size: 0.64rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .maintenance-item button {
+      padding: 8px 11px;
+      border-radius: 8px;
+      background: var(--cyan);
+      color: #031419;
+      font-size: 0.65rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .maintenance-empty {
+      display: grid;
+      min-height: 240px;
+      place-items: center;
+      padding: 25px;
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 750;
+      text-align: center;
+    }
+
+    .service-bay {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, transparent 49%, rgb(255 255 255 / 3%) 50%, transparent 51%) 0 0 / 38px 38px,
+        linear-gradient(transparent 49%, rgb(255 255 255 / 3%) 50%, transparent 51%) 0 0 / 38px 38px,
+        var(--panel);
+    }
+
+    .service-car {
+      height: 155px;
+      display: grid;
+      place-items: center;
+      margin: 10px 0;
+      border-bottom: 5px solid #303a4d;
+    }
+
+    .service-car .car {
+      transform: scale(1.25);
+    }
+
+    .service-task {
+      color: var(--cyan);
+      font-size: 0.72rem;
+      font-weight: 1000;
+      letter-spacing: 0.12em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .service-meter {
+      position: relative;
+      height: 34px;
+      overflow: hidden;
+      margin: 18px 0;
+      border: 4px solid #090c12;
+      border-radius: 9px;
+      background: linear-gradient(90deg, #7c2832, #d5a833 34%, #d5a833 66%, #7c2832);
+      box-shadow: inset 0 0 0 2px rgb(255 255 255 / 10%);
+    }
+
+    .service-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 42%;
+      width: 16%;
+      background: var(--green);
+      box-shadow: 0 0 18px rgb(100 239 145 / 55%);
+    }
+
+    .service-marker {
+      position: absolute;
+      z-index: 2;
+      top: -4px;
+      bottom: -4px;
+      left: 0;
+      width: 6px;
+      border: 2px solid #080b10;
+      background: #fff;
+      box-shadow: 0 0 9px #fff;
+      transform: translateX(-50%);
+    }
+
+    .service-progress {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .service-progress span {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #303949;
+    }
+
+    .service-progress span.complete {
+      background: var(--green);
+      box-shadow: 0 0 9px rgb(100 239 145 / 50%);
+    }
+
+    .service-message {
+      min-height: 1.5em;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .day-report-card {
+      width: min(520px, 100%);
+      padding: 34px;
+      border: 2px solid var(--cyan);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: 0 0 70px rgb(33 230 255 / 18%), var(--shadow);
+      text-align: center;
+    }
+
+    .day-report-card h2 {
+      margin-bottom: 8px;
+    }
+
+    .day-report-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 24px 0;
+    }
+
+    .day-report-stat {
+      padding: 13px 6px;
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .day-report-stat strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--yellow);
+      font-size: 1.35rem;
     }
 
     .factory-grid {
@@ -1886,6 +2098,10 @@
         grid-template-columns: 1fr;
       }
 
+      .maintenance-layout {
+        grid-template-columns: 1fr;
+      }
+
       .race-sidebar {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -2032,7 +2248,7 @@
         <div class="brand-mark" aria-label="Box Box Motors logo"><span>BB</span></div>
         <div>
           <h1>Box Box <span>Motors</span></h1>
-          <p>Open. Build. Sell.</p>
+          <p>Open. Rent. Service.</p>
         </div>
       </div>
       <div class="wallet" aria-label="Your credits">
@@ -2048,6 +2264,7 @@
       <button class="nav-button active" type="button" data-view="shop">📦 Shop</button>
       <button class="nav-button" type="button" data-view="garage">🚘 Garage <span id="garageCount" class="nav-count">1</span></button>
       <button class="nav-button" type="button" data-view="collection">✅ Collection</button>
+      <button class="nav-button" type="button" data-view="maintenance">🔧 Maintenance</button>
       <button class="nav-button" type="button" data-view="autoGroup">🏢 Auto Group</button>
     </nav>
 
@@ -2057,7 +2274,7 @@
           <p class="kicker">The pack shop</p>
           <h2>What's in<br>the box?</h2>
         </div>
-        <p class="section-copy">Spend race winnings on packs. Every box contains one permanent car. Pulling a duplicate upgrades it.</p>
+        <p class="section-copy">Spend your auto group income on packs. Every box adds another car to your storage, including unlimited duplicates.</p>
       </div>
 
       <div id="packGrid" class="packs"></div>
@@ -2069,7 +2286,7 @@
           <p class="kicker">Your collection</p>
           <h2>The garage</h2>
         </div>
-        <p class="section-copy">Every packed car is stored as a separate copy. Keep your favourites or sell copies to fund more packs and dealership upgrades.</p>
+        <p class="section-copy">Every packed car is stored as a separate copy. Rent them through the auto group, or sell available copies to fund upgrades.</p>
       </div>
       <div class="garage-toolbar">
         <div id="garageSummary" class="garage-summary"></div>
@@ -2089,24 +2306,47 @@
       <div id="collectionGrid" class="collection-grid"></div>
     </section>
 
+    <section id="maintenanceView" class="view">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">Prepare returned rentals</p>
+          <h2>Maintenance</h2>
+        </div>
+        <p class="section-copy">Cars return after you sleep. Complete three timed service checks before each car can be rented again.</p>
+      </div>
+
+      <div class="maintenance-layout">
+        <div class="maintenance-queue">
+          <h3>Service queue</h3>
+          <p id="maintenanceSummary">No returned cars are waiting.</p>
+          <div id="maintenanceList" class="maintenance-list"></div>
+        </div>
+        <div id="serviceBay" class="service-bay">
+          <h3>Service bay</h3>
+          <p>Select a returned car to begin its maintenance checks.</p>
+          <div id="serviceGame"></div>
+        </div>
+      </div>
+    </section>
+
     <section id="autoGroupView" class="view">
       <div class="section-heading">
         <div>
           <p class="kicker">Run your dealership</p>
           <h2>Auto group</h2>
         </div>
-        <p class="section-copy">Open the showroom and customers will automatically buy your cheapest cars first. Close it whenever you want to hold your stock.</p>
+        <p class="section-copy">Open the rental desk and customers will take the cheapest available cars for one day. Sleep to collect the returns and review your daily results.</p>
       </div>
 
       <div class="factory-grid">
         <div class="factory-floor">
           <h3 id="factoryRank">Backyard Car Yard</h3>
-          <p>Your auto group grows as you improve its storage and sourcing systems.</p>
+          <p id="dayLabel">Day 1 · Customers rent available cars until you sleep.</p>
           <span id="dealershipState" class="dealership-state">Open</span>
           <div class="factory-stats">
-            <div class="factory-stat"><strong id="factoryStored">1 / 10</strong>Stored cars</div>
-            <div class="factory-stat"><strong id="factoryPacked">0</strong>Customers</div>
-            <div class="factory-stat"><strong id="factorySold">0</strong>Cars sold</div>
+            <div class="factory-stat"><strong id="factoryStored">1 / 10</strong>Available cars</div>
+            <div class="factory-stat"><strong id="factoryPacked">0</strong>Rentals today</div>
+            <div class="factory-stat"><strong id="factorySold">$0</strong>Made today</div>
           </div>
           <div class="factory-building" aria-hidden="true"><span class="factory-sign">Box Box Auto Group</span></div>
           <div id="conveyorCars" class="conveyor-cars" aria-hidden="true"></div>
@@ -2120,10 +2360,11 @@
         </div>
 
         <aside class="factory-panel">
-          <h3>Auto group controls</h3>
-          <p>Control customer sales and invest the revenue back into the dealership.</p>
+          <h3>Rental controls</h3>
+          <p>Control customer rentals, finish the day, and invest revenue back into the auto group.</p>
 
-          <button id="toggleDealershipButton" class="primary-button" type="button">Close dealership</button>
+          <button id="toggleDealershipButton" class="primary-button" type="button">Close rental desk</button>
+          <button id="sleepButton" class="primary-button" type="button">Sleep · End day</button>
 
           <div class="upgrade-card">
             <div class="upgrade-card-header">
@@ -2217,6 +2458,20 @@
       <div id="openingBox" class="opening-box street" role="button" tabindex="0" aria-label="Tap to open pack">
         <div class="box-lid"></div>
         <div class="box-body"><span>?</span></div>
+      </div>
+
+      <div id="dayReportModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="dayReportTitle">
+        <div class="day-report-card">
+          <p class="kicker">Business report</p>
+          <h2 id="dayReportTitle">Day complete</h2>
+          <p id="dayReportCopy" class="section-copy" style="margin:0 auto;text-align:center"></p>
+          <div class="day-report-stats">
+            <div class="day-report-stat"><strong id="reportRevenue">$0</strong>Rental income</div>
+            <div class="day-report-stat"><strong id="reportRentals">0</strong>Cars rented</div>
+            <div class="day-report-stat"><strong id="reportReturns">0</strong>Need service</div>
+          </div>
+          <button id="startNextDayButton" class="primary-button" type="button">Start next day</button>
+        </div>
       </div>
       <p id="tapHint" class="tap-hint">Tap the box to open</p>
       <div id="revealCard" class="reveal-card"></div>
@@ -2572,6 +2827,11 @@
       carsSold: 0,
       customersServed: 0,
       dealershipOpen: true,
+      rentedCars: {},
+      maintenanceQueue: [],
+      day: 1,
+      dayRevenue: 0,
+      dayRentals: 0,
       licenses: ["neon"],
       bestTimes: {},
       wins: 0,
@@ -2589,6 +2849,8 @@
     let toastTimer = 0;
     let customerVisitInProgress = false;
     let customerTimers = [];
+    let maintenanceSession = null;
+    let maintenanceFrame = 0;
     const drivingInput = { left: false, right: false, throttle: false, brake: false };
 
     const creditsDisplay = document.querySelector("#creditsDisplay");
@@ -2599,6 +2861,9 @@
     const garageSummary = document.querySelector("#garageSummary");
     const collectionGrid = document.querySelector("#collectionGrid");
     const collectionSummary = document.querySelector("#collectionSummary");
+    const maintenanceSummary = document.querySelector("#maintenanceSummary");
+    const maintenanceList = document.querySelector("#maintenanceList");
+    const serviceGame = document.querySelector("#serviceGame");
     const factoryRank = document.querySelector("#factoryRank");
     const factoryStored = document.querySelector("#factoryStored");
     const factoryPacked = document.querySelector("#factoryPacked");
@@ -2615,6 +2880,15 @@
     const toggleDealershipButton = document.querySelector("#toggleDealershipButton");
     const customer = document.querySelector("#customer");
     const customerMessage = document.querySelector("#customerMessage");
+    const dayLabel = document.querySelector("#dayLabel");
+    const sleepButton = document.querySelector("#sleepButton");
+    const dayReportModal = document.querySelector("#dayReportModal");
+    const dayReportTitle = document.querySelector("#dayReportTitle");
+    const dayReportCopy = document.querySelector("#dayReportCopy");
+    const reportRevenue = document.querySelector("#reportRevenue");
+    const reportRentals = document.querySelector("#reportRentals");
+    const reportReturns = document.querySelector("#reportReturns");
+    const startNextDayButton = document.querySelector("#startNextDayButton");
     const selectedRacer = document.querySelector("#selectedRacer");
     const trackSelect = document.querySelector("#trackSelect");
     const licenseInfo = document.querySelector("#licenseInfo");
@@ -2653,6 +2927,11 @@
       if (button) sellCar(button.dataset.carId);
     });
 
+    maintenanceList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-maintain-id]");
+      if (button) startMaintenance(button.dataset.maintainId);
+    });
+
     openingBox.addEventListener("click", openPendingPack);
     openingBox.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
@@ -2672,6 +2951,8 @@
     upgradeStorageButton.addEventListener("click", upgradeStorage);
     upgradeLuckButton.addEventListener("click", upgradeLuck);
     toggleDealershipButton.addEventListener("click", toggleDealership);
+    sleepButton.addEventListener("click", sleepDay);
+    startNextDayButton.addEventListener("click", startNextDay);
 
     document.addEventListener("keydown", (event) => {
       const control = keyToControl(event.code);
@@ -2742,6 +3023,15 @@
           storedCars,
           validNumber(saved.storageCapacity, defaultState.storageCapacity)
         );
+        const rentedCars = {};
+        Object.entries(saved.rentedCars ?? {}).forEach(([id, count]) => {
+          if (collection[id] && Number.isInteger(count) && count > 0) {
+            rentedCars[id] = Math.min(count, collection[id]);
+          }
+        });
+        const maintenanceQueue = Array.isArray(saved.maintenanceQueue)
+          ? saved.maintenanceQueue.filter((id) => getCar(id))
+          : [];
 
         return {
           credits: validNumber(saved.credits, defaultState.credits),
@@ -2755,6 +3045,11 @@
           carsSold: validNumber(saved.carsSold, 0),
           customersServed: validNumber(saved.customersServed, 0),
           dealershipOpen: saved.dealershipOpen !== false,
+          rentedCars,
+          maintenanceQueue,
+          day: Math.max(1, validNumber(saved.day, 1)),
+          dayRevenue: validNumber(saved.dayRevenue, 0),
+          dayRentals: validNumber(saved.dayRentals, 0),
           licenses: Array.from(new Set(["neon", ...(Array.isArray(saved.licenses) ? saved.licenses : [])]))
             .filter((id) => TRACKS[id]),
           bestTimes: Object.fromEntries(
@@ -2774,6 +3069,10 @@
       return Number.isFinite(number) && number >= 0 ? Math.floor(number) : fallback;
     }
 
+    function money(value) {
+      return `🪙 ${value.toLocaleString()}`;
+    }
+
     function saveState() {
       localStorage.setItem(SAVE_KEY, JSON.stringify(state));
     }
@@ -2786,6 +3085,7 @@
       renderPacks();
       renderGarage();
       renderCollection();
+      renderMaintenance();
       renderAutoGroup();
     }
 
@@ -2823,7 +3123,7 @@
       const ownedCars = CARS.filter((car) => state.collection[car.id])
         .sort((a, b) => rarityRank(b.rarity) - rarityRank(a.rarity));
 
-      garageSummary.innerHTML = `<strong>${getStorageUsed()} / ${state.storageCapacity}</strong> storage used · <strong>${ownedCars.length}</strong> unique cars currently stored`;
+      garageSummary.innerHTML = `<strong>${getStorageUsed()} / ${state.storageCapacity}</strong> storage used · <strong>${getAvailableStoredCount()}</strong> available · <strong>${getRentedCount()}</strong> rented · <strong>${state.maintenanceQueue.length}</strong> need service`;
       garageGrid.innerHTML = ownedCars.length
         ? ownedCars.map((car) => createCarCard(car)).join("")
         : `<div class="empty-garage">Your garage is empty. Open a pack to find your first car.</div>`;
@@ -2831,6 +3131,9 @@
 
     function createCarCard(car) {
       const copies = state.collection[car.id];
+      const available = getAvailableCount(car.id);
+      const rented = getRentedCount(car.id);
+      const awaitingService = getMaintenanceCount(car.id);
       const stats = getLeveledStats(car, 1);
       const salePrice = getSalePrice(car);
 
@@ -2843,13 +3146,14 @@
           <div class="car-visual">${createCarVisual(car)}</div>
           <h3>${car.name}</h3>
           <p class="car-class">${car.class} · ${getPower(stats)} power</p>
+          <p class="car-class">${available} available${rented ? ` · ${rented} rented` : ""}${awaitingService ? ` · ${awaitingService} need service` : ""}</p>
           <div class="stats">
             ${createStatRow("Speed", stats.speed)}
             ${createStatRow("Launch", stats.acceleration)}
             ${createStatRow("Grip", stats.grip)}
           </div>
-          <button class="select-car" type="button" data-car-id="${car.id}">
-            Sell one · 🪙 ${salePrice.toLocaleString()}
+          <button class="select-car" type="button" data-car-id="${car.id}" ${available <= 0 ? "disabled" : ""}>
+            ${available > 0 ? `Sell one · 🪙 ${salePrice.toLocaleString()}` : "No available copies"}
           </button>
         </article>
       `;
@@ -2888,6 +3192,153 @@
           `;
         })
         .join("");
+    }
+
+    function renderMaintenance() {
+      const groupedReturns = state.maintenanceQueue.reduce((groups, id) => {
+        groups[id] = (groups[id] ?? 0) + 1;
+        return groups;
+      }, {});
+      const entries = Object.entries(groupedReturns);
+      maintenanceSummary.textContent = entries.length
+        ? `${state.maintenanceQueue.length} returned ${state.maintenanceQueue.length === 1 ? "car is" : "cars are"} waiting for service.`
+        : "No returned cars are waiting. Sleep after renting cars to receive them here.";
+      maintenanceList.innerHTML = entries.length
+        ? entries.map(([id, count]) => {
+            const car = getCar(id);
+            return `
+              <div class="maintenance-item">
+                <div><strong>${car.name}</strong><span>${count} waiting · ${car.rarity}</span></div>
+                <button type="button" data-maintain-id="${id}">Service one</button>
+              </div>
+            `;
+          }).join("")
+        : `<div class="maintenance-empty">All cars are clean, checked, and ready to rent.</div>`;
+
+      if (maintenanceSession && !state.maintenanceQueue.includes(maintenanceSession.carId)) {
+        cancelMaintenance();
+      }
+    }
+
+    function startMaintenance(carId) {
+      if (!state.maintenanceQueue.includes(carId)) return;
+      cancelAnimationFrame(maintenanceFrame);
+      maintenanceSession = {
+        carId,
+        checks: 0,
+        markerPosition: 0,
+        startedAt: performance.now(),
+        zoneStart: 36 + Math.random() * 12
+      };
+      renderServiceGame();
+      animateServiceMarker();
+    }
+
+    function renderServiceGame(message = "Stop the marker inside the green zone.") {
+      if (!maintenanceSession) {
+        serviceGame.innerHTML = "";
+        return;
+      }
+
+      const car = getCar(maintenanceSession.carId);
+      serviceGame.innerHTML = `
+        <div class="service-car">${createCarVisual(car)}</div>
+        <div class="service-task">Check ${maintenanceSession.checks + 1} of 3 · Time the repair</div>
+        <div class="service-meter">
+          <span class="service-zone" style="left:${maintenanceSession.zoneStart}%"></span>
+          <span id="serviceMarker" class="service-marker"></span>
+        </div>
+        <div class="service-progress">${[0, 1, 2].map((step) => `<span class="${step < maintenanceSession.checks ? "complete" : ""}"></span>`).join("")}</div>
+        <p class="service-message">${message}</p>
+        <button id="stopServiceButton" class="primary-button" type="button">Stop marker</button>
+      `;
+      document.querySelector("#stopServiceButton").addEventListener("click", stopServiceMarker);
+    }
+
+    function animateServiceMarker(now = performance.now()) {
+      if (!maintenanceSession) return;
+      const progress = ((now - maintenanceSession.startedAt) % 1600) / 1600;
+      maintenanceSession.markerPosition = progress < 0.5 ? progress * 200 : (1 - progress) * 200;
+      const marker = document.querySelector("#serviceMarker");
+      if (marker) marker.style.left = `${maintenanceSession.markerPosition}%`;
+      maintenanceFrame = requestAnimationFrame(animateServiceMarker);
+    }
+
+    function stopServiceMarker() {
+      if (!maintenanceSession) return;
+      const zoneEnd = maintenanceSession.zoneStart + 16;
+      const hit = maintenanceSession.markerPosition >= maintenanceSession.zoneStart
+        && maintenanceSession.markerPosition <= zoneEnd;
+
+      if (!hit) {
+        maintenanceSession.startedAt = performance.now();
+        maintenanceSession.zoneStart = 36 + Math.random() * 12;
+        renderServiceGame("Missed the green zone. Try this check again.");
+        return;
+      }
+
+      maintenanceSession.checks += 1;
+      if (maintenanceSession.checks >= 3) {
+        const car = getCar(maintenanceSession.carId);
+        const queueIndex = state.maintenanceQueue.indexOf(maintenanceSession.carId);
+        state.maintenanceQueue.splice(queueIndex, 1);
+        cancelMaintenance();
+        saveState();
+        renderAll();
+        showToast(`${car.name} is serviced and ready to rent.`);
+        return;
+      }
+
+      maintenanceSession.startedAt = performance.now();
+      maintenanceSession.zoneStart = 36 + Math.random() * 12;
+      renderServiceGame("Good repair! Complete the next check.");
+    }
+
+    function cancelMaintenance() {
+      cancelAnimationFrame(maintenanceFrame);
+      maintenanceFrame = 0;
+      maintenanceSession = null;
+      serviceGame.innerHTML = "";
+    }
+
+    function sleepDay() {
+      cancelCustomerVisit();
+      state.dealershipOpen = false;
+      const completedDay = state.day;
+      const revenue = state.dayRevenue;
+      const rentals = state.dayRentals;
+      let returns = 0;
+
+      Object.entries(state.rentedCars).forEach(([id, count]) => {
+        for (let index = 0; index < count; index += 1) {
+          state.maintenanceQueue.push(id);
+          returns += 1;
+        }
+      });
+
+      state.rentedCars = {};
+      state.day += 1;
+      state.dayRevenue = 0;
+      state.dayRentals = 0;
+      saveState();
+      renderAll();
+
+      dayReportTitle.textContent = `Day ${completedDay} complete`;
+      dayReportCopy.textContent = returns
+        ? "Your rentals have returned. Service them before putting them back on the lot."
+        : "No cars were out on rent today. Open the rental desk tomorrow to attract customers.";
+      reportRevenue.textContent = money(revenue);
+      reportRentals.textContent = rentals.toLocaleString();
+      reportReturns.textContent = returns.toLocaleString();
+      dayReportModal.classList.add("active");
+    }
+
+    function startNextDay() {
+      dayReportModal.classList.remove("active");
+      state.dealershipOpen = true;
+      saveState();
+      renderAll();
+      customerTimers.push(window.setTimeout(processCustomerVisit, 900));
     }
 
     function createStatRow(label, value) {
@@ -3069,7 +3520,10 @@
     }
 
     function sellCar(carId) {
-      if (!state.collection[carId]) return;
+      if (getAvailableCount(carId) <= 0) {
+        showToast("That car is rented or awaiting maintenance.");
+        return;
+      }
       const car = getCar(carId);
       state.collection[carId] -= 1;
       if (state.collection[carId] <= 0) {
@@ -3086,6 +3540,23 @@
       return Object.values(state.collection).reduce((total, count) => total + count, 0);
     }
 
+    function getRentedCount(carId) {
+      if (carId) return state.rentedCars[carId] ?? 0;
+      return Object.values(state.rentedCars).reduce((total, count) => total + count, 0);
+    }
+
+    function getMaintenanceCount(carId) {
+      return state.maintenanceQueue.filter((id) => id === carId).length;
+    }
+
+    function getAvailableCount(carId) {
+      return Math.max(0, (state.collection[carId] ?? 0) - getRentedCount(carId) - getMaintenanceCount(carId));
+    }
+
+    function getAvailableStoredCount() {
+      return CARS.reduce((total, car) => total + getAvailableCount(car.id), 0);
+    }
+
     function getSalePrice(car) {
       return {
         common: 160,
@@ -3093,6 +3564,10 @@
         epic: 950,
         legendary: 2200
       }[car.rarity];
+    }
+
+    function getRentalFee(car) {
+      return Math.round(getSalePrice(car) * 0.28 / 10) * 10;
     }
 
     function getStorageUpgradeCost() {
@@ -3140,12 +3615,13 @@
       const groupLevel = state.storageLevel + state.luckLevel;
       const ranks = ["Backyard Car Yard", "Local Auto Centre", "Regional Dealer Group", "National Auto Group", "Global Dealer Empire"];
       factoryRank.textContent = ranks[Math.min(ranks.length - 1, Math.floor((groupLevel - 1) / 3))];
-      factoryStored.textContent = `${stored} / ${state.storageCapacity}`;
-      factoryPacked.textContent = state.customersServed.toLocaleString();
-      factorySold.textContent = state.carsSold.toLocaleString();
+      factoryStored.textContent = `${getAvailableStoredCount()} / ${stored}`;
+      factoryPacked.textContent = state.dayRentals.toLocaleString();
+      factorySold.textContent = money(state.dayRevenue);
+      dayLabel.textContent = `Day ${state.day} · ${getRentedCount()} cars are currently out on one-day rentals.`;
       dealershipState.textContent = state.dealershipOpen ? "Open" : "Closed";
       dealershipState.classList.toggle("closed", !state.dealershipOpen);
-      toggleDealershipButton.textContent = state.dealershipOpen ? "Close dealership" : "Open dealership";
+      toggleDealershipButton.textContent = state.dealershipOpen ? "Close rental desk" : "Open rental desk";
       toggleDealershipButton.style.background = state.dealershipOpen ? "var(--red)" : "var(--green)";
       toggleDealershipButton.style.boxShadow = state.dealershipOpen ? "0 7px 0 #8d1827" : "0 7px 0 #177c37";
       storageLevel.textContent = `Level ${state.storageLevel}`;
@@ -3163,7 +3639,7 @@
       upgradeLuckButton.disabled = state.luckLevel >= 10 || state.credits < luckCost;
 
       const displayCars = Object.entries(state.collection)
-        .flatMap(([id, count]) => Array.from({ length: Math.min(count, 2) }, () => getCar(id)))
+        .flatMap(([id]) => Array.from({ length: Math.min(getAvailableCount(id), 2) }, () => getCar(id)))
         .filter(Boolean)
         .slice(0, 5);
       conveyorCars.innerHTML = displayCars.map(createCarVisual).join("");
@@ -3176,7 +3652,7 @@
       }
       saveState();
       renderAll();
-      showToast(state.dealershipOpen ? "The auto group is open for customers." : "The auto group is closed. Stock is safe.");
+      showToast(state.dealershipOpen ? "The rental desk is open for customers." : "The rental desk is closed.");
       if (state.dealershipOpen) {
         customerTimers.push(window.setTimeout(processCustomerVisit, 900));
       }
@@ -3184,9 +3660,9 @@
 
     function processCustomerVisit() {
       if (!state.dealershipOpen || customerVisitInProgress) return;
-      const car = getCheapestStoredCar();
+      const car = getCheapestAvailableCar();
       if (!car) {
-        customerMessage.textContent = "No cars in stock. Open packs to fill the lot.";
+        customerMessage.textContent = "No cars are available. Service returns or open packs to fill the lot.";
         customerMessage.classList.add("active");
         customerTimers.push(window.setTimeout(() => customerMessage.classList.remove("active"), 2400));
         return;
@@ -3200,23 +3676,21 @@
       customerMessage.classList.add("active");
 
       customerTimers.push(window.setTimeout(() => {
-        if (!state.dealershipOpen || !state.collection[car.id]) {
+        if (!state.dealershipOpen || getAvailableCount(car.id) <= 0) {
           cancelCustomerVisit();
           return;
         }
 
-        const price = getSalePrice(car);
-        state.collection[car.id] -= 1;
-        if (state.collection[car.id] <= 0) {
-          delete state.collection[car.id];
-        }
+        const price = getRentalFee(car);
+        state.rentedCars[car.id] = (state.rentedCars[car.id] ?? 0) + 1;
         state.credits += price;
-        state.carsSold += 1;
+        state.dayRevenue += price;
+        state.dayRentals += 1;
         state.customersServed += 1;
         saveState();
         renderAll();
-        customerMessage.textContent = `Sold ${car.name} for ${price.toLocaleString()} credits.`;
-        showToast(`Customer bought ${car.name} for ${price.toLocaleString()} credits.`);
+        customerMessage.textContent = `Rented ${car.name} for ${price.toLocaleString()} credits.`;
+        showToast(`Customer rented ${car.name} for one day.`);
       }, 2300));
 
       customerTimers.push(window.setTimeout(() => {
@@ -3229,8 +3703,12 @@
 
     function getCheapestStoredCar() {
       return CARS
-        .filter((car) => state.collection[car.id] > 0)
+        .filter((car) => getAvailableCount(car.id) > 0)
         .sort((left, right) => getSalePrice(left) - getSalePrice(right) || left.name.localeCompare(right.name))[0];
+    }
+
+    function getCheapestAvailableCar() {
+      return getCheapestStoredCar();
     }
 
     function cancelCustomerVisit() {
