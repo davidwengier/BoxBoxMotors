@@ -1325,6 +1325,14 @@
       color: var(--cyan);
     }
 
+    .garage-toolbar .collection-summary {
+      margin-bottom: 0;
+    }
+
+    .test-reward-button {
+      max-width: 280px;
+    }
+
     .collection-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -3128,7 +3136,10 @@
         </div>
         <p class="section-copy">Every obtainable car appears here. Cars are automatically checked off the moment you open them from a pack.</p>
       </div>
-      <div id="collectionSummary" class="collection-summary"></div>
+      <div class="garage-toolbar">
+        <div id="collectionSummary" class="collection-summary"></div>
+        <button id="testDugMobileButton" class="primary-button test-reward-button" type="button">Give test DugMobile</button>
+      </div>
       <div id="collectionGrid" class="collection-grid"></div>
     </section>
 
@@ -3894,6 +3905,7 @@
     const garageSummary = document.querySelector("#garageSummary");
     const collectionGrid = document.querySelector("#collectionGrid");
     const collectionSummary = document.querySelector("#collectionSummary");
+    const testDugMobileButton = document.querySelector("#testDugMobileButton");
     const maintenanceSummary = document.querySelector("#maintenanceSummary");
     const maintenanceList = document.querySelector("#maintenanceList");
     const workerStatus = document.querySelector("#workerStatus");
@@ -4002,6 +4014,7 @@
     upgradeStorageButton.addEventListener("click", upgradeStorage);
     upgradeLuckButton.addEventListener("click", upgradeLuck);
     upgradeWorkerButton.addEventListener("click", upgradeMaintenanceWorkers);
+    testDugMobileButton.addEventListener("click", grantTestDugMobile);
     toggleDealershipButton.addEventListener("click", toggleDealership);
     sleepButton.addEventListener("click", sleepDay);
     startNextDayButton.addEventListener("click", startNextDay);
@@ -4336,6 +4349,10 @@
       collectionSummary.innerHTML = collectionComplete
         ? `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> cars discovered · Collection complete! The DugMobile unlocked.`
         : `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> cars discovered · ${COLLECTIBLE_CARS.length - ownedCount} remaining`;
+      testDugMobileButton.disabled = state.dugMobileAwarded;
+      testDugMobileButton.textContent = state.dugMobileAwarded
+        ? "DugMobile already claimed"
+        : "Give test DugMobile";
       const displayedCars = state.dugMobileAwarded
         ? [...COLLECTIBLE_CARS, COLLECTION_REWARD]
         : [...COLLECTIBLE_CARS];
@@ -4967,13 +4984,27 @@
       const discovered = new Set(state.discovered);
       if (!COLLECTIBLE_CARS.every((car) => discovered.has(car.id))) return false;
 
+      awardDugMobile("All 200 cars collected! The secret DugMobile is now in your garage.");
+      return true;
+    }
+
+    function grantTestDugMobile() {
+      if (state.dugMobileAwarded) {
+        showToast("The DugMobile has already been claimed on this save.");
+        return;
+      }
+
+      awardDugMobile("Test DugMobile added to your garage. This one-time reward cannot be claimed again.");
+      renderAll();
+    }
+
+    function awardDugMobile(message) {
       state.dugMobileAwarded = true;
       state.collection[COLLECTION_REWARD_ID] = 1;
       state.discovered.push(COLLECTION_REWARD_ID);
       state.storageCapacity = Math.max(state.storageCapacity, getStorageUsed());
       saveState();
-      showToast("All 200 cars collected! The secret DugMobile is now in your garage.");
-      return true;
+      showToast(message);
     }
 
     function getStorageUpgradeCost() {

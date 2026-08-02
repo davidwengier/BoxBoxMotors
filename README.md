@@ -21,6 +21,7 @@ A mobile-friendly car pack opening and auto rental tycoon game for the browser.
 - Track every obtainable car on an automatic collection checklist.
 - Complete all 200 pack cars to unlock the one-time black DugMobile reward,
   worth 5,000 credits per rental or 100,000 credits when sold.
+- Use the one-time testing button on the Collection page to claim the DugMobile early.
 - Store every packed copy as an individual car, including unlimited duplicates.
 - Rent cars from the auto group to passive customers, with the cheapest available cars chosen first.
 - Serve ten visually distinct customer types with varied clothing, skin tones,
