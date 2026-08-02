@@ -20,6 +20,8 @@ A mobile-friendly car pack opening and auto rental tycoon game for the browser.
 - Sleep to end the day, return every rented car, and see the day's income and rental totals.
 - Process each returned car through interactive scanning, meter-based washing, refuelling,
   safety checks, and parking before it can be rented again.
+- Hire up to five maintenance workers to process returns automatically, improving from
+  five seconds per service part with one worker to one second with a full crew.
 - Sell available cars from the garage when you want immediate credits.
 - Start with 10 storage spaces and buy larger warehouse expansions.
 - Upgrade sourcing luck for better epic and legendary chances.

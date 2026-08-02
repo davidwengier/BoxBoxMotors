@@ -1032,6 +1032,54 @@
       margin-top: 16px;
     }
 
+    .worker-status {
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+
+    .worker-status-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 7px;
+    }
+
+    .worker-status-header strong {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+    }
+
+    .worker-status-header span {
+      color: var(--cyan);
+      font-size: 0.62rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .worker-progress {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #252e3e;
+    }
+
+    .worker-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--green));
+      transition: width 200ms linear;
+    }
+
+    .worker-status p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 0.63rem;
+      font-weight: 750;
+    }
+
     .maintenance-item {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -2520,6 +2568,7 @@
         <div class="maintenance-queue">
           <h3>Service queue</h3>
           <p id="maintenanceSummary">No returned cars are waiting.</p>
+          <div id="workerStatus" class="worker-status"></div>
           <div id="maintenanceList" class="maintenance-list"></div>
         </div>
         <div id="serviceBay" class="service-bay">
@@ -2584,6 +2633,15 @@
             </div>
             <p id="luckDescription">Standard pack odds.</p>
             <button id="upgradeLuckButton" class="primary-button" type="button">Improve luck</button>
+          </div>
+
+          <div class="upgrade-card">
+            <div class="upgrade-card-header">
+              <h4>Maintenance crew</h4>
+              <span id="workerLevel" class="upgrade-level">No workers</span>
+            </div>
+            <p id="workerDescription">Hire a worker to automatically service returned cars.</p>
+            <button id="upgradeWorkerButton" class="primary-button" type="button">Hire first worker</button>
           </div>
         </aside>
       </div>
@@ -3031,6 +3089,9 @@
       dealershipOpen: true,
       rentedCars: {},
       maintenanceQueue: [],
+      maintenanceWorkers: 0,
+      workerPartProgress: 0,
+      workerLastTick: 0,
       day: 1,
       dayRevenue: 0,
       dayRentals: 0,
@@ -3072,6 +3133,7 @@
     const collectionSummary = document.querySelector("#collectionSummary");
     const maintenanceSummary = document.querySelector("#maintenanceSummary");
     const maintenanceList = document.querySelector("#maintenanceList");
+    const workerStatus = document.querySelector("#workerStatus");
     const serviceGame = document.querySelector("#serviceGame");
     const factoryRank = document.querySelector("#factoryRank");
     const factoryStored = document.querySelector("#factoryStored");
@@ -3085,6 +3147,9 @@
     const luckLevel = document.querySelector("#luckLevel");
     const luckDescription = document.querySelector("#luckDescription");
     const upgradeLuckButton = document.querySelector("#upgradeLuckButton");
+    const workerLevel = document.querySelector("#workerLevel");
+    const workerDescription = document.querySelector("#workerDescription");
+    const upgradeWorkerButton = document.querySelector("#upgradeWorkerButton");
     const dealershipState = document.querySelector("#dealershipState");
     const toggleDealershipButton = document.querySelector("#toggleDealershipButton");
     const customer = document.querySelector("#customer");
@@ -3163,6 +3228,7 @@
     raceAgainButton.addEventListener("click", resetRace);
     upgradeStorageButton.addEventListener("click", upgradeStorage);
     upgradeLuckButton.addEventListener("click", upgradeLuck);
+    upgradeWorkerButton.addEventListener("click", upgradeMaintenanceWorkers);
     toggleDealershipButton.addEventListener("click", toggleDealership);
     sleepButton.addEventListener("click", sleepDay);
     startNextDayButton.addEventListener("click", startNextDay);
@@ -3209,6 +3275,7 @@
     renderAll();
     window.setInterval(processCustomerVisit, 7000);
     window.setTimeout(processCustomerVisit, 2500);
+    window.setInterval(processMaintenanceWorkers, 250);
 
     function loadState() {
       try {
@@ -3263,6 +3330,11 @@
           dealershipOpen: saved.dealershipOpen !== false,
           rentedCars,
           maintenanceQueue,
+          maintenanceWorkers: Math.min(5, validNumber(saved.maintenanceWorkers, 0)),
+          workerPartProgress: Math.min(4, validNumber(saved.workerPartProgress, 0)),
+          workerLastTick: Number.isFinite(saved.workerLastTick) && saved.workerLastTick > 0
+            ? saved.workerLastTick
+            : Date.now(),
           day: Math.max(1, validNumber(saved.day, 1)),
           dayRevenue: validNumber(saved.dayRevenue, 0),
           dayRentals: validNumber(saved.dayRentals, 0),
@@ -3438,6 +3510,7 @@
             `;
           }).join("")
         : `<div class="maintenance-empty">All cars are clean, checked, and ready to rent.</div>`;
+      renderWorkerStatus();
 
       if (maintenanceSession && !state.maintenanceQueue.includes(maintenanceSession.carId)) {
         cancelMaintenance();
@@ -3455,6 +3528,37 @@
         parkingBay: Math.floor(Math.random() * 3)
       };
       renderServiceGame();
+    }
+
+    function renderWorkerStatus() {
+      if (state.maintenanceWorkers === 0) {
+        workerStatus.innerHTML = `
+          <div class="worker-status-header"><strong>Automatic crew</strong><span>Not hired</span></div>
+          <div class="worker-progress"><div class="worker-progress-fill" style="width:0%"></div></div>
+          <p>Maintenance is manual until you hire a worker from the Auto Group.</p>
+        `;
+        return;
+      }
+
+      const secondsPerPart = getWorkerSecondsPerPart();
+      if (state.maintenanceQueue.length === 0) {
+        workerStatus.innerHTML = `
+          <div class="worker-status-header"><strong>Automatic crew</strong><span>Waiting</span></div>
+          <div class="worker-progress"><div class="worker-progress-fill" style="width:0%"></div></div>
+          <p>${state.maintenanceWorkers} ${state.maintenanceWorkers === 1 ? "worker is" : "workers are"} ready for the next returned car.</p>
+        `;
+        return;
+      }
+
+      const car = getCar(state.maintenanceQueue[0]);
+      const elapsed = Math.max(0, Date.now() - state.workerLastTick);
+      const progress = Math.min(100, elapsed / (secondsPerPart * 1000) * 100);
+      const task = SERVICE_TASKS[state.workerPartProgress];
+      workerStatus.innerHTML = `
+        <div class="worker-status-header"><strong>${car.name}</strong><span>${secondsPerPart}s per part</span></div>
+        <div class="worker-progress"><div class="worker-progress-fill" style="width:${progress}%"></div></div>
+        <p>Part ${state.workerPartProgress + 1} of ${SERVICE_TASKS.length}: ${task.title}</p>
+      `;
     }
 
     function renderServiceGame(message = "Process each task in order, just like handling a returned rental.") {
@@ -3627,6 +3731,8 @@
         const car = getCar(maintenanceSession.carId);
         const queueIndex = state.maintenanceQueue.indexOf(maintenanceSession.carId);
         state.maintenanceQueue.splice(queueIndex, 1);
+        state.workerPartProgress = 0;
+        state.workerLastTick = Date.now();
         cancelMaintenance();
         saveState();
         renderAll();
@@ -3651,6 +3757,7 @@
       const completedDay = state.day;
       const revenue = state.dayRevenue;
       const rentals = state.dayRentals;
+      const maintenanceWasEmpty = state.maintenanceQueue.length === 0;
       let returns = 0;
 
       Object.entries(state.rentedCars).forEach(([id, count]) => {
@@ -3664,6 +3771,10 @@
       state.day += 1;
       state.dayRevenue = 0;
       state.dayRentals = 0;
+      if (maintenanceWasEmpty && returns > 0 && state.maintenanceWorkers > 0) {
+        state.workerPartProgress = 0;
+        state.workerLastTick = Date.now();
+      }
       saveState();
       renderAll();
 
@@ -3979,6 +4090,14 @@
       return Math.round(1100 * Math.pow(1.65, state.luckLevel) / 50) * 50;
     }
 
+    function getWorkerUpgradeCost() {
+      return Math.round(1200 * Math.pow(1.8, state.maintenanceWorkers) / 50) * 50;
+    }
+
+    function getWorkerSecondsPerPart() {
+      return Math.max(1, 6 - state.maintenanceWorkers);
+    }
+
     function upgradeStorage() {
       const cost = getStorageUpgradeCost();
       if (state.credits < cost) {
@@ -4007,6 +4126,69 @@
       saveState();
       renderAll();
       showToast(`Pack luck upgraded to level ${state.luckLevel}.`);
+    }
+
+    function upgradeMaintenanceWorkers() {
+      if (state.maintenanceWorkers >= 5) return;
+      const cost = getWorkerUpgradeCost();
+      if (state.credits < cost) {
+        showToast("Not enough credits to hire another maintenance worker.");
+        return;
+      }
+
+      state.credits -= cost;
+      state.maintenanceWorkers += 1;
+      state.workerPartProgress = 0;
+      state.workerLastTick = Date.now();
+      saveState();
+      renderAll();
+      showToast(`Maintenance crew upgraded to ${state.maintenanceWorkers} ${state.maintenanceWorkers === 1 ? "worker" : "workers"}.`);
+    }
+
+    function processMaintenanceWorkers() {
+      if (state.maintenanceWorkers === 0) {
+        renderWorkerStatus();
+        return;
+      }
+
+      const now = Date.now();
+      if (state.maintenanceQueue.length === 0) {
+        state.workerPartProgress = 0;
+        state.workerLastTick = now;
+        renderWorkerStatus();
+        return;
+      }
+
+      const partDuration = getWorkerSecondsPerPart() * 1000;
+      if (!state.workerLastTick) state.workerLastTick = now;
+      let completedParts = Math.floor(Math.max(0, now - state.workerLastTick) / partDuration);
+      if (completedParts === 0) {
+        renderWorkerStatus();
+        return;
+      }
+
+      state.workerLastTick += completedParts * partDuration;
+      const completedCars = [];
+      while (completedParts > 0 && state.maintenanceQueue.length > 0) {
+        state.workerPartProgress += 1;
+        completedParts -= 1;
+        if (state.workerPartProgress >= SERVICE_TASKS.length) {
+          completedCars.push(getCar(state.maintenanceQueue.shift()));
+          state.workerPartProgress = 0;
+        }
+      }
+
+      if (state.maintenanceQueue.length === 0) {
+        state.workerLastTick = now;
+      }
+      saveState();
+      renderAll();
+      if (completedCars.length > 0) {
+        const label = completedCars.length === 1
+          ? completedCars[0].name
+          : `${completedCars.length} returned cars`;
+        showToast(`Your maintenance crew prepared ${label} for rental.`);
+      }
     }
 
     function renderAutoGroup() {
@@ -4038,6 +4220,19 @@
         ? "Maximum luck reached"
         : `Improve luck · 🪙 ${luckCost.toLocaleString()}`;
       upgradeLuckButton.disabled = state.luckLevel >= 10 || state.credits < luckCost;
+      const workerCost = getWorkerUpgradeCost();
+      workerLevel.textContent = state.maintenanceWorkers === 0
+        ? "No workers"
+        : `${state.maintenanceWorkers} / 5 workers`;
+      workerDescription.textContent = state.maintenanceWorkers === 0
+        ? "Hire a worker to automatically service returned cars at 5 seconds per part."
+        : state.maintenanceWorkers >= 5
+          ? "Maximum crew speed: every maintenance part takes only 1 second."
+          : `Each part takes ${getWorkerSecondsPerPart()} seconds. Another worker makes it 1 second faster.`;
+      upgradeWorkerButton.textContent = state.maintenanceWorkers >= 5
+        ? "Maximum crew hired"
+        : `${state.maintenanceWorkers === 0 ? "Hire worker" : "Add worker"} · 🪙 ${workerCost.toLocaleString()}`;
+      upgradeWorkerButton.disabled = state.maintenanceWorkers >= 5 || state.credits < workerCost;
 
       const displayCars = Object.entries(state.collection)
         .flatMap(([id]) => Array.from({ length: Math.min(getAvailableCount(id), 2) }, () => getCar(id)))
