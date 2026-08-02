@@ -490,6 +490,38 @@
       text-transform: uppercase;
     }
 
+    .pack-collection-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 9px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: rgb(7 11 17 / 58%);
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .pack.complete .pack-collection-status {
+      border-color: var(--green);
+      background: rgb(22 81 43 / 42%);
+      color: var(--green);
+    }
+
+    .view-pack-button {
+      padding: 5px 8px;
+      border-radius: 7px;
+      background: #303a4c;
+      color: var(--text);
+      font-size: 0.58rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
     .pack-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1370,6 +1402,113 @@
       margin-bottom: 5px;
       color: var(--yellow);
       font-size: 1.35rem;
+    }
+
+    .pack-contents-card {
+      width: min(850px, 96vw);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 26px;
+      border: 2px solid var(--cyan);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .pack-contents-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .pack-contents-header h2 {
+      margin: 3px 0 0;
+    }
+
+    .pack-contents-progress {
+      color: var(--green);
+      font-size: 0.76rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .close-pack-contents {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      border-radius: 10px;
+      background: #30394b;
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 1000;
+    }
+
+    .pack-contents-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 9px;
+    }
+
+    .pack-content-car {
+      position: relative;
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      opacity: 0.58;
+    }
+
+    .pack-content-car.collected {
+      border-color: var(--car-rarity);
+      opacity: 1;
+    }
+
+    .pack-content-car .car-visual {
+      height: 72px;
+      margin: 0;
+    }
+
+    .pack-content-car .car {
+      transform: scale(0.67);
+    }
+
+    .pack-content-car strong {
+      display: block;
+      min-height: 2.4em;
+      font-size: 0.67rem;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .pack-content-car span {
+      color: var(--car-rarity);
+      font-size: 0.56rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .pack-content-check {
+      position: absolute;
+      z-index: 3;
+      top: 7px;
+      right: 7px;
+      display: grid;
+      width: 22px;
+      height: 22px;
+      place-items: center;
+      border-radius: 50%;
+      background: #303949;
+      color: var(--muted);
+      font-size: 0.67rem;
+      font-weight: 1000;
+    }
+
+    .collected .pack-content-check {
+      background: var(--green);
+      color: #082010;
     }
 
     .factory-grid {
@@ -2414,6 +2553,10 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
+      .pack-contents-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
       .factory-floor {
         min-height: 390px;
       }
@@ -2735,6 +2878,20 @@
         <div class="day-report-stat"><strong id="reportReturns">0</strong>Need service</div>
       </div>
       <button id="startNextDayButton" class="primary-button" type="button">Start next day</button>
+    </div>
+  </div>
+
+  <div id="packContentsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="packContentsTitle">
+    <div class="pack-contents-card">
+      <div class="pack-contents-header">
+        <div>
+          <p class="kicker">Possible cars</p>
+          <h2 id="packContentsTitle">Pack contents</h2>
+          <p id="packContentsProgress" class="pack-contents-progress"></p>
+        </div>
+        <button id="closePackContentsButton" class="close-pack-contents" type="button" aria-label="Close pack contents">×</button>
+      </div>
+      <div id="packContentsGrid" class="pack-contents-grid"></div>
     </div>
   </div>
 
@@ -3163,6 +3320,11 @@
     const reportRentals = document.querySelector("#reportRentals");
     const reportReturns = document.querySelector("#reportReturns");
     const startNextDayButton = document.querySelector("#startNextDayButton");
+    const packContentsModal = document.querySelector("#packContentsModal");
+    const packContentsTitle = document.querySelector("#packContentsTitle");
+    const packContentsProgress = document.querySelector("#packContentsProgress");
+    const packContentsGrid = document.querySelector("#packContentsGrid");
+    const closePackContentsButton = document.querySelector("#closePackContentsButton");
     const selectedRacer = document.querySelector("#selectedRacer");
     const trackSelect = document.querySelector("#trackSelect");
     const licenseInfo = document.querySelector("#licenseInfo");
@@ -3192,6 +3354,11 @@
     });
 
     packGrid.addEventListener("click", (event) => {
+      const contentsButton = event.target.closest("[data-view-pack]");
+      if (contentsButton) {
+        showPackContents(contentsButton.dataset.viewPack);
+        return;
+      }
       const button = event.target.closest("[data-pack-id]");
       if (button) buyPack(button.dataset.packId, Number(button.dataset.packQuantity ?? 1));
     });
@@ -3232,8 +3399,16 @@
     toggleDealershipButton.addEventListener("click", toggleDealership);
     sleepButton.addEventListener("click", sleepDay);
     startNextDayButton.addEventListener("click", startNextDay);
+    closePackContentsButton.addEventListener("click", closePackContents);
+    packContentsModal.addEventListener("click", (event) => {
+      if (event.target === packContentsModal) closePackContents();
+    });
 
     document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && packContentsModal.classList.contains("active")) {
+        closePackContents();
+        return;
+      }
       const control = keyToControl(event.code);
       if (!control || !document.querySelector("#raceView").classList.contains("active")) return;
       event.preventDefault();
@@ -3384,7 +3559,10 @@
         .map(({ pack }) => pack);
 
       packGrid.innerHTML = packsByPrice.map((pack) => {
-        const poolSize = getPackCarPool(pack).length;
+        const pool = getPackCarPool(pack);
+        const poolSize = pool.length;
+        const collectedCount = pool.filter((car) => state.discovered.includes(car.id)).length;
+        const packComplete = collectedCount === poolSize;
         const availableSlots = state.storageCapacity - getStorageUsed();
         const segments = Object.entries(pack.odds)
           .filter(([, chance]) => chance > 0)
@@ -3392,7 +3570,7 @@
           .join("");
 
         return `
-          <article class="pack ${pack.id}" style="--pack-color:${pack.color};--pack-glow:${pack.color}22">
+          <article class="pack ${pack.id} ${packComplete ? "complete" : ""}" style="--pack-color:${pack.color};--pack-glow:${pack.color}22">
             <div class="pack-art" aria-hidden="true">
               <div class="box-lid"></div>
               <div class="box-body"><span class="${pack.id === "lego" ? "brick-pack-logo" : ""}">${pack.symbol}</span></div>
@@ -3402,6 +3580,10 @@
             <p>${pack.description}</p>
             <div class="odds" aria-label="Rarity odds">${segments}</div>
             <div class="pack-pool">${poolSize} different ${poolSize === 1 ? "car" : "cars"} available</div>
+            <div class="pack-collection-status">
+              <span>${packComplete ? "✓ Complete" : `${collectedCount} / ${poolSize} collected`}</span>
+              <button class="view-pack-button" type="button" data-view-pack="${pack.id}">View cars</button>
+            </div>
             <div class="pack-actions">
               <button class="buy-button" type="button" data-pack-id="${pack.id}" data-pack-quantity="1" ${state.credits < pack.price || availableSlots < 1 ? "disabled" : ""}>
                 Buy 1 <span class="price">🪙 ${pack.price.toLocaleString()}</span>
@@ -3423,6 +3605,37 @@
       garageGrid.innerHTML = ownedCars.length
         ? ownedCars.map((car) => createCarCard(car)).join("")
         : `<div class="empty-garage">Your garage is empty. Open a pack to find your first car.</div>`;
+    }
+
+    function showPackContents(packId) {
+      const pack = PACKS.find((entry) => entry.id === packId);
+      if (!pack) return;
+      const pool = getPackCarPool(pack)
+        .sort((left, right) => rarityRank(right.rarity) - rarityRank(left.rarity) || left.name.localeCompare(right.name));
+      const discovered = new Set(state.discovered);
+      const collectedCount = pool.filter((car) => discovered.has(car.id)).length;
+
+      packContentsTitle.textContent = pack.name;
+      packContentsProgress.textContent = collectedCount === pool.length
+        ? `Collection complete · ${pool.length} / ${pool.length}`
+        : `${collectedCount} / ${pool.length} cars collected`;
+      packContentsGrid.innerHTML = pool.map((car) => {
+        const collected = discovered.has(car.id);
+        return `
+          <article class="pack-content-car ${collected ? "collected" : ""}" style="--car-rarity:${RARITY_COLORS[car.rarity]}">
+            <span class="pack-content-check">${collected ? "✓" : "?"}</span>
+            <div class="car-visual">${createCarVisual(car)}</div>
+            <strong>${car.name}</strong>
+            <span>${car.rarity} · ${collected ? "Collected" : "Not collected"}</span>
+          </article>
+        `;
+      }).join("");
+      packContentsModal.classList.add("active");
+      closePackContentsButton.focus();
+    }
+
+    function closePackContents() {
+      packContentsModal.classList.remove("active");
     }
 
     function createCarCard(car) {
