@@ -1382,8 +1382,15 @@
       margin-bottom: 0;
     }
 
-    .test-reward-button {
-      max-width: 280px;
+    .reset-game-button {
+      max-width: 220px;
+      background: var(--red);
+      box-shadow: 0 7px 0 #8d1827;
+      color: #fff;
+    }
+
+    .reset-game-button:hover {
+      box-shadow: 0 9px 0 #8d1827;
     }
 
     .collection-grid {
@@ -3191,7 +3198,7 @@
       </div>
       <div class="garage-toolbar">
         <div id="collectionSummary" class="collection-summary"></div>
-        <button id="testDugMobileButton" class="primary-button test-reward-button" type="button">Give test DugMobile</button>
+        <button id="resetGameButton" class="primary-button reset-game-button" type="button">Reset game</button>
       </div>
       <div id="collectionGrid" class="collection-grid"></div>
     </section>
@@ -3958,7 +3965,7 @@
     const garageSummary = document.querySelector("#garageSummary");
     const collectionGrid = document.querySelector("#collectionGrid");
     const collectionSummary = document.querySelector("#collectionSummary");
-    const testDugMobileButton = document.querySelector("#testDugMobileButton");
+    const resetGameButton = document.querySelector("#resetGameButton");
     const maintenanceSummary = document.querySelector("#maintenanceSummary");
     const maintenanceList = document.querySelector("#maintenanceList");
     const workerStatus = document.querySelector("#workerStatus");
@@ -4067,7 +4074,7 @@
     upgradeStorageButton.addEventListener("click", upgradeStorage);
     upgradeLuckButton.addEventListener("click", upgradeLuck);
     upgradeWorkerButton.addEventListener("click", upgradeMaintenanceWorkers);
-    testDugMobileButton.addEventListener("click", grantTestDugMobile);
+    resetGameButton.addEventListener("click", resetGame);
     toggleDealershipButton.addEventListener("click", toggleDealership);
     sleepButton.addEventListener("click", sleepDay);
     startNextDayButton.addEventListener("click", startNextDay);
@@ -4410,10 +4417,6 @@
       collectionSummary.innerHTML = collectionComplete
         ? `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> cars discovered · Collection complete! The DugMobile unlocked.`
         : `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> cars discovered · ${COLLECTIBLE_CARS.length - ownedCount} remaining`;
-      testDugMobileButton.disabled = state.dugMobileAwarded;
-      testDugMobileButton.textContent = state.dugMobileAwarded
-        ? "DugMobile already claimed"
-        : "Give test DugMobile";
       const displayedCars = state.dugMobileAwarded
         ? [...COLLECTIBLE_CARS, COLLECTION_REWARD]
         : [...COLLECTIBLE_CARS];
@@ -5049,14 +5052,10 @@
       return true;
     }
 
-    function grantTestDugMobile() {
-      if (state.dugMobileAwarded) {
-        showToast("The DugMobile has already been claimed on this save.");
-        return;
-      }
-
-      awardDugMobile("Test DugMobile added to your garage. This one-time reward cannot be claimed again.");
-      renderAll();
+    function resetGame() {
+      if (!window.confirm("Reset all progress and start the game again? This cannot be undone.")) return;
+      localStorage.removeItem(SAVE_KEY);
+      window.location.reload();
     }
 
     function awardDugMobile(message) {
