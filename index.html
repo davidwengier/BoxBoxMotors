@@ -1081,57 +1081,64 @@
       text-transform: uppercase;
     }
 
-    .service-meter {
-      position: relative;
-      height: 34px;
-      overflow: hidden;
-      margin: 18px 0;
-      border: 4px solid #090c12;
-      border-radius: 9px;
-      background: linear-gradient(90deg, #7c2832, #d5a833 34%, #d5a833 66%, #7c2832);
-      box-shadow: inset 0 0 0 2px rgb(255 255 255 / 10%);
-    }
-
-    .service-zone {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 42%;
-      width: 16%;
-      background: var(--green);
-      box-shadow: 0 0 18px rgb(100 239 145 / 55%);
-    }
-
-    .service-marker {
-      position: absolute;
-      z-index: 2;
-      top: -4px;
-      bottom: -4px;
-      left: 0;
-      width: 6px;
-      border: 2px solid #080b10;
-      background: #fff;
-      box-shadow: 0 0 9px #fff;
-      transform: translateX(-50%);
-    }
-
-    .service-progress {
-      display: flex;
-      justify-content: center;
+    .service-workflow {
+      display: grid;
       gap: 8px;
-      margin-bottom: 14px;
+      margin: 16px 0;
     }
 
-    .service-progress span {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: #303949;
+    .service-step {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgb(8 12 18 / 75%);
+      color: var(--muted);
     }
 
-    .service-progress span.complete {
-      background: var(--green);
-      box-shadow: 0 0 9px rgb(100 239 145 / 50%);
+    .service-step.active {
+      border-color: var(--cyan);
+      color: var(--text);
+      box-shadow: 0 0 16px rgb(33 230 255 / 12%);
+    }
+
+    .service-step.complete {
+      border-color: rgb(100 239 145 / 45%);
+      color: var(--green);
+    }
+
+    .service-step-icon {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      border-radius: 8px;
+      background: #202837;
+      font-size: 0.9rem;
+    }
+
+    .service-step strong {
+      display: block;
+      color: inherit;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+    }
+
+    .service-step small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.58rem;
+    }
+
+    .service-step-status {
+      font-size: 0.58rem;
+      font-weight: 1000;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .service-message {
@@ -2312,7 +2319,7 @@
           <p class="kicker">Prepare returned rentals</p>
           <h2>Maintenance</h2>
         </div>
-        <p class="section-copy">Cars return after you sleep. Complete three timed service checks before each car can be rented again.</p>
+        <p class="section-copy">Process every returned rental through check-in, cleaning, refuelling, and inspection before placing it back on the lot.</p>
       </div>
 
       <div class="maintenance-layout">
@@ -2323,7 +2330,7 @@
         </div>
         <div id="serviceBay" class="service-bay">
           <h3>Service bay</h3>
-          <p>Select a returned car to begin its maintenance checks.</p>
+          <p>Select a returned car, then work through each return-station task.</p>
           <div id="serviceGame"></div>
         </div>
       </div>
@@ -2460,21 +2467,22 @@
         <div class="box-body"><span>?</span></div>
       </div>
 
-      <div id="dayReportModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="dayReportTitle">
-        <div class="day-report-card">
-          <p class="kicker">Business report</p>
-          <h2 id="dayReportTitle">Day complete</h2>
-          <p id="dayReportCopy" class="section-copy" style="margin:0 auto;text-align:center"></p>
-          <div class="day-report-stats">
-            <div class="day-report-stat"><strong id="reportRevenue">$0</strong>Rental income</div>
-            <div class="day-report-stat"><strong id="reportRentals">0</strong>Cars rented</div>
-            <div class="day-report-stat"><strong id="reportReturns">0</strong>Need service</div>
-          </div>
-          <button id="startNextDayButton" class="primary-button" type="button">Start next day</button>
-        </div>
-      </div>
       <p id="tapHint" class="tap-hint">Tap the box to open</p>
       <div id="revealCard" class="reveal-card"></div>
+    </div>
+  </div>
+
+  <div id="dayReportModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="dayReportTitle">
+    <div class="day-report-card">
+      <p class="kicker">Business report</p>
+      <h2 id="dayReportTitle">Day complete</h2>
+      <p id="dayReportCopy" class="section-copy" style="margin:0 auto;text-align:center"></p>
+      <div class="day-report-stats">
+        <div class="day-report-stat"><strong id="reportRevenue">$0</strong>Rental income</div>
+        <div class="day-report-stat"><strong id="reportRentals">0</strong>Cars rented</div>
+        <div class="day-report-stat"><strong id="reportReturns">0</strong>Need service</div>
+      </div>
+      <button id="startNextDayButton" class="primary-button" type="button">Start next day</button>
     </div>
   </div>
 
@@ -2838,6 +2846,14 @@
       races: 0
     };
 
+    const SERVICE_TASKS = [
+      { id: "check-in", icon: "📋", title: "Check in return", description: "Scan the rental and record its return." },
+      { id: "clean", icon: "🧽", title: "Clean the car", description: "Wash the body, glass, and interior." },
+      { id: "refuel", icon: "⛽", title: "Refuel", description: "Top up the tank for the next customer." },
+      { id: "inspect", icon: "🔍", title: "Safety inspection", description: "Check tyres, lights, brakes, and damage." },
+      { id: "restock", icon: "🅿️", title: "Return to lot", description: "Mark the car available for rental again." }
+    ];
+
     let state = loadState();
     let pendingPack = null;
     let pendingCar = null;
@@ -2850,7 +2866,6 @@
     let customerVisitInProgress = false;
     let customerTimers = [];
     let maintenanceSession = null;
-    let maintenanceFrame = 0;
     const drivingInput = { left: false, right: false, throttle: false, brake: false };
 
     const creditsDisplay = document.querySelector("#creditsDisplay");
@@ -2930,6 +2945,10 @@
     maintenanceList.addEventListener("click", (event) => {
       const button = event.target.closest("[data-maintain-id]");
       if (button) startMaintenance(button.dataset.maintainId);
+    });
+    serviceGame.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-service-action]");
+      if (button) advanceMaintenance(button.dataset.serviceAction);
     });
 
     openingBox.addEventListener("click", openPendingPack);
@@ -3222,63 +3241,55 @@
 
     function startMaintenance(carId) {
       if (!state.maintenanceQueue.includes(carId)) return;
-      cancelAnimationFrame(maintenanceFrame);
       maintenanceSession = {
         carId,
-        checks: 0,
-        markerPosition: 0,
-        startedAt: performance.now(),
-        zoneStart: 36 + Math.random() * 12
+        step: 0
       };
       renderServiceGame();
-      animateServiceMarker();
     }
 
-    function renderServiceGame(message = "Stop the marker inside the green zone.") {
+    function renderServiceGame(message = "Process each task in order, just like handling a returned rental.") {
       if (!maintenanceSession) {
         serviceGame.innerHTML = "";
         return;
       }
 
       const car = getCar(maintenanceSession.carId);
+      const currentTask = SERVICE_TASKS[maintenanceSession.step];
       serviceGame.innerHTML = `
         <div class="service-car">${createCarVisual(car)}</div>
-        <div class="service-task">Check ${maintenanceSession.checks + 1} of 3 · Time the repair</div>
-        <div class="service-meter">
-          <span class="service-zone" style="left:${maintenanceSession.zoneStart}%"></span>
-          <span id="serviceMarker" class="service-marker"></span>
+        <div class="service-task">${car.name} · Return station</div>
+        <div class="service-workflow">
+          ${SERVICE_TASKS.map((task, index) => {
+            const status = index < maintenanceSession.step
+              ? "complete"
+              : index === maintenanceSession.step ? "active" : "";
+            const statusLabel = index < maintenanceSession.step
+              ? "Done"
+              : index === maintenanceSession.step ? "Next" : "Waiting";
+            return `
+              <div class="service-step ${status}">
+                <span class="service-step-icon">${index < maintenanceSession.step ? "✓" : task.icon}</span>
+                <span><strong>${task.title}</strong><small>${task.description}</small></span>
+                <span class="service-step-status">${statusLabel}</span>
+              </div>
+            `;
+          }).join("")}
         </div>
-        <div class="service-progress">${[0, 1, 2].map((step) => `<span class="${step < maintenanceSession.checks ? "complete" : ""}"></span>`).join("")}</div>
         <p class="service-message">${message}</p>
-        <button id="stopServiceButton" class="primary-button" type="button">Stop marker</button>
+        <button class="primary-button" type="button" data-service-action="${currentTask.id}">
+          ${currentTask.icon} ${currentTask.title}
+        </button>
       `;
-      document.querySelector("#stopServiceButton").addEventListener("click", stopServiceMarker);
     }
 
-    function animateServiceMarker(now = performance.now()) {
+    function advanceMaintenance(action) {
       if (!maintenanceSession) return;
-      const progress = ((now - maintenanceSession.startedAt) % 1600) / 1600;
-      maintenanceSession.markerPosition = progress < 0.5 ? progress * 200 : (1 - progress) * 200;
-      const marker = document.querySelector("#serviceMarker");
-      if (marker) marker.style.left = `${maintenanceSession.markerPosition}%`;
-      maintenanceFrame = requestAnimationFrame(animateServiceMarker);
-    }
+      const currentTask = SERVICE_TASKS[maintenanceSession.step];
+      if (!currentTask || currentTask.id !== action) return;
 
-    function stopServiceMarker() {
-      if (!maintenanceSession) return;
-      const zoneEnd = maintenanceSession.zoneStart + 16;
-      const hit = maintenanceSession.markerPosition >= maintenanceSession.zoneStart
-        && maintenanceSession.markerPosition <= zoneEnd;
-
-      if (!hit) {
-        maintenanceSession.startedAt = performance.now();
-        maintenanceSession.zoneStart = 36 + Math.random() * 12;
-        renderServiceGame("Missed the green zone. Try this check again.");
-        return;
-      }
-
-      maintenanceSession.checks += 1;
-      if (maintenanceSession.checks >= 3) {
+      maintenanceSession.step += 1;
+      if (maintenanceSession.step >= SERVICE_TASKS.length) {
         const car = getCar(maintenanceSession.carId);
         const queueIndex = state.maintenanceQueue.indexOf(maintenanceSession.carId);
         state.maintenanceQueue.splice(queueIndex, 1);
@@ -3289,14 +3300,10 @@
         return;
       }
 
-      maintenanceSession.startedAt = performance.now();
-      maintenanceSession.zoneStart = 36 + Math.random() * 12;
-      renderServiceGame("Good repair! Complete the next check.");
+      renderServiceGame(`${currentTask.title} complete. Continue processing the return.`);
     }
 
     function cancelMaintenance() {
-      cancelAnimationFrame(maintenanceFrame);
-      maintenanceFrame = 0;
       maintenanceSession = null;
       serviceGame.innerHTML = "";
     }
