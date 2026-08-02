@@ -6,6 +6,8 @@ A mobile-friendly car pack opening and auto rental tycoon game for the browser.
 
 - Buy 15 packs, including manufacturer collections, LEGO cars, and
   Fast & Furious movie cars.
+- Buy packs individually or open a stack of five at once.
+- Each pack has a stable pool of no more than 20 different cars.
 - Collect 100 cars across four rarity tiers.
 - Every car is from Ford, Honda, Acura, Porsche, Chevrolet, Hyundai,
   Lamborghini, Lotus, or Toyota.

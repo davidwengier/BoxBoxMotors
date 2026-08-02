@@ -480,6 +480,33 @@
       color: #5d4c00;
     }
 
+    .pack-pool {
+      margin-bottom: 9px;
+      color: var(--muted);
+      font-size: 0.63rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .pack-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .pack-actions .buy-button {
+      padding-inline: 8px;
+      font-size: 0.7rem;
+    }
+
+    .pack-actions .bulk-buy {
+      background: var(--yellow);
+      box-shadow: 0 7px 0 #947716;
+      color: #201900;
+    }
+
     .garage-toolbar {
       display: flex;
       align-items: center;
@@ -2091,6 +2118,59 @@
       animation: card-reveal 650ms cubic-bezier(.1, .75, .2, 1.25) both;
     }
 
+    .reveal-card.bulk {
+      width: min(760px, 94vw);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .reveal-card .bulk-reveal-title {
+      margin: 0 0 15px;
+      font-size: clamp(1.8rem, 6vw, 3.2rem);
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .bulk-results {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .bulk-result {
+      min-width: 0;
+      padding: 10px 7px;
+      border: 1px solid var(--result-color);
+      border-radius: 12px;
+      background: #111722;
+      text-align: center;
+    }
+
+    .bulk-result .car-visual {
+      height: 75px;
+      margin: 0;
+    }
+
+    .bulk-result .car {
+      transform: scale(0.68);
+    }
+
+    .bulk-result strong {
+      display: block;
+      min-height: 2.4em;
+      font-size: 0.63rem;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .bulk-result span {
+      color: var(--result-color);
+      font-size: 0.55rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
     .reveal-card .car-visual {
       height: 155px;
       margin: 8px 0;
@@ -2296,6 +2376,10 @@
       }
 
       .collection-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bulk-results {
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -2983,8 +3067,8 @@
 
     let state = loadState();
     let pendingPack = null;
-    let pendingCar = null;
-    let pendingDuplicate = false;
+    let pendingCars = [];
+    let pendingResults = [];
     let raceRunning = false;
     let raceFrame = 0;
     let raceSession = null;
@@ -3061,7 +3145,7 @@
 
     packGrid.addEventListener("click", (event) => {
       const button = event.target.closest("[data-pack-id]");
-      if (button) buyPack(button.dataset.packId);
+      if (button) buyPack(button.dataset.packId, Number(button.dataset.packQuantity ?? 1));
     });
 
     garageGrid.addEventListener("click", (event) => {
@@ -3245,6 +3329,8 @@
         .map(({ pack }) => pack);
 
       packGrid.innerHTML = packsByPrice.map((pack) => {
+        const poolSize = getPackCarPool(pack).length;
+        const availableSlots = state.storageCapacity - getStorageUsed();
         const segments = Object.entries(pack.odds)
           .filter(([, chance]) => chance > 0)
           .map(([rarity, chance]) => `<span class="${rarity}" style="width:${chance}%"></span>`)
@@ -3260,9 +3346,15 @@
             <h3>${pack.name}</h3>
             <p>${pack.description}</p>
             <div class="odds" aria-label="Rarity odds">${segments}</div>
-            <button class="buy-button" type="button" data-pack-id="${pack.id}" ${state.credits < pack.price || getStorageUsed() >= state.storageCapacity ? "disabled" : ""}>
-              Buy pack <span class="price">🪙 ${pack.price.toLocaleString()}</span>
-            </button>
+            <div class="pack-pool">${poolSize} different ${poolSize === 1 ? "car" : "cars"} available</div>
+            <div class="pack-actions">
+              <button class="buy-button" type="button" data-pack-id="${pack.id}" data-pack-quantity="1" ${state.credits < pack.price || availableSlots < 1 ? "disabled" : ""}>
+                Buy 1 <span class="price">🪙 ${pack.price.toLocaleString()}</span>
+              </button>
+              <button class="buy-button bulk-buy" type="button" data-pack-id="${pack.id}" data-pack-quantity="5" ${state.credits < pack.price * 5 || availableSlots < 5 ? "disabled" : ""}>
+                Buy 5 <span class="price">🪙 ${(pack.price * 5).toLocaleString()}</span>
+              </button>
+            </div>
           </article>
         `;
       }).join("");
@@ -3662,21 +3754,23 @@
       }
     }
 
-    function buyPack(packId) {
+    function buyPack(packId, quantity = 1) {
       const pack = PACKS.find((entry) => entry.id === packId);
-      if (getStorageUsed() >= state.storageCapacity) {
-        showToast("Storage is full. Sell a car or expand the warehouse.");
+      if (!pack || ![1, 5].includes(quantity)) return;
+      if (state.storageCapacity - getStorageUsed() < quantity) {
+        showToast(`You need ${quantity} free storage spaces to buy this stack.`);
         return;
       }
-      if (!pack || state.credits < pack.price) {
+      const totalPrice = pack.price * quantity;
+      if (state.credits < totalPrice) {
         showToast("Not enough credits. Sell cars to fund more packs.");
         return;
       }
 
-      state.credits -= pack.price;
+      state.credits -= totalPrice;
       pendingPack = pack;
-      pendingCar = rollCar(pack);
-      pendingDuplicate = Boolean(state.collection[pendingCar.id]);
+      pendingCars = Array.from({ length: quantity }, () => rollCar(pack));
+      pendingResults = [];
       saveState();
       renderAll();
 
@@ -3688,18 +3782,50 @@
       openingBox.classList.remove("opening");
       openingBox.hidden = false;
       tapHint.hidden = false;
+      tapHint.textContent = quantity === 5 ? "Tap to open all 5 boxes" : "Tap the box to open";
+      revealCard.classList.remove("bulk");
       revealCard.classList.remove("active");
       packModal.classList.add("active");
       openingBox.focus();
     }
 
-    function rollCar(pack) {
+    function getPackCarPool(pack) {
       const eligibleCars = CARS.filter((car) => {
         const series = car.series ?? "core";
         return (pack.series ? series === pack.series : series === "core") &&
           (!pack.origins || pack.origins.includes(car.origin)) &&
-          (!pack.brands || pack.brands.includes(getCarBrand(car)));
+          (!pack.brands || pack.brands.includes(getCarBrand(car))) &&
+          pack.odds[car.rarity] > 0;
       });
+      const rankedCars = [...eligibleCars]
+        .sort((left, right) => stablePackScore(pack.id, left.id) - stablePackScore(pack.id, right.id));
+      const selectedCars = [];
+
+      Object.entries(pack.odds)
+        .filter(([, chance]) => chance > 0)
+        .forEach(([rarity]) => {
+          const rarityCar = rankedCars.find((car) => car.rarity === rarity);
+          if (rarityCar && !selectedCars.includes(rarityCar)) selectedCars.push(rarityCar);
+        });
+
+      rankedCars.forEach((car) => {
+        if (selectedCars.length < 20 && !selectedCars.includes(car)) selectedCars.push(car);
+      });
+      return selectedCars;
+    }
+
+    function stablePackScore(packId, carId) {
+      const value = `${packId}:${carId}`;
+      let hash = 2166136261;
+      for (let index = 0; index < value.length; index += 1) {
+        hash ^= value.charCodeAt(index);
+        hash = Math.imul(hash, 16777619);
+      }
+      return hash >>> 0;
+    }
+
+    function rollCar(pack) {
+      const eligibleCars = getPackCarPool(pack);
       const rarityMultipliers = {
         common: Math.max(0.4, 1 - state.luckLevel * 0.06),
         rare: 1 + state.luckLevel * 0.02,
@@ -3730,17 +3856,19 @@
     }
 
     function openPendingPack() {
-      if (!pendingCar || openingBox.classList.contains("opening")) return;
+      if (pendingCars.length === 0 || openingBox.classList.contains("opening")) return;
 
       openingBox.classList.add("opening");
       tapHint.hidden = true;
 
       window.setTimeout(() => {
-        state.collection[pendingCar.id] = (state.collection[pendingCar.id] ?? 0) + 1;
-        if (!state.discovered.includes(pendingCar.id)) {
-          state.discovered.push(pendingCar.id);
-        }
-        state.carsPacked += 1;
+        pendingResults = pendingCars.map((car) => {
+          const isNew = !state.discovered.includes(car.id);
+          state.collection[car.id] = (state.collection[car.id] ?? 0) + 1;
+          if (isNew) state.discovered.push(car.id);
+          state.carsPacked += 1;
+          return { car, isNew, copies: state.collection[car.id] };
+        });
 
         saveState();
         openingBox.hidden = true;
@@ -3750,21 +3878,42 @@
     }
 
     function renderReveal() {
-      const copies = state.collection[pendingCar.id];
-      const stats = getLeveledStats(pendingCar, 1);
-      revealCard.style.setProperty("--rarity-color", RARITY_COLORS[pendingCar.rarity]);
-      revealCard.innerHTML = `
-        <div class="reveal-rarity">${pendingCar.rarity} pull</div>
-        <div class="car-visual">${createCarVisual(pendingCar)}</div>
-        <h2>${pendingCar.name}</h2>
-        <span class="new-badge">${pendingDuplicate ? `Another copy · ${copies} stored` : "New discovery!"}</span>
-        <div class="reveal-stats">
-          <span><strong>${stats.speed}</strong>Speed</span>
-          <span><strong>${stats.acceleration}</strong>Launch</span>
-          <span><strong>${stats.grip}</strong>Grip</span>
-        </div>
-        <button id="keepCarButton" class="primary-button" type="button">Store car · Value 🪙 ${getSalePrice(pendingCar).toLocaleString()}</button>
-      `;
+      if (pendingResults.length === 1) {
+        const { car, isNew, copies } = pendingResults[0];
+        const stats = getLeveledStats(car, 1);
+        revealCard.style.setProperty("--rarity-color", RARITY_COLORS[car.rarity]);
+        revealCard.innerHTML = `
+          <div class="reveal-rarity">${car.rarity} pull</div>
+          <div class="car-visual">${createCarVisual(car)}</div>
+          <h2>${car.name}</h2>
+          <span class="new-badge">${isNew ? "New discovery!" : `Another copy · ${copies} stored`}</span>
+          <div class="reveal-stats">
+            <span><strong>${stats.speed}</strong>Speed</span>
+            <span><strong>${stats.acceleration}</strong>Launch</span>
+            <span><strong>${stats.grip}</strong>Grip</span>
+          </div>
+          <button id="keepCarButton" class="primary-button" type="button">Store car · Value 🪙 ${getSalePrice(car).toLocaleString()}</button>
+        `;
+      } else {
+        const bestResult = [...pendingResults]
+          .sort((left, right) => rarityRank(right.car.rarity) - rarityRank(left.car.rarity))[0];
+        revealCard.classList.add("bulk");
+        revealCard.style.setProperty("--rarity-color", RARITY_COLORS[bestResult.car.rarity]);
+        revealCard.innerHTML = `
+          <div class="reveal-rarity">Five-pack stack opened</div>
+          <h2 class="bulk-reveal-title">Your 5 cars</h2>
+          <div class="bulk-results">
+            ${pendingResults.map(({ car, isNew }) => `
+              <div class="bulk-result" style="--result-color:${RARITY_COLORS[car.rarity]}">
+                <div class="car-visual">${createCarVisual(car)}</div>
+                <strong>${car.name}</strong>
+                <span>${isNew ? "New!" : `${state.collection[car.id]} stored`} · ${car.rarity}</span>
+              </div>
+            `).join("")}
+          </div>
+          <button id="keepCarButton" class="primary-button" type="button">Store all 5 cars</button>
+        `;
+      }
       revealCard.classList.add("active");
       document.querySelector("#keepCarButton").addEventListener("click", closePack);
       document.querySelector("#keepCarButton").focus();
@@ -3773,8 +3922,8 @@
     function closePack() {
       packModal.classList.remove("active");
       pendingPack = null;
-      pendingCar = null;
-      pendingDuplicate = false;
+      pendingCars = [];
+      pendingResults = [];
     }
 
     function sellCar(carId) {
