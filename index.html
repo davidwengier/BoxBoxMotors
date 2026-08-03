@@ -181,7 +181,7 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
-      max-width: 780px;
+      max-width: 880px;
       margin: 0 auto 34px;
       padding: 6px;
       border: 1px solid var(--line);
@@ -191,6 +191,9 @@
 
     .nav-button {
       position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 12px 10px;
       border-radius: 12px;
       background: transparent;
@@ -198,6 +201,7 @@
       font-size: 0.82rem;
       font-weight: 900;
       letter-spacing: 0.06em;
+      white-space: nowrap;
       text-transform: uppercase;
       transition: background 160ms ease, color 160ms ease;
     }
@@ -3289,7 +3293,9 @@
       }
 
       .nav {
+        grid-template-columns: repeat(5, minmax(108px, 1fr));
         margin-bottom: 26px;
+        overflow-x: auto;
       }
 
       .nav-button {
