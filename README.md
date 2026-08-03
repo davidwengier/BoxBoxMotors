@@ -6,7 +6,7 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 
 ## Gameplay
 
-- Buy 19 packs, including manufacturer collections, real racing go-karts,
+- Buy 18 packs, including manufacturer collections, real racing go-karts,
   Trek and Surron bikes, 2025 Formula 1 cars, LEGO cars, and Fast & Furious movie cars.
 - Buy packs individually or open a stack of five at once.
 - Each pack has a stable pool of no more than 20 different cars.
