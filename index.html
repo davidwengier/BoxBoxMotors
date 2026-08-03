@@ -2202,7 +2202,7 @@
     }
 
     .customer.visiting {
-      animation: customer-visit 5.4s linear forwards;
+      animation: customer-visit var(--customer-visit-duration, 5.4s) linear forwards;
     }
 
     .customer-head {
@@ -3352,6 +3352,15 @@
 
           <div class="upgrade-card">
             <div class="upgrade-card-header">
+              <h4>Customer speed</h4>
+              <span id="customerSpeedLevel" class="upgrade-level">Level 0</span>
+            </div>
+            <p id="customerSpeedDescription">Customers arrive every 7 seconds.</p>
+            <button id="upgradeCustomerSpeedButton" class="primary-button" type="button">Speed up customers</button>
+          </div>
+
+          <div class="upgrade-card">
+            <div class="upgrade-card-header">
               <h4>Maintenance crew</h4>
               <span id="workerLevel" class="upgrade-level">No workers</span>
             </div>
@@ -3720,8 +3729,27 @@
       makeCar("bike-surron-ultra-bee", "Surron Ultra Bee", "Surron", "mythic", "Ultimate Electric Dirt Bike", "asia", "bike", "#d8a72f", 96, 98, 96, "bike")
     ];
 
+    const FERRARI_CARS = [
+      makeCar("ferrari-roma", "Ferrari Roma", "Ferrari", "rare", "Grand Tourer", "europe", "supercar", "#ba3035", 82, 80, 79, "ferrari"),
+      makeCar("ferrari-portofino-m", "Ferrari Portofino M", "Ferrari", "rare", "Convertible Grand Tourer", "europe", "roadster", "#e6b82f", 83, 81, 78, "ferrari"),
+      makeCar("ferrari-california-t", "Ferrari California T", "Ferrari", "rare", "Convertible Grand Tourer", "europe", "roadster", "#4c83b5", 81, 80, 77, "ferrari"),
+      makeCar("ferrari-308-gts", "Ferrari 308 GTS", "Ferrari", "rare", "Classic Sports Car", "europe", "supercar", "#d63438", 74, 70, 80, "ferrari"),
+      makeCar("ferrari-458-italia", "Ferrari 458 Italia", "Ferrari", "epic", "V8 Supercar", "europe", "supercar", "#e73538", 90, 88, 88, "ferrari"),
+      makeCar("ferrari-488-gtb", "Ferrari 488 GTB", "Ferrari", "epic", "Twin-Turbo Supercar", "europe", "supercar", "#d82e33", 92, 91, 89, "ferrari"),
+      makeCar("ferrari-f8-tributo", "Ferrari F8 Tributo", "Ferrari", "epic", "V8 Supercar", "europe", "supercar", "#df3438", 93, 92, 90, "ferrari"),
+      makeCar("ferrari-296-gtb", "Ferrari 296 GTB", "Ferrari", "epic", "Hybrid Supercar", "europe", "supercar", "#e9c334", 94, 96, 92, "ferrari"),
+      makeCar("ferrari-812-superfast", "Ferrari 812 Superfast", "Ferrari", "epic", "V12 Grand Tourer", "europe", "supercar", "#9d2630", 95, 89, 87, "ferrari"),
+      makeCar("ferrari-sf90-stradale", "Ferrari SF90 Stradale", "Ferrari", "legendary", "Hybrid Hypercar", "europe", "hypercar", "#d92f34", 98, 99, 94, "ferrari"),
+      makeCar("ferrari-f40", "Ferrari F40", "Ferrari", "legendary", "Classic Supercar", "europe", "hypercar", "#d72e33", 94, 88, 91, "ferrari"),
+      makeCar("ferrari-f50", "Ferrari F50", "Ferrari", "legendary", "V12 Supercar", "europe", "hypercar", "#d93236", 95, 90, 92, "ferrari"),
+      makeCar("ferrari-enzo", "Ferrari Enzo", "Ferrari", "legendary", "V12 Hypercar", "europe", "hypercar", "#db3034", 97, 93, 94, "ferrari"),
+      makeCar("ferrari-laferrari", "Ferrari LaFerrari", "Ferrari", "legendary", "Hybrid Hypercar", "europe", "hypercar", "#d82f33", 99, 98, 96, "ferrari"),
+      makeCar("ferrari-499p", "Ferrari 499P", "Ferrari", "mythic", "Le Mans Hypercar", "europe", "hypercar", "#d62e33", 100, 100, 100, "ferrari"),
+      makeCar("ferrari-daytona-sp3", "Ferrari Daytona SP3", "Ferrari", "limited", "Limited Edition Icona", "europe", "hypercar", "#c72c32", 97, 95, 95, "ferrari", true)
+    ];
+
     const COLLECTION_REWARD_CARS = [...CORE_CARS, ...ADDITIONAL_CARS];
-    const COLLECTIBLE_CARS = [...COLLECTION_REWARD_CARS, ...BIKE_CARS];
+    const COLLECTIBLE_CARS = [...COLLECTION_REWARD_CARS, ...BIKE_CARS, ...FERRARI_CARS];
     const COLLECTION_REWARD_ID = "the-dugmobile";
     const COLLECTION_REWARD = makeCar(
       COLLECTION_REWARD_ID,
@@ -3882,6 +3910,17 @@
         odds: { common: 7, rare: 24, epic: 46, legendary: 20, mythic: 3 }
       },
       {
+        id: "ferrari",
+        name: "Ferrari Legends",
+        tier: "Prancing Horse collection",
+        description: "Ferrari grand tourers, supercars, icons, and Le Mans champions.",
+        price: 2200,
+        symbol: "F",
+        color: "#e73538",
+        series: "ferrari",
+        odds: { common: 0, rare: 30, epic: 38, legendary: 24, mythic: 5, limited: 3 }
+      },
+      {
         id: "go-kart",
         name: "Go-Kart Pack",
         tier: "Grassroots racing",
@@ -3991,6 +4030,7 @@
       storageCapacity: 10,
       storageLevel: 1,
       luckLevel: 0,
+      customerSpeedLevel: 0,
       carsPacked: 0,
       carsSold: 0,
       customersServed: 0,
@@ -4042,6 +4082,7 @@
     let toastTimer = 0;
     let customerVisitInProgress = false;
     let customerTimers = [];
+    let nextCustomerVisitAt = Date.now() + 2500;
     let lastCustomerProfile = -1;
     let maintenanceSession = null;
     const drivingInput = { left: false, right: false, throttle: false, brake: false };
@@ -4071,6 +4112,9 @@
     const luckLevel = document.querySelector("#luckLevel");
     const luckDescription = document.querySelector("#luckDescription");
     const upgradeLuckButton = document.querySelector("#upgradeLuckButton");
+    const customerSpeedLevel = document.querySelector("#customerSpeedLevel");
+    const customerSpeedDescription = document.querySelector("#customerSpeedDescription");
+    const upgradeCustomerSpeedButton = document.querySelector("#upgradeCustomerSpeedButton");
     const workerLevel = document.querySelector("#workerLevel");
     const workerDescription = document.querySelector("#workerDescription");
     const upgradeWorkerButton = document.querySelector("#upgradeWorkerButton");
@@ -4162,6 +4206,7 @@
     raceAgainButton.addEventListener("click", resetRace);
     upgradeStorageButton.addEventListener("click", upgradeStorage);
     upgradeLuckButton.addEventListener("click", upgradeLuck);
+    upgradeCustomerSpeedButton.addEventListener("click", upgradeCustomerSpeed);
     upgradeWorkerButton.addEventListener("click", upgradeMaintenanceWorkers);
     resetGameButton.addEventListener("click", resetGame);
     toggleDealershipButton.addEventListener("click", toggleDealership);
@@ -4216,8 +4261,7 @@
     });
 
     renderAll();
-    window.setInterval(processCustomerVisit, 7000);
-    window.setTimeout(processCustomerVisit, 2500);
+    window.setInterval(processCustomerVisit, 250);
     window.setInterval(processMaintenanceWorkers, 250);
 
     function loadState() {
@@ -4267,6 +4311,7 @@
           storageCapacity,
           storageLevel: validNumber(saved.storageLevel, Math.max(1, storageCapacity / 10)),
           luckLevel: Math.min(10, validNumber(saved.luckLevel, 0)),
+          customerSpeedLevel: Math.min(5, validNumber(saved.customerSpeedLevel, 0)),
           carsPacked: validNumber(saved.carsPacked, 0),
           carsSold: validNumber(saved.carsSold, 0),
           customersServed: validNumber(saved.customersServed, 0),
@@ -4828,7 +4873,7 @@
       state.dealershipOpen = true;
       saveState();
       renderAll();
-      customerTimers.push(window.setTimeout(processCustomerVisit, 900));
+      scheduleNextCustomerVisit(900);
     }
 
     function getLeveledStats(car, level) {
@@ -5204,6 +5249,23 @@
       return Math.round(1100 * Math.pow(1.65, state.luckLevel) / 50) * 50;
     }
 
+    function getCustomerSpeedUpgradeCost() {
+      return Math.round(1500 * Math.pow(1.75, state.customerSpeedLevel) / 50) * 50;
+    }
+
+    function getCustomerVisitTimings() {
+      const multiplier = Math.pow(0.82, state.customerSpeedLevel);
+      return {
+        interval: Math.max(2500, Math.round(7000 * multiplier)),
+        browsing: Math.max(750, Math.round(2300 * multiplier)),
+        total: Math.max(1900, Math.round(5500 * multiplier))
+      };
+    }
+
+    function scheduleNextCustomerVisit(delay = getCustomerVisitTimings().interval) {
+      nextCustomerVisitAt = Date.now() + delay;
+    }
+
     function getWorkerUpgradeCost() {
       return Math.round(1200 * Math.pow(1.8, state.maintenanceWorkers) / 50) * 50;
     }
@@ -5240,6 +5302,25 @@
       saveState();
       renderAll();
       showToast(`Pack luck upgraded to level ${state.luckLevel}.`);
+    }
+
+    function upgradeCustomerSpeed() {
+      if (state.customerSpeedLevel >= 5) return;
+      const cost = getCustomerSpeedUpgradeCost();
+      if (state.credits < cost) {
+        showToast("Not enough credits for the customer speed upgrade.");
+        return;
+      }
+
+      state.credits -= cost;
+      state.customerSpeedLevel += 1;
+      scheduleNextCustomerVisit(Math.min(
+        Math.max(0, nextCustomerVisitAt - Date.now()),
+        getCustomerVisitTimings().interval
+      ));
+      saveState();
+      renderAll();
+      showToast(`Customer speed upgraded to level ${state.customerSpeedLevel}.`);
     }
 
     function upgradeMaintenanceWorkers() {
@@ -5309,7 +5390,7 @@
       const stored = getStorageUsed();
       const storageCost = getStorageUpgradeCost();
       const luckCost = getLuckUpgradeCost();
-      const groupLevel = state.storageLevel + state.luckLevel;
+      const groupLevel = state.storageLevel + state.luckLevel + state.customerSpeedLevel;
       const ranks = ["Backyard Car Yard", "Local Auto Centre", "Regional Dealer Group", "National Auto Group", "Global Dealer Empire"];
       factoryRank.textContent = ranks[Math.min(ranks.length - 1, Math.floor((groupLevel - 1) / 3))];
       factoryStored.textContent = `${getAvailableStoredCount()} / ${stored}`;
@@ -5334,6 +5415,16 @@
         ? "Maximum luck reached"
         : `Improve luck · 🪙 ${luckCost.toLocaleString()}`;
       upgradeLuckButton.disabled = state.luckLevel >= 10 || state.credits < luckCost;
+      const customerSpeedCost = getCustomerSpeedUpgradeCost();
+      const customerTimings = getCustomerVisitTimings();
+      customerSpeedLevel.textContent = `Level ${state.customerSpeedLevel}`;
+      customerSpeedDescription.textContent = state.customerSpeedLevel >= 5
+        ? `Maximum speed: customers choose in ${(customerTimings.browsing / 1000).toFixed(1)} seconds and return about every ${(customerTimings.interval / 1000).toFixed(1)} seconds.`
+        : `Customers choose in ${(customerTimings.browsing / 1000).toFixed(1)} seconds and return about every ${(customerTimings.interval / 1000).toFixed(1)} seconds.`;
+      upgradeCustomerSpeedButton.textContent = state.customerSpeedLevel >= 5
+        ? "Maximum customer speed"
+        : `Speed up customers · 🪙 ${customerSpeedCost.toLocaleString()}`;
+      upgradeCustomerSpeedButton.disabled = state.customerSpeedLevel >= 5 || state.credits < customerSpeedCost;
       const workerCost = getWorkerUpgradeCost();
       workerLevel.textContent = state.maintenanceWorkers === 0
         ? "No workers"
@@ -5364,22 +5455,30 @@
       renderAll();
       showToast(state.dealershipOpen ? "The rental desk is open for customers." : "The rental desk is closed.");
       if (state.dealershipOpen) {
-        customerTimers.push(window.setTimeout(processCustomerVisit, 900));
+        scheduleNextCustomerVisit(900);
       }
     }
 
     function processCustomerVisit() {
+      if (Date.now() < nextCustomerVisitAt) return;
       if (!state.dealershipOpen || customerVisitInProgress) return;
+      const timings = getCustomerVisitTimings();
       const car = getRandomAvailableCar();
       if (!car) {
+        scheduleNextCustomerVisit(timings.interval);
         customerMessage.textContent = "No cars are available. Service returns or open packs to fill the lot.";
         customerMessage.classList.add("active");
-        customerTimers.push(window.setTimeout(() => customerMessage.classList.remove("active"), 2400));
+        customerTimers.push(window.setTimeout(
+          () => customerMessage.classList.remove("active"),
+          Math.min(2400, timings.interval)
+        ));
         return;
       }
 
       const shopper = applyRandomCustomer();
       customerVisitInProgress = true;
+      nextCustomerVisitAt = Number.POSITIVE_INFINITY;
+      customer.style.setProperty("--customer-visit-duration", `${timings.total / 1000}s`);
       customer.classList.remove("visiting");
       void customer.offsetWidth;
       customer.classList.add("visiting");
@@ -5402,14 +5501,15 @@
         renderAll();
         customerMessage.textContent = `${shopper.label} rented ${car.name} for ${price.toLocaleString()} credits.`;
         showToast(`${shopper.label} rented ${car.name} for one day.`);
-      }, 2300));
+      }, timings.browsing));
 
       customerTimers.push(window.setTimeout(() => {
         customer.classList.remove("visiting");
         customerMessage.classList.remove("active");
         customerVisitInProgress = false;
         customerTimers = [];
-      }, 5500));
+        scheduleNextCustomerVisit(timings.interval);
+      }, timings.total));
     }
 
     function applyRandomCustomer() {
@@ -5448,6 +5548,7 @@
       customerVisitInProgress = false;
       customer.classList.remove("visiting");
       customerMessage.classList.remove("active");
+      scheduleNextCustomerVisit();
     }
 
     function renderSelectedRacer() {

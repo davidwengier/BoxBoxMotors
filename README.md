@@ -6,14 +6,14 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 
 ## Gameplay
 
-- Buy 18 packs, including manufacturer collections, real racing go-karts,
+- Buy 19 packs, including a Ferrari collection, real racing go-karts,
   Trek and Surron bikes, 2025 Formula 1 cars, LEGO cars, and Fast & Furious movie cars.
 - Buy packs individually or open a stack of five at once.
 - Each pack has a stable pool of no more than 20 different cars.
 - Every collectible car belongs to exactly one pack, with no repeats between packs.
 - View every car available in a pack and track pack-specific collection completion.
-- Collect 216 vehicles across six rarity tiers, including the original 200 cars
-  and 16 real Trek and Surron bikes.
+- Collect 232 vehicles across six rarity tiers, including the original 200 cars,
+  16 real Trek and Surron bikes, and 16 Ferrari models.
 - Find five rainbow Limited-rarity production cars in existing packs.
 - The main production collection uses Ford, Honda, Acura, Porsche, Chevrolet,
   Hyundai, Lamborghini, Lotus, Toyota, and Jaguar, while special packs use licensed
@@ -35,6 +35,7 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 - Store every packed copy as an individual car, including unlimited duplicates.
 - Rent cars from the auto group to passive customers, with each customer choosing
   randomly from the individual cars currently available.
+- Upgrade customer speed through five levels to shorten browsing and arrival times.
 - Serve ten visually distinct customer types with varied clothing, skin tones,
   hairstyles, and accessories.
 - Close the rental desk at any time to stop new rentals.
