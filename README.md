@@ -10,6 +10,7 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
   2025 Formula 1 cars, LEGO cars, and Fast & Furious movie cars.
 - Buy packs individually or open a stack of five at once.
 - Each pack has a stable pool of no more than 20 different cars.
+- Every collectible car belongs to exactly one pack, with no repeats between packs.
 - View every car available in a pack and track pack-specific collection completion.
 - Collect 200 cars across six rarity tiers, including ten red Mythic cars.
 - Find five rainbow Limited-rarity production cars in existing packs.
@@ -42,7 +43,8 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 - Manual maintenance does not reset the automatic crew's current part progress.
 - Sell available cars from the garage when you want immediate credits.
 - Start with 10 storage spaces and buy larger warehouse expansions.
-- Upgrade sourcing luck for better epic and legendary chances.
+- Upgrade sourcing luck to visibly improve Epic, Legendary, Mythic, and Limited
+  percentages shown on every pack.
 - Grow the operation from a backyard car yard into a global dealer empire.
 - Progress is saved in browser `localStorage`.
 

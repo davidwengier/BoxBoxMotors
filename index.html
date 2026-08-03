@@ -426,7 +426,7 @@
     .odds {
       display: flex;
       gap: 4px;
-      margin-bottom: 18px;
+      margin-bottom: 8px;
     }
 
     .odds span {
@@ -441,6 +441,27 @@
     .odds .mythic { background: var(--mythic); }
     .odds .limited {
       background: linear-gradient(90deg, #ff4058, #ffb62e, #f5ef55, #58dc79, #36cfff, #8472ff, #ed62d4);
+    }
+
+    .pack-odds-labels {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px 8px;
+      min-height: 30px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.55rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .pack-odds-labels .mythic {
+      color: var(--mythic);
+    }
+
+    .pack-odds-labels .limited {
+      color: #ff64ce;
     }
 
     .buy-button,
@@ -3799,6 +3820,8 @@
       }
     ];
 
+    const PACK_CAR_POOLS = buildPackCarPools();
+
     const TRACKS = {
       neon: {
         keyStat: "acceleration",
@@ -4194,9 +4217,12 @@
         const collectedCount = pool.filter((car) => state.discovered.includes(car.id)).length;
         const packComplete = collectedCount === poolSize;
         const availableSlots = state.storageCapacity - getStorageUsed();
-        const segments = Object.entries(pack.odds)
-          .filter(([, chance]) => chance > 0)
+        const adjustedOdds = getAdjustedPackOdds(pack);
+        const segments = Object.entries(adjustedOdds)
           .map(([rarity, chance]) => `<span class="${rarity}" style="width:${chance}%"></span>`)
+          .join("");
+        const oddsLabels = Object.entries(adjustedOdds)
+          .map(([rarity, chance]) => `<span class="${rarity}">${rarity} ${chance.toFixed(1)}%</span>`)
           .join("");
 
         return `
@@ -4208,7 +4234,8 @@
             <div class="pack-tier">${pack.tier}</div>
             <h3>${pack.name}</h3>
             <p>${pack.description}</p>
-            <div class="odds" aria-label="Rarity odds">${segments}</div>
+            <div class="odds" aria-label="Adjusted rarity odds">${segments}</div>
+            <div class="pack-odds-labels">${oddsLabels}</div>
             <div class="pack-pool">${poolSize} different ${poolSize === 1 ? "car" : "cars"} available</div>
             <div class="pack-collection-status">
               <span>${packComplete ? "✓ Complete" : `${collectedCount} / ${poolSize} collected`}</span>
@@ -4771,28 +4798,106 @@
     }
 
     function getPackCarPool(pack) {
-      const eligibleCars = CARS.filter((car) => {
-        const series = car.series ?? "core";
-        return (pack.series ? series === pack.series : series === "core") &&
-          (!pack.origins || pack.origins.includes(car.origin)) &&
-          (!pack.brands || pack.brands.includes(getCarBrand(car))) &&
-          pack.odds[car.rarity] > 0;
-      });
-      const rankedCars = [...eligibleCars]
-        .sort((left, right) => stablePackScore(pack.id, left.id) - stablePackScore(pack.id, right.id));
-      const selectedCars = [];
+      return [...(PACK_CAR_POOLS.get(pack.id) ?? [])];
+    }
 
-      Object.entries(pack.odds)
-        .filter(([, chance]) => chance > 0)
-        .forEach(([rarity]) => {
-          const rarityCar = rankedCars.find((car) => car.rarity === rarity);
-          if (rarityCar && !selectedCars.includes(rarityCar)) selectedCars.push(rarityCar);
+    function buildPackCarPools() {
+      const pools = new Map(PACKS.map((pack) => [pack.id, []]));
+      const candidatesByCar = new Map(COLLECTIBLE_CARS.map((car) => [
+        car.id,
+        PACKS.filter((pack) => isCarEligibleForPack(car, pack))
+      ]));
+      const assignedCars = new Set();
+
+      ["limited", "mythic", "legendary", "epic", "rare", "common"].forEach((rarity) => {
+        const packsWithRarity = PACKS
+          .filter((pack) => (pack.odds[rarity] ?? 0) > 0)
+          .sort((left, right) => {
+            const leftCount = COLLECTIBLE_CARS.filter((car) =>
+              car.rarity === rarity && isCarEligibleForPack(car, left)
+            ).length;
+            const rightCount = COLLECTIBLE_CARS.filter((car) =>
+              car.rarity === rarity && isCarEligibleForPack(car, right)
+            ).length;
+            return leftCount - rightCount || left.id.localeCompare(right.id);
+          });
+
+        packsWithRarity.forEach((pack) => {
+          const car = COLLECTIBLE_CARS
+            .filter((entry) =>
+              !assignedCars.has(entry.id) &&
+              entry.rarity === rarity &&
+              isCarEligibleForPack(entry, pack)
+            )
+            .sort((left, right) =>
+              candidatesByCar.get(left.id).length - candidatesByCar.get(right.id).length ||
+              stablePackScore(pack.id, left.id) - stablePackScore(pack.id, right.id)
+            )[0];
+          if (!car) return;
+          pools.get(pack.id).push(car);
+          assignedCars.add(car.id);
         });
-
-      rankedCars.forEach((car) => {
-        if (selectedCars.length < 20 && !selectedCars.includes(car)) selectedCars.push(car);
       });
-      return selectedCars;
+
+      const assignments = COLLECTIBLE_CARS
+        .filter((car) => !assignedCars.has(car.id))
+        .map((car) => ({
+          car,
+          candidates: candidatesByCar.get(car.id)
+        }))
+        .sort((left, right) =>
+        left.candidates.length - right.candidates.length ||
+        rarityRank(right.car.rarity) - rarityRank(left.car.rarity) ||
+        stablePackScore("assignment", left.car.id) - stablePackScore("assignment", right.car.id)
+      );
+
+      assignments.forEach(({ car, candidates }) => {
+        const availablePacks = candidates
+          .filter((pack) => pools.get(pack.id).length < 20)
+          .sort((left, right) =>
+            pools.get(left.id).length - pools.get(right.id).length ||
+            stablePackScore(left.id, car.id) - stablePackScore(right.id, car.id)
+          );
+        const selectedPack = availablePacks[0];
+        if (!selectedPack) {
+          throw new Error(`No pack space available for ${car.name}.`);
+        }
+        pools.get(selectedPack.id).push(car);
+        assignedCars.add(car.id);
+      });
+
+      return pools;
+    }
+
+    function isCarEligibleForPack(car, pack) {
+      const series = car.series ?? "core";
+      return (pack.series ? series === pack.series : series === "core") &&
+        (!pack.origins || pack.origins.includes(car.origin)) &&
+        (!pack.brands || pack.brands.includes(getCarBrand(car))) &&
+        (pack.odds[car.rarity] ?? 0) > 0;
+    }
+
+    function getLuckRarityMultipliers() {
+      return {
+        common: Math.max(0.4, 1 - state.luckLevel * 0.06),
+        rare: 1 + state.luckLevel * 0.02,
+        epic: 1 + state.luckLevel * 0.12,
+        legendary: 1 + state.luckLevel * 0.22,
+        mythic: 1 + state.luckLevel * 0.3,
+        limited: 1 + state.luckLevel * 0.35
+      };
+    }
+
+    function getAdjustedPackOdds(pack) {
+      const pool = getPackCarPool(pack);
+      const multipliers = getLuckRarityMultipliers();
+      const weightedOdds = Object.entries(pack.odds)
+        .filter(([rarity, chance]) => chance > 0 && pool.some((car) => car.rarity === rarity))
+        .map(([rarity, chance]) => [rarity, chance * multipliers[rarity]]);
+      const totalWeight = weightedOdds.reduce((total, [, weight]) => total + weight, 0);
+      return Object.fromEntries(
+        weightedOdds.map(([rarity, weight]) => [rarity, weight / totalWeight * 100])
+      );
     }
 
     function stablePackScore(packId, carId) {
@@ -4807,29 +4912,15 @@
 
     function rollCar(pack) {
       const eligibleCars = getPackCarPool(pack);
-      const rarityMultipliers = {
-        common: Math.max(0.4, 1 - state.luckLevel * 0.06),
-        rare: 1 + state.luckLevel * 0.02,
-        epic: 1 + state.luckLevel * 0.12,
-        legendary: 1 + state.luckLevel * 0.22,
-        mythic: 1 + state.luckLevel * 0.3,
-        limited: 1 + state.luckLevel * 0.35
-      };
-      const weightedRarities = Object.entries(pack.odds)
-        .filter(([rarity, chance]) => chance > 0 && eligibleCars.some((car) => car.rarity === rarity))
-        .map(([rarity, chance]) => ({
-          rarity,
-          weight: chance * rarityMultipliers[rarity]
-        }));
-      const totalWeight = weightedRarities.reduce((total, entry) => total + entry.weight, 0);
-      const roll = Math.random() * totalWeight;
+      const adjustedOdds = getAdjustedPackOdds(pack);
+      const roll = Math.random() * 100;
       let cumulative = 0;
-      let rarity = weightedRarities[weightedRarities.length - 1].rarity;
+      let rarity = Object.keys(adjustedOdds).at(-1);
 
-      for (const entry of weightedRarities) {
-        cumulative += entry.weight;
+      for (const [entryRarity, chance] of Object.entries(adjustedOdds)) {
+        cumulative += chance;
         if (roll < cumulative) {
-          rarity = entry.rarity;
+          rarity = entryRarity;
           break;
         }
       }
@@ -5118,8 +5209,8 @@
       upgradeStorageButton.disabled = state.credits < storageCost;
       luckLevel.textContent = `Level ${state.luckLevel}`;
       luckDescription.textContent = state.luckLevel === 0
-        ? "Standard pack odds. Upgrade scanners to improve epic and legendary chances."
-        : `${state.luckLevel * 5}% sourcing luck boost toward higher rarities.`;
+        ? "Standard odds are shown on every pack. Luck boosts Epic, Legendary, Mythic, and Limited cars."
+        : `Adjusted odds are shown on every pack. Mythic and Limited receive the strongest level ${state.luckLevel} boosts.`;
       upgradeLuckButton.textContent = state.luckLevel >= 10
         ? "Maximum luck reached"
         : `Improve luck · 🪙 ${luckCost.toLocaleString()}`;
