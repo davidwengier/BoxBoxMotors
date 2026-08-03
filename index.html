@@ -397,6 +397,66 @@
       text-shadow: 1px 1px #7c0d13;
     }
 
+    .box-body .bike-pack-logo {
+      position: relative;
+      width: 94px;
+      height: 64px;
+      align-content: start;
+      padding-top: 7px;
+      border-radius: 12px;
+      background:
+        linear-gradient(60deg, transparent 46%, #62e99a 47% 54%, transparent 55%) 27px 26px / 31px 24px no-repeat,
+        linear-gradient(-60deg, transparent 46%, #62e99a 47% 54%, transparent 55%) 42px 26px / 31px 24px no-repeat,
+        linear-gradient(8deg, transparent 43%, #62e99a 44% 55%, transparent 56%) 29px 27px / 44px 20px no-repeat,
+        #07130e;
+      color: #f4fff8;
+      font-size: 0.82rem;
+      font-style: italic;
+      letter-spacing: 0.13em;
+      text-shadow: 0 2px #173e29;
+    }
+
+    .box-body .bike-pack-logo::before,
+    .box-body .bike-pack-logo::after {
+      position: absolute;
+      bottom: 7px;
+      width: 22px;
+      height: 22px;
+      border: 4px solid #dfffea;
+      border-radius: 50%;
+      background: radial-gradient(circle, #62e99a 0 2px, transparent 3px);
+      content: "";
+    }
+
+    .box-body .bike-pack-logo::before { left: 13px; }
+    .box-body .bike-pack-logo::after { right: 13px; }
+
+    .box-body .mercedes-pack-logo {
+      position: relative;
+      width: 98px;
+      height: 54px;
+      padding-left: 23px;
+      border-color: #dce4e8;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #252c31, #07090b 66%);
+      color: #f5f7f8;
+      font-size: 1.28rem;
+      font-style: italic;
+      letter-spacing: -0.08em;
+      text-shadow: 0 2px #000;
+    }
+
+    .box-body .mercedes-pack-logo::before {
+      position: absolute;
+      top: 11px;
+      bottom: 11px;
+      left: 12px;
+      width: 16px;
+      background: repeating-linear-gradient(105deg, #dce4e8 0 3px, transparent 3px 6px);
+      content: "";
+      transform: skewX(-12deg);
+    }
+
     .pack-tier {
       margin-bottom: 5px;
       color: var(--pack-color);
@@ -1118,6 +1178,110 @@
       border-radius: 50%;
       background: #aeb8c8;
       box-shadow: none;
+    }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] {
+      width: 152px;
+      height: 76px;
+      filter: drop-shadow(0 8px 7px rgb(0 0 0 / 38%));
+    }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .wheel {
+      bottom: 0;
+      width: 44px;
+      height: 44px;
+      border: 6px dashed #11161b;
+      background:
+        repeating-conic-gradient(#9ba9af 0 2deg, transparent 2deg 30deg),
+        radial-gradient(circle, #dce5e7 0 3px, #161c22 4px 7px, transparent 8px),
+        #263039;
+      box-shadow: inset 0 0 0 2px #505d63, 0 2px 0 #050608;
+    }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .wheel.back { left: 5px; }
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .wheel.front { right: 5px; }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .car-body {
+      right: 39px;
+      bottom: 20px;
+      left: 40px;
+      height: 39px;
+      border: 0;
+      background:
+        linear-gradient(62deg, transparent 45%, #58b8d9 46% 54%, transparent 55%),
+        linear-gradient(-59deg, transparent 45%, #58b8d9 46% 54%, transparent 55%),
+        linear-gradient(5deg, transparent 43%, #b7e8f4 44% 54%, transparent 55%);
+      clip-path: none;
+    }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .car-accent {
+      right: 37px;
+      bottom: 53px;
+      left: 38px;
+      height: 7px;
+      border-color: #071018;
+      background: linear-gradient(90deg, #b7e8f4, #58b8d9 55%, #23799d);
+      transform: rotate(-5deg);
+    }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .car-cabin {
+      position: absolute;
+      z-index: 5;
+      top: 31px;
+      left: 55px;
+      width: 47px;
+      height: 11px;
+      display: block;
+      border: 1px solid #081018;
+      border-radius: 3px;
+      background: #e7fbff;
+      color: #123f55;
+      font-size: 6px;
+      font-style: italic;
+      font-weight: 1000;
+      line-height: 9px;
+      text-align: center;
+      transform: rotate(7deg);
+    }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .car-cabin::after {
+      content: "MARLIN 5";
+    }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .car-headlight {
+      right: 34px;
+      bottom: 36px;
+      width: 7px;
+      height: 39px;
+      background: linear-gradient(90deg, #151c22 0 45%, #8fa0a7 46% 100%);
+      transform: rotate(-11deg);
+    }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .car-grille {
+      top: 4px;
+      right: 31px;
+      width: 40px;
+      height: 6px;
+      background: #11181e;
+      transform: rotate(3deg);
+    }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .car-taillight {
+      bottom: 55px;
+      left: 40px;
+      width: 27px;
+      height: 7px;
+      background: #131a20;
+      transform: rotate(-3deg);
+    }
+
+    .car.bike[data-car-id="bike-trek-marlin-5-gen3"] .car-spoiler {
+      bottom: 17px;
+      left: 70px;
+      width: 17px;
+      height: 17px;
+      border-color: #11181e;
+      background: radial-gradient(circle, #11181e 0 3px, #b9c7cb 4px 6px, #11181e 7px);
     }
 
     .car.formula {
@@ -2818,6 +2982,39 @@
       font-size: 2.5rem;
     }
 
+    .opening-box .box-body .bike-pack-logo {
+      width: 118px;
+      height: 80px;
+      padding-top: 9px;
+      font-size: 1rem;
+      background-position: 36px 32px, 54px 32px, 38px 33px, 0 0;
+      background-size: 36px 29px, 36px 29px, 50px 24px, auto;
+    }
+
+    .opening-box .box-body .bike-pack-logo::before,
+    .opening-box .box-body .bike-pack-logo::after {
+      bottom: 8px;
+      width: 28px;
+      height: 28px;
+    }
+
+    .opening-box .box-body .bike-pack-logo::before { left: 16px; }
+    .opening-box .box-body .bike-pack-logo::after { right: 16px; }
+
+    .opening-box .box-body .mercedes-pack-logo {
+      width: 124px;
+      height: 68px;
+      padding-left: 29px;
+      font-size: 1.62rem;
+    }
+
+    .opening-box .box-body .mercedes-pack-logo::before {
+      top: 14px;
+      bottom: 14px;
+      left: 15px;
+      width: 20px;
+    }
+
     .opening-box.opening .box-lid {
       animation: lid-open 650ms cubic-bezier(.2, .8, .2, 1) forwards;
     }
@@ -4027,6 +4224,7 @@
         description: "AMG hot hatches, super sedans, gullwings, and championship prototypes.",
         price: 1700,
         symbol: "AMG",
+        logoClass: "mercedes-pack-logo",
         color: "#aeb8c0",
         series: "mercedes",
         odds: { common: 18, rare: 37, epic: 28, legendary: 12, mythic: 3, limited: 2 }
@@ -4070,7 +4268,8 @@
         tier: "Two-wheel collection",
         description: "Mountain bikes and electric dirt bikes from Trek and Surron.",
         price: 900,
-        symbol: "🚲",
+        symbol: "TREK",
+        logoClass: "bike-pack-logo",
         color: "#50b77b",
         series: "bike",
         itemLabel: "bikes",
@@ -4526,7 +4725,7 @@
           <article class="pack ${pack.id} ${packComplete ? "complete" : ""}" style="--pack-color:${pack.color};--pack-glow:${pack.color}22">
             <div class="pack-art" aria-hidden="true">
               <div class="box-lid"></div>
-              <div class="box-body"><span class="${pack.id === "lego" ? "brick-pack-logo" : ""}">${pack.symbol}</span></div>
+              <div class="box-body"><span class="${pack.logoClass ?? (pack.id === "lego" ? "brick-pack-logo" : "")}">${pack.symbol}</span></div>
             </div>
             <div class="pack-tier">${pack.tier}</div>
             <h3>${pack.name}</h3>
@@ -5081,7 +5280,7 @@
       openingBox.className = `opening-box ${pack.id}`;
       openingBox.style.setProperty("--pack-color", pack.color);
       const openingSymbol = openingBox.querySelector(".box-body span");
-      openingSymbol.className = pack.id === "lego" ? "brick-pack-logo" : "";
+      openingSymbol.className = pack.logoClass ?? (pack.id === "lego" ? "brick-pack-logo" : "");
       openingSymbol.textContent = pack.symbol;
       openingBox.classList.remove("opening");
       openingBox.hidden = false;
