@@ -4622,8 +4622,6 @@
         const car = getCar(maintenanceSession.carId);
         const queueIndex = state.maintenanceQueue.indexOf(maintenanceSession.carId);
         state.maintenanceQueue.splice(queueIndex, 1);
-        state.workerPartProgress = 0;
-        state.workerLastTick = Date.now();
         cancelMaintenance();
         saveState();
         renderAll();
@@ -5162,7 +5160,7 @@
 
     function processCustomerVisit() {
       if (!state.dealershipOpen || customerVisitInProgress) return;
-      const car = getCheapestAvailableCar();
+      const car = getRandomAvailableCar();
       if (!car) {
         customerMessage.textContent = "No cars are available. Service returns or open packs to fill the lot.";
         customerMessage.classList.add("active");
@@ -5219,14 +5217,19 @@
       return profile;
     }
 
-    function getCheapestStoredCar() {
-      return CARS
-        .filter((car) => getAvailableCount(car.id) > 0)
-        .sort((left, right) => getSalePrice(left) - getSalePrice(right) || left.name.localeCompare(right.name))[0];
-    }
+    function getRandomAvailableCar() {
+      const availableCars = CARS
+        .map((car) => ({ car, count: getAvailableCount(car.id) }))
+        .filter((entry) => entry.count > 0);
+      const totalAvailable = availableCars.reduce((total, entry) => total + entry.count, 0);
+      if (totalAvailable === 0) return undefined;
 
-    function getCheapestAvailableCar() {
-      return getCheapestStoredCar();
+      let selection = Math.floor(Math.random() * totalAvailable);
+      for (const entry of availableCars) {
+        if (selection < entry.count) return entry.car;
+        selection -= entry.count;
+      }
+      return availableCars.at(-1).car;
     }
 
     function cancelCustomerVisit() {

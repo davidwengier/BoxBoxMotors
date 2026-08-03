@@ -29,7 +29,8 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 - Reset the entire saved game from beside the Box Box Motors logo after
   confirming the warning.
 - Store every packed copy as an individual car, including unlimited duplicates.
-- Rent cars from the auto group to passive customers, with the cheapest available cars chosen first.
+- Rent cars from the auto group to passive customers, with each customer choosing
+  randomly from the individual cars currently available.
 - Serve ten visually distinct customer types with varied clothing, skin tones,
   hairstyles, and accessories.
 - Close the rental desk at any time to stop new rentals.
@@ -38,6 +39,7 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
   safety checks, and parking before it can be rented again.
 - Hire up to five maintenance workers to process returns automatically, improving from
   five seconds per service part with one worker to one second with a full crew.
+- Manual maintenance does not reset the automatic crew's current part progress.
 - Sell available cars from the garage when you want immediate credits.
 - Start with 10 storage spaces and buy larger warehouse expansions.
 - Upgrade sourcing luck for better epic and legendary chances.
