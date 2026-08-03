@@ -6,14 +6,15 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 
 ## Gameplay
 
-- Buy 19 packs, including a Ferrari collection, real racing go-karts,
-  Trek and Surron bikes, 2025 Formula 1 cars, LEGO cars, and Fast & Furious movie cars.
+- Buy 23 packs, including Ferrari, BMW, Mercedes-AMG, Nissan, and McLaren
+  collections, real racing go-karts, Trek and Surron bikes, 2025 Formula 1 cars,
+  LEGO cars, and Fast & Furious movie cars.
 - Buy packs individually or open a stack of five at once.
 - Each pack has a stable pool of no more than 20 different cars.
 - Every collectible car belongs to exactly one pack, with no repeats between packs.
 - View every car available in a pack and track pack-specific collection completion.
-- Collect 232 vehicles across six rarity tiers, including the original 200 cars,
-  16 real Trek and Surron bikes, and 16 Ferrari models.
+- Collect exactly 300 vehicles across six rarity tiers, including 68 new BMW,
+  Mercedes-AMG, Nissan, and McLaren models.
 - Find five rainbow Limited-rarity production cars in existing packs.
 - The main production collection uses Ford, Honda, Acura, Porsche, Chevrolet,
   Hyundai, Lamborghini, Lotus, Toyota, and Jaguar, while special packs use licensed
@@ -21,9 +22,9 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 - Cars use distinct hatchback, SUV, roadster, sedan, muscle, supercar,
   hypercar, brick-built, go-kart, and open-wheel Formula 1 shapes.
 - Car artwork adds model-specific aero, lighting, grilles, stripes,
-  wheel designs, era details, and brand styling across all 200 cars.
+  wheel designs, era details, and brand styling across all 300 vehicles.
 - Track every obtainable car on an automatic collection checklist.
-- Complete all 200 pack cars to unlock the one-time black DugMobile reward,
+- Complete all 300 collectible vehicles to unlock the one-time black DugMobile reward,
   worth 5,000 credits per rental or 100,000 credits when sold.
 - The bike pack includes a Mythic Surron Ultra Bee and a rainbow Limited
   Trek Marlin 5 Gen 3.
