@@ -6,13 +6,14 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 
 ## Gameplay
 
-- Buy 18 packs, including manufacturer collections, real racing go-karts,
-  2025 Formula 1 cars, LEGO cars, and Fast & Furious movie cars.
+- Buy 19 packs, including manufacturer collections, real racing go-karts,
+  Trek and Surron bikes, 2025 Formula 1 cars, LEGO cars, and Fast & Furious movie cars.
 - Buy packs individually or open a stack of five at once.
 - Each pack has a stable pool of no more than 20 different cars.
 - Every collectible car belongs to exactly one pack, with no repeats between packs.
 - View every car available in a pack and track pack-specific collection completion.
-- Collect 200 cars across six rarity tiers, including ten red Mythic cars.
+- Collect 216 vehicles across six rarity tiers, including the original 200 cars
+  and 16 real Trek and Surron bikes.
 - Find five rainbow Limited-rarity production cars in existing packs.
 - The main production collection uses Ford, Honda, Acura, Porsche, Chevrolet,
   Hyundai, Lamborghini, Lotus, Toyota, and Jaguar, while special packs use licensed
@@ -24,6 +25,8 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 - Track every obtainable car on an automatic collection checklist.
 - Complete all 200 pack cars to unlock the one-time black DugMobile reward,
   worth 5,000 credits per rental or 100,000 credits when sold.
+- The bike pack includes a Mythic Surron Ultra Bee and a rainbow Limited
+  Trek Marlin 5 Gen 3.
 - The DugMobile keeps its black generated car body with a continuous row of
   matching Dug stickers from rear to front, tucked behind both wheel arches,
   and no coloured accent stripe.

@@ -1023,6 +1023,103 @@
     .car.kart .wheel.back { left: 5px; }
     .car.kart .wheel.front { right: 5px; }
 
+    .car.bike {
+      width: 142px;
+      height: 70px;
+    }
+
+    .car.bike .car-body {
+      right: 42px;
+      bottom: 18px;
+      left: 43px;
+      height: 36px;
+      border-width: 5px;
+      border-radius: 4px;
+      background: transparent;
+      box-shadow: none;
+      clip-path: polygon(0 0, 100% 0, 63% 100%, 25% 100%);
+    }
+
+    .car.bike.brand-surron .car-body {
+      background: var(--car-color);
+      box-shadow: inset 0 -10px rgb(0 0 0 / 24%);
+      clip-path: polygon(8% 0, 100% 0, 75% 100%, 18% 100%);
+    }
+
+    .car.bike .car-cabin {
+      display: none;
+    }
+
+    .car.bike .wheel {
+      bottom: 0;
+      width: 38px;
+      height: 38px;
+      border-width: 6px;
+      background: #202631;
+    }
+
+    .car.bike .wheel.back { left: 8px; }
+    .car.bike .wheel.front { right: 8px; }
+
+    .car.bike .car-accent {
+      right: 35px;
+      bottom: 48px;
+      left: 40px;
+      height: 5px;
+      border: 2px solid #080a0f;
+      border-radius: 4px;
+      background: var(--car-color);
+      transform: rotate(-7deg);
+    }
+
+    .car.bike .car-grille {
+      top: 5px;
+      right: 37px;
+      bottom: auto;
+      left: auto;
+      width: 34px;
+      height: 5px;
+      border: 2px solid #080a0f;
+      border-radius: 5px;
+      background: #202631;
+      transform: rotate(5deg);
+    }
+
+    .car.bike .car-headlight {
+      right: 34px;
+      bottom: 33px;
+      width: 5px;
+      height: 35px;
+      border: 0;
+      border-radius: 3px;
+      background: #aeb8c8;
+      box-shadow: none;
+      transform: rotate(-12deg);
+    }
+
+    .car.bike .car-taillight {
+      bottom: 46px;
+      left: 44px;
+      width: 25px;
+      height: 6px;
+      border-radius: 5px;
+      background: #202631;
+      box-shadow: none;
+    }
+
+    .car.bike .car-spoiler {
+      display: block;
+      right: auto;
+      bottom: 15px;
+      left: 66px;
+      width: 15px;
+      height: 15px;
+      border: 4px solid #080a0f;
+      border-radius: 50%;
+      background: #aeb8c8;
+      box-shadow: none;
+    }
+
     .car.formula {
       width: 168px;
       height: 48px;
@@ -3604,7 +3701,27 @@
       makeCar("ff-corvette-grand-sport", "Fast & Furious 1963 Chevrolet Corvette Grand Sport", "Chevrolet", "epic", "Fast Five Movie Car", "usa", "supercar", "#4b99cb", 86, 84, 80, "fast")
     ];
 
-    const COLLECTIBLE_CARS = [...CORE_CARS, ...ADDITIONAL_CARS];
+    const BIKE_CARS = [
+      makeCar("bike-trek-marlin-4-gen3", "Trek Marlin 4 Gen 3", "Trek", "common", "Cross-Country Mountain Bike", "usa", "bike", "#4c92c8", 40, 55, 72, "bike"),
+      makeCar("bike-trek-fx-1-gen4", "Trek FX 1 Gen 4", "Trek", "common", "Fitness Bike", "usa", "bike", "#5c6878", 43, 58, 68, "bike"),
+      makeCar("bike-trek-dual-sport-2-gen5", "Trek Dual Sport 2 Gen 5", "Trek", "rare", "Hybrid Adventure Bike", "usa", "bike", "#d58a38", 52, 64, 76, "bike"),
+      makeCar("bike-trek-marlin-6-gen3", "Trek Marlin 6 Gen 3", "Trek", "rare", "Trail Mountain Bike", "usa", "bike", "#d94747", 50, 66, 79, "bike"),
+      makeCar("bike-trek-roscoe-6", "Trek Roscoe 6", "Trek", "rare", "Trail Hardtail", "usa", "bike", "#4a9d76", 53, 68, 82, "bike"),
+      makeCar("bike-trek-marlin-7-gen3", "Trek Marlin 7 Gen 3", "Trek", "epic", "Cross-Country Mountain Bike", "usa", "bike", "#e8b936", 58, 72, 85, "bike"),
+      makeCar("bike-trek-roscoe-8", "Trek Roscoe 8", "Trek", "epic", "Aggressive Trail Hardtail", "usa", "bike", "#8055bd", 61, 75, 88, "bike"),
+      makeCar("bike-trek-fuel-ex-5-gen6", "Trek Fuel EX 5 Gen 6", "Trek", "epic", "Full-Suspension Trail Bike", "usa", "bike", "#517aa8", 63, 76, 90, "bike"),
+      makeCar("bike-trek-slash-98-gen6", "Trek Slash 9.8 GX AXS T-Type Gen 6", "Trek", "legendary", "Carbon Enduro Bike", "usa", "bike", "#322f36", 70, 83, 95, "bike"),
+      makeCar("bike-trek-marlin-5-gen3", "Trek Marlin 5 Gen 3", "Trek", "limited", "Limited Edition Mountain Bike", "usa", "bike", "#61a7d4", 54, 69, 82, "bike", true),
+      makeCar("bike-surron-hyper-bee", "Surron Hyper Bee", "Surron", "common", "Youth Electric Dirt Bike", "asia", "bike", "#e5b633", 57, 75, 73, "bike"),
+      makeCar("bike-surron-light-bee-s", "Surron Light Bee S", "Surron", "rare", "Electric Off-Road Bike", "asia", "bike", "#48a66a", 67, 82, 80, "bike"),
+      makeCar("bike-surron-light-bee-x", "Surron Light Bee X", "Surron", "epic", "Electric Dirt Bike", "asia", "bike", "#2f343d", 76, 89, 85, "bike"),
+      makeCar("bike-surron-storm-bee-enduro", "Surron Storm Bee Enduro", "Surron", "legendary", "Electric Enduro Bike", "asia", "bike", "#d6a638", 88, 94, 91, "bike"),
+      makeCar("bike-surron-storm-bee-road", "Surron Storm Bee Road", "Surron", "legendary", "Electric Road Bike", "asia", "bike", "#416b9f", 91, 95, 88, "bike"),
+      makeCar("bike-surron-ultra-bee", "Surron Ultra Bee", "Surron", "mythic", "Ultimate Electric Dirt Bike", "asia", "bike", "#d8a72f", 96, 98, 96, "bike")
+    ];
+
+    const COLLECTION_REWARD_CARS = [...CORE_CARS, ...ADDITIONAL_CARS];
+    const COLLECTIBLE_CARS = [...COLLECTION_REWARD_CARS, ...BIKE_CARS];
     const COLLECTION_REWARD_ID = "the-dugmobile";
     const COLLECTION_REWARD = makeCar(
       COLLECTION_REWARD_ID,
@@ -3784,6 +3901,18 @@
         color: "#66d14f",
         series: "kart",
         odds: { common: 20, rare: 55, epic: 25, legendary: 0 }
+      },
+      {
+        id: "bike",
+        name: "Trek & Surron Bike Pack",
+        tier: "Two-wheel collection",
+        description: "Mountain bikes and electric dirt bikes from Trek and Surron.",
+        price: 900,
+        symbol: "🚲",
+        color: "#50b77b",
+        series: "bike",
+        itemLabel: "bikes",
+        odds: { common: 28, rare: 35, epic: 23, legendary: 9, mythic: 3, limited: 2 }
       },
       {
         id: "lego",
@@ -4236,7 +4365,7 @@
             <p>${pack.description}</p>
             <div class="odds" aria-label="Adjusted rarity odds">${segments}</div>
             <div class="pack-odds-labels">${oddsLabels}</div>
-            <div class="pack-pool">${poolSize} different ${poolSize === 1 ? "car" : "cars"} available</div>
+            <div class="pack-pool">${poolSize} different ${pack.itemLabel ?? (poolSize === 1 ? "car" : "cars")} available</div>
             <div class="pack-collection-status">
               <span>${packComplete ? "✓ Complete" : `${collectedCount} / ${poolSize} collected`}</span>
               <button class="view-pack-button" type="button" data-view-pack="${pack.id}">View cars</button>
@@ -4383,8 +4512,8 @@
       const ownedCount = COLLECTIBLE_CARS.filter((car) => discovered.has(car.id)).length;
       const collectionComplete = ownedCount === COLLECTIBLE_CARS.length;
       collectionSummary.innerHTML = collectionComplete
-        ? `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> cars discovered · Collection complete! The DugMobile unlocked.`
-        : `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> cars discovered · ${COLLECTIBLE_CARS.length - ownedCount} remaining`;
+        ? `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> vehicles discovered · Collection complete!`
+        : `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> vehicles discovered · ${COLLECTIBLE_CARS.length - ownedCount} remaining`;
       const displayedCars = state.dugMobileAwarded
         ? [...COLLECTIBLE_CARS, COLLECTION_REWARD]
         : [...COLLECTIBLE_CARS];
@@ -5056,7 +5185,7 @@
     function grantCollectionReward() {
       if (state.dugMobileAwarded) return false;
       const discovered = new Set(state.discovered);
-      if (!COLLECTIBLE_CARS.every((car) => discovered.has(car.id))) return false;
+      if (!COLLECTION_REWARD_CARS.every((car) => discovered.has(car.id))) return false;
 
       awardDugMobile("All 200 cars collected! The secret DugMobile is now in your garage.");
       return true;
