@@ -5557,7 +5557,13 @@
 
     function getRentalFee(car) {
       if (car.id === COLLECTION_REWARD_ID) return 5000;
-      return Math.round(getSalePrice(car) * 0.28 / 10) * 20;
+      const baseFee = Math.round(getSalePrice(car) * 0.28 / 10) * 20;
+      const seriesMultiplier = {
+        lego: 1.15,
+        fast: 1.15,
+        bike: 0.65
+      }[car.series] ?? 1;
+      return Math.round(baseFee * seriesMultiplier / 20) * 20;
     }
 
     function grantCollectionReward() {

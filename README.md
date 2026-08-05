@@ -36,6 +36,8 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 - Store every packed copy as an individual car, including unlimited duplicates.
 - Rent cars from the auto group to passive customers, with each customer choosing
   randomly from the individual cars currently available.
+- LEGO and Fast & Furious vehicles earn a small rental premium, while Trek and
+  Surron bikes have lower rental fees.
 - Upgrade customer speed through five levels to shorten browsing and arrival times.
 - Serve ten visually distinct customer types with varied clothing, skin tones,
   hairstyles, and accessories.
