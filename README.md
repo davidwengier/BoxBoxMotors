@@ -17,6 +17,8 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 - Each pack has a stable pool of no more than 20 different cars.
 - Every collectible car belongs to exactly one pack, with no repeats between packs.
 - View every car available in a pack and track pack-specific collection completion.
+- Mark any vehicle in Collection for auto-sell so future pack pulls immediately
+  pay its sale value without using storage.
 - Collect exactly 300 vehicles across six rarity tiers, including 68 new BMW,
   Mercedes-AMG, Nissan, and McLaren models.
 - Find five rainbow Limited-rarity production cars in existing packs.
@@ -32,6 +34,7 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
   worth 5,000 credits per rental or 100,000 credits when sold.
 - The bike pack includes a Mythic Surron Ultra Bee and a rainbow Limited
   Trek Marlin 5 Gen 3.
+- Every Trek bike has a visible lower frame and underbody structure.
 - The DugMobile keeps its black generated car body with a continuous row of
   matching Dug stickers from rear to front, tucked behind both wheel arches,
   and no coloured accent stripe.
