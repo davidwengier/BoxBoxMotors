@@ -4122,7 +4122,7 @@
         symbol: "F",
         color: "#3184d8",
         brands: ["Ford"],
-        odds: { common: 26, rare: 44, epic: 22, legendary: 5, mythic: 2, limited: 1 }
+        odds: { common: 26, rare: 44, epic: 22, legendary: 5, mythic: 2, limited: 0.5 }
       },
       {
         id: "honda-acura",
@@ -4133,7 +4133,7 @@
         symbol: "H",
         color: "#e9414b",
         brands: ["Honda", "Acura"],
-        odds: { common: 32, rare: 42, epic: 19, legendary: 4, mythic: 2, limited: 1 }
+        odds: { common: 32, rare: 42, epic: 19, legendary: 4, mythic: 2, limited: 0.5 }
       },
       {
         id: "porsche",
@@ -4144,7 +4144,7 @@
         symbol: "P",
         color: "#d2b359",
         brands: ["Porsche"],
-        odds: { common: 0, rare: 47, epic: 37, legendary: 13, mythic: 2, limited: 1 }
+        odds: { common: 0, rare: 47, epic: 37, legendary: 13, mythic: 2, limited: 0.5 }
       },
       {
         id: "chevrolet",
@@ -4166,7 +4166,7 @@
         symbol: "N",
         color: "#5caedb",
         brands: ["Hyundai"],
-        odds: { common: 53, rare: 33, epic: 10, legendary: 1, mythic: 2, limited: 1 }
+        odds: { common: 53, rare: 33, epic: 10, legendary: 1, mythic: 2, limited: 0.5 }
       },
       {
         id: "toyota",
@@ -4188,7 +4188,7 @@
         symbol: "J",
         color: "#4ba47e",
         brands: ["Jaguar"],
-        odds: { common: 18, rare: 34, epic: 32, legendary: 13, mythic: 2, limited: 1 }
+        odds: { common: 18, rare: 34, epic: 32, legendary: 13, mythic: 2, limited: 0.5 }
       },
       {
         id: "exotic",
@@ -4210,7 +4210,7 @@
         symbol: "F",
         color: "#e73538",
         series: "ferrari",
-        odds: { common: 0, rare: 30, epic: 38, legendary: 24, mythic: 5, limited: 3 }
+        odds: { common: 0, rare: 30, epic: 38, legendary: 24, mythic: 5, limited: 0.5 }
       },
       {
         id: "bmw",
@@ -4221,7 +4221,7 @@
         symbol: "M",
         color: "#4385c5",
         series: "bmw",
-        odds: { common: 18, rare: 37, epic: 28, legendary: 12, mythic: 3, limited: 2 }
+        odds: { common: 18, rare: 37, epic: 28, legendary: 12, mythic: 3, limited: 0.5 }
       },
       {
         id: "mercedes",
@@ -4233,7 +4233,7 @@
         logoClass: "mercedes-pack-logo",
         color: "#aeb8c0",
         series: "mercedes",
-        odds: { common: 18, rare: 37, epic: 28, legendary: 12, mythic: 3, limited: 2 }
+        odds: { common: 18, rare: 37, epic: 28, legendary: 12, mythic: 3, limited: 0.5 }
       },
       {
         id: "nissan",
@@ -4244,7 +4244,7 @@
         symbol: "N",
         color: "#d94349",
         series: "nissan",
-        odds: { common: 18, rare: 37, epic: 28, legendary: 12, mythic: 3, limited: 2 }
+        odds: { common: 18, rare: 37, epic: 28, legendary: 12, mythic: 3, limited: 0.5 }
       },
       {
         id: "mclaren",
@@ -4255,7 +4255,7 @@
         symbol: "M",
         color: "#ef812f",
         series: "mclaren",
-        odds: { common: 14, rare: 33, epic: 32, legendary: 15, mythic: 4, limited: 2 }
+        odds: { common: 14, rare: 33, epic: 32, legendary: 15, mythic: 4, limited: 0.5 }
       },
       {
         id: "go-kart",
@@ -4279,7 +4279,7 @@
         color: "#50b77b",
         series: "bike",
         itemLabel: "bikes",
-        odds: { common: 28, rare: 35, epic: 23, legendary: 9, mythic: 3, limited: 2 }
+        odds: { common: 28, rare: 35, epic: 23, legendary: 9, mythic: 3, limited: 1 }
       },
       {
         id: "lego",
@@ -5385,21 +5385,26 @@
         rare: 1 + state.luckLevel * 0.02,
         epic: 1 + state.luckLevel * 0.12,
         legendary: 1 + state.luckLevel * 0.22,
-        mythic: 1 + state.luckLevel * 0.3,
-        limited: 1 + state.luckLevel * 0.35
+        mythic: 1 + state.luckLevel * 0.3
       };
     }
 
     function getAdjustedPackOdds(pack) {
       const pool = getPackCarPool(pack);
       const multipliers = getLuckRarityMultipliers();
-      const weightedOdds = Object.entries(pack.odds)
-        .filter(([rarity, chance]) => chance > 0 && pool.some((car) => car.rarity === rarity))
+      const availableOdds = Object.entries(pack.odds)
+        .filter(([rarity, chance]) => chance > 0 && pool.some((car) => car.rarity === rarity));
+      const fixedLimitedChance = availableOdds.find(([rarity]) => rarity === "limited")?.[1] ?? 0;
+      const weightedOdds = availableOdds
+        .filter(([rarity]) => rarity !== "limited")
         .map(([rarity, chance]) => [rarity, chance * multipliers[rarity]]);
       const totalWeight = weightedOdds.reduce((total, [, weight]) => total + weight, 0);
-      return Object.fromEntries(
-        weightedOdds.map(([rarity, weight]) => [rarity, weight / totalWeight * 100])
-      );
+      const adjustedOdds = weightedOdds.map(([rarity, weight]) => [
+        rarity,
+        weight / totalWeight * (100 - fixedLimitedChance)
+      ]);
+      if (fixedLimitedChance > 0) adjustedOdds.push(["limited", fixedLimitedChance]);
+      return Object.fromEntries(adjustedOdds);
     }
 
     function stablePackScore(packId, carId) {
@@ -5747,8 +5752,8 @@
       upgradeStorageButton.disabled = state.credits < storageCost;
       luckLevel.textContent = `Level ${state.luckLevel}`;
       luckDescription.textContent = state.luckLevel === 0
-        ? "Standard odds are shown on every pack. Luck boosts Epic, Legendary, Mythic, and Limited cars."
-        : `Adjusted odds are shown on every pack. Mythic and Limited receive the strongest level ${state.luckLevel} boosts.`;
+        ? "Standard odds are shown on every pack. Luck boosts Epic, Legendary, and Mythic cars; Limited odds stay fixed."
+        : `Adjusted odds are shown on every pack. Mythic receives the strongest level ${state.luckLevel} boost, while Limited odds stay fixed.`;
       upgradeLuckButton.textContent = state.luckLevel >= 10
         ? "Maximum luck reached"
         : `Improve luck · 🪙 ${luckCost.toLocaleString()}`;

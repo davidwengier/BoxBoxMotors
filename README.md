@@ -48,8 +48,8 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 - Manual maintenance does not reset the automatic crew's current part progress.
 - Sell available cars from the garage when you want immediate credits.
 - Start with 10 storage spaces and buy larger warehouse expansions.
-- Upgrade sourcing luck to visibly improve Epic, Legendary, Mythic, and Limited
-  percentages shown on every pack.
+- Upgrade sourcing luck to visibly improve Epic, Legendary, and Mythic percentages.
+  Limited odds stay fixed at 0.5%, except the Trek Marlin 5 Gen 3 at 1%.
 - Grow the operation from a backyard car yard into a global dealer empire.
 - Progress is saved in browser `localStorage`.
 
