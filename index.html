@@ -5295,6 +5295,8 @@
       revealCard.classList.remove("bulk");
       revealCard.classList.remove("rarity-limited");
       revealCard.classList.remove("active");
+      revealCard.style.removeProperty("--rarity-color");
+      revealCard.replaceChildren();
       packModal.classList.add("active");
       openingBox.focus();
     }
@@ -5472,11 +5474,9 @@
           <button id="keepCarButton" class="primary-button" type="button">Store car · Value 🪙 ${getSalePrice(car).toLocaleString()}</button>
         `;
       } else {
-        const bestResult = [...pendingResults]
-          .sort((left, right) => rarityRank(right.car.rarity) - rarityRank(left.car.rarity))[0];
         revealCard.classList.add("bulk");
-        revealCard.classList.toggle("rarity-limited", bestResult.car.rarity === "limited");
-        revealCard.style.setProperty("--rarity-color", RARITY_COLORS[bestResult.car.rarity]);
+        revealCard.classList.remove("rarity-limited");
+        revealCard.style.setProperty("--rarity-color", "var(--cyan)");
         revealCard.innerHTML = `
           <div class="reveal-rarity">Five-pack stack opened</div>
           <h2 class="bulk-reveal-title">Your 5 cars</h2>
