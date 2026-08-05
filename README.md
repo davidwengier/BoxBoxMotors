@@ -10,6 +10,8 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
   collections, real racing go-karts, Trek and Surron bikes, 2025 Formula 1 cars,
   LEGO cars, and Fast & Furious movie cars.
 - Buy packs individually or open a stack of five at once.
+- Late-game packs scale from the 4,000-credit Euro Performance pack through
+  increasingly expensive manufacturer and elite collections.
 - The Hypercar Vault is a premium 15,000-credit end-game pack guaranteeing a
   Legendary or Mythic vehicle.
 - Each pack has a stable pool of no more than 20 different cars.
