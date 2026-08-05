@@ -17,8 +17,9 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 - Each pack has a stable pool of no more than 20 different cars.
 - Every collectible car belongs to exactly one pack, with no repeats between packs.
 - View every car available in a pack and track pack-specific collection completion.
-- Mark any vehicle in Collection for auto-sell so future pack pulls immediately
-  pay its sale value without using storage.
+- Open Auto-sell Settings from the Shop and toggle Common, Rare, Epic,
+  Legendary, Mythic, or Limited pulls. Enabled rarities immediately pay their
+  sale value without using storage.
 - Collect exactly 300 vehicles across six rarity tiers, including 68 new BMW,
   Mercedes-AMG, Nissan, and McLaren models.
 - Find five rainbow Limited-rarity production cars in existing packs.

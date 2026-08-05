@@ -276,6 +276,24 @@
       text-align: right;
     }
 
+    .section-heading-actions {
+      display: grid;
+      justify-items: end;
+      gap: 10px;
+    }
+
+    .auto-sell-settings-button {
+      width: auto;
+      padding: 10px 14px;
+      border: 1px solid var(--yellow);
+      border-radius: 10px;
+      background: #3d310d;
+      color: #ffe486;
+      font-size: 0.68rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
     .packs {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1694,7 +1712,7 @@
 
     .collection-card {
       position: relative;
-      min-height: 205px;
+      min-height: 165px;
       overflow: hidden;
       padding: 13px;
       border: 1px solid var(--line);
@@ -1755,27 +1773,6 @@
       font-weight: 1000;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-    }
-
-    .auto-sell-button {
-      width: 100%;
-      margin-top: 9px;
-      padding: 7px 8px;
-      border: 1px solid #435064;
-      border-radius: 8px;
-      background: #151c28;
-      color: var(--muted);
-      font-size: 0.56rem;
-      font-weight: 1000;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .auto-sell-button.active {
-      border-color: var(--yellow);
-      background: #4d3c0d;
-      color: #ffe486;
-      box-shadow: inset 0 0 0 1px rgb(255 204 51 / 22%);
     }
 
     .maintenance-layout {
@@ -2164,6 +2161,58 @@
       border-radius: 24px;
       background: var(--panel);
       box-shadow: var(--shadow);
+    }
+
+    .auto-sell-settings-card {
+      width: min(500px, 94vw);
+      padding: 26px;
+      border: 2px solid var(--yellow);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: 0 0 70px rgb(255 204 51 / 13%), var(--shadow);
+    }
+
+    .auto-sell-settings-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .auto-sell-rarity-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--rarity-color);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+
+    .auto-sell-rarity-row strong {
+      color: var(--rarity-color);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .auto-sell-rarity-toggle {
+      width: auto;
+      min-width: 130px;
+      padding: 9px 11px;
+      border: 1px solid #435064;
+      border-radius: 8px;
+      background: #151c28;
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .auto-sell-rarity-toggle.active {
+      border-color: var(--yellow);
+      background: #4d3c0d;
+      color: #ffe486;
     }
 
     .pack-contents-header {
@@ -3363,6 +3412,11 @@
         display: block;
       }
 
+      .section-heading-actions {
+        justify-items: start;
+        margin-top: 12px;
+      }
+
       .section-copy {
         margin-top: 12px;
         text-align: left;
@@ -3495,7 +3549,10 @@
           <p class="kicker">The pack shop</p>
           <h2>What's in<br>the box?</h2>
         </div>
-        <p class="section-copy">Spend your auto group income on packs. Every box adds another car to your storage, including unlimited duplicates.</p>
+        <div class="section-heading-actions">
+          <p class="section-copy">Spend your auto group income on packs. Every box adds another car to your storage, including unlimited duplicates.</p>
+          <button id="autoSellSettingsButton" class="auto-sell-settings-button" type="button">Auto-sell settings · 0 on</button>
+        </div>
       </div>
 
       <div id="packGrid" class="packs"></div>
@@ -3521,7 +3578,7 @@
           <p class="kicker">Complete the checklist</p>
           <h2>Car collection</h2>
         </div>
-        <p class="section-copy">Every obtainable car appears here. Turn on auto-sell for any vehicle you do not want to store when opening packs.</p>
+        <p class="section-copy">Every obtainable car appears here. Cars are automatically checked off the moment you open them from a pack.</p>
       </div>
       <div id="collectionSummary" class="collection-summary"></div>
       <div id="collectionGrid" class="collection-grid"></div>
@@ -3735,6 +3792,20 @@
     </div>
   </div>
 
+  <div id="autoSellSettingsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="autoSellSettingsTitle">
+    <div class="auto-sell-settings-card">
+      <div class="pack-contents-header">
+        <div>
+          <p class="kicker">Pack automation</p>
+          <h2 id="autoSellSettingsTitle">Auto-sell</h2>
+          <p class="pack-contents-progress">Choose which rarities are sold immediately after opening.</p>
+        </div>
+        <button id="closeAutoSellSettingsButton" class="close-pack-contents" type="button" aria-label="Close auto-sell settings">×</button>
+      </div>
+      <div id="autoSellSettingsList" class="auto-sell-settings-list"></div>
+    </div>
+  </div>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -3749,6 +3820,7 @@
       limited: "#ff64ce",
       secret: "#050505"
     };
+    const AUTO_SELL_RARITIES = ["common", "rare", "epic", "legendary", "mythic", "limited"];
 
     const CORE_CARS = [
       { id: "metro-zip", name: "Hyundai i30 N", rarity: "common", class: "Hot Hatch", origin: "korea", body: "hatch", color: "#f05b62", speed: 48, acceleration: 63, grip: 65 },
@@ -4425,7 +4497,7 @@
       storageLevel: 1,
       luckLevel: 0,
       customerSpeedLevel: 0,
-      autoSellCarIds: [],
+      autoSellRarities: [],
       carsPacked: 0,
       carsSold: 0,
       customersServed: 0,
@@ -4531,6 +4603,10 @@
     const packContentsProgress = document.querySelector("#packContentsProgress");
     const packContentsGrid = document.querySelector("#packContentsGrid");
     const closePackContentsButton = document.querySelector("#closePackContentsButton");
+    const autoSellSettingsButton = document.querySelector("#autoSellSettingsButton");
+    const autoSellSettingsModal = document.querySelector("#autoSellSettingsModal");
+    const autoSellSettingsList = document.querySelector("#autoSellSettingsList");
+    const closeAutoSellSettingsButton = document.querySelector("#closeAutoSellSettingsButton");
     const selectedRacer = document.querySelector("#selectedRacer");
     const trackSelect = document.querySelector("#trackSelect");
     const licenseInfo = document.querySelector("#licenseInfo");
@@ -4574,11 +4650,6 @@
       if (button) sellCar(button.dataset.carId);
     });
 
-    collectionGrid.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-auto-sell-id]");
-      if (button) toggleAutoSell(button.dataset.autoSellId);
-    });
-
     maintenanceList.addEventListener("click", (event) => {
       const button = event.target.closest("[data-maintain-id]");
       if (button) startMaintenance(button.dataset.maintainId);
@@ -4616,8 +4687,21 @@
     packContentsModal.addEventListener("click", (event) => {
       if (event.target === packContentsModal) closePackContents();
     });
+    autoSellSettingsButton.addEventListener("click", openAutoSellSettings);
+    closeAutoSellSettingsButton.addEventListener("click", closeAutoSellSettings);
+    autoSellSettingsModal.addEventListener("click", (event) => {
+      if (event.target === autoSellSettingsModal) closeAutoSellSettings();
+    });
+    autoSellSettingsList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-auto-sell-rarity]");
+      if (button) toggleAutoSellRarity(button.dataset.autoSellRarity);
+    });
 
     document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && autoSellSettingsModal.classList.contains("active")) {
+        closeAutoSellSettings();
+        return;
+      }
       if (event.key === "Escape" && packContentsModal.classList.contains("active")) {
         closePackContents();
         return;
@@ -4712,9 +4796,12 @@
           storageLevel: validNumber(saved.storageLevel, Math.max(1, storageCapacity / 10)),
           luckLevel: Math.min(10, validNumber(saved.luckLevel, 0)),
           customerSpeedLevel: Math.min(5, validNumber(saved.customerSpeedLevel, 0)),
-          autoSellCarIds: Array.from(new Set(
-            Array.isArray(saved.autoSellCarIds) ? saved.autoSellCarIds : []
-          )).filter((id) => COLLECTIBLE_CARS.some((car) => car.id === id)),
+          autoSellRarities: Array.from(new Set([
+            ...(Array.isArray(saved.autoSellRarities) ? saved.autoSellRarities : []),
+            ...(Array.isArray(saved.autoSellCarIds)
+              ? saved.autoSellCarIds.map((id) => getCar(id)?.rarity)
+              : [])
+          ])).filter((rarity) => AUTO_SELL_RARITIES.includes(rarity)),
           carsPacked: validNumber(saved.carsPacked, 0),
           carsSold: validNumber(saved.carsSold, 0),
           customersServed: validNumber(saved.customersServed, 0),
@@ -4765,6 +4852,7 @@
       creditsDisplay.textContent = state.credits.toLocaleString();
       storageDisplay.textContent = `${storedCars}/${state.storageCapacity}`;
       garageCount.textContent = storedCars;
+      autoSellSettingsButton.textContent = `Auto-sell settings · ${state.autoSellRarities.length} on`;
       renderPacks();
       renderGarage();
       renderCollection();
@@ -4784,7 +4872,7 @@
         const collectedCount = pool.filter((car) => state.discovered.includes(car.id)).length;
         const packComplete = collectedCount === poolSize;
         const availableSlots = state.storageCapacity - getStorageUsed();
-        const hasAutoSellCars = pool.some((car) => state.autoSellCarIds.includes(car.id));
+        const hasAutoSellCars = pool.some((car) => state.autoSellRarities.includes(car.rarity));
         const adjustedOdds = getAdjustedPackOdds(pack);
         const segments = Object.entries(adjustedOdds)
           .map(([rarity, chance]) => `<span class="${rarity}" style="width:${chance}%"></span>`)
@@ -4862,6 +4950,43 @@
 
     function closePackContents() {
       packContentsModal.classList.remove("active");
+    }
+
+    function openAutoSellSettings() {
+      renderAutoSellSettings();
+      autoSellSettingsModal.classList.add("active");
+      closeAutoSellSettingsButton.focus();
+    }
+
+    function closeAutoSellSettings() {
+      autoSellSettingsModal.classList.remove("active");
+      autoSellSettingsButton.focus();
+    }
+
+    function renderAutoSellSettings() {
+      autoSellSettingsList.innerHTML = AUTO_SELL_RARITIES.map((rarity) => {
+        const enabled = state.autoSellRarities.includes(rarity);
+        return `
+          <div class="auto-sell-rarity-row" style="--rarity-color:${RARITY_COLORS[rarity]}">
+            <strong>${rarity}</strong>
+            <button class="auto-sell-rarity-toggle ${enabled ? "active" : ""}" type="button" data-auto-sell-rarity="${rarity}">
+              Auto-sell ${enabled ? "on" : "off"}
+            </button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function toggleAutoSellRarity(rarity) {
+      if (!AUTO_SELL_RARITIES.includes(rarity)) return;
+      const enabled = state.autoSellRarities.includes(rarity);
+      state.autoSellRarities = enabled
+        ? state.autoSellRarities.filter((entry) => entry !== rarity)
+        : [...state.autoSellRarities, rarity];
+      saveState();
+      renderAll();
+      renderAutoSellSettings();
+      showToast(`${rarity[0].toUpperCase()}${rarity.slice(1)} auto-sell ${enabled ? "disabled" : "enabled"}.`);
     }
 
     function createCarCard(car) {
@@ -4950,10 +5075,9 @@
       const discovered = new Set(state.discovered);
       const ownedCount = COLLECTIBLE_CARS.filter((car) => discovered.has(car.id)).length;
       const collectionComplete = ownedCount === COLLECTIBLE_CARS.length;
-      const autoSellCount = state.autoSellCarIds.length;
       collectionSummary.innerHTML = collectionComplete
-        ? `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> vehicles discovered · Collection complete! · ${autoSellCount} auto-sell ${autoSellCount === 1 ? "rule" : "rules"}`
-        : `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> vehicles discovered · ${COLLECTIBLE_CARS.length - ownedCount} remaining · ${autoSellCount} auto-sell ${autoSellCount === 1 ? "rule" : "rules"}`;
+        ? `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> vehicles discovered · Collection complete!`
+        : `<strong>${ownedCount} / ${COLLECTIBLE_CARS.length}</strong> vehicles discovered · ${COLLECTIBLE_CARS.length - ownedCount} remaining`;
       const displayedCars = state.dugMobileAwarded
         ? [...COLLECTIBLE_CARS, COLLECTION_REWARD]
         : [...COLLECTIBLE_CARS];
@@ -4965,34 +5089,16 @@
         .map((car) => {
           const owned = discovered.has(car.id);
           const copies = state.collection[car.id] ?? 0;
-          const autoSell = state.autoSellCarIds.includes(car.id);
           return `
-            <article class="collection-card rarity-${car.rarity} ${owned ? "owned" : "locked"} ${autoSell ? "auto-sell" : ""}" style="--rarity-color:${RARITY_COLORS[car.rarity]}">
+            <article class="collection-card rarity-${car.rarity} ${owned ? "owned" : "locked"}" style="--rarity-color:${RARITY_COLORS[car.rarity]}">
               <span class="collection-check">${owned ? "✓" : "?"}</span>
               <div class="car-visual">${createCarVisual(car)}</div>
               <h3>${car.name}</h3>
               <p class="collection-rarity">${car.rarity}${owned ? ` · ${copies} stored` : " · Not discovered"}${car.id === COLLECTION_REWARD_ID ? " · One-time reward" : ""}</p>
-              ${car.id === COLLECTION_REWARD_ID ? "" : `
-                <button class="auto-sell-button ${autoSell ? "active" : ""}" type="button" data-auto-sell-id="${car.id}">
-                  Auto-sell ${autoSell ? "on" : "off"} · 🪙 ${getSalePrice(car).toLocaleString()}
-                </button>
-              `}
             </article>
           `;
         })
         .join("");
-    }
-
-    function toggleAutoSell(carId) {
-      if (!COLLECTIBLE_CARS.some((car) => car.id === carId)) return;
-      const enabled = state.autoSellCarIds.includes(carId);
-      state.autoSellCarIds = enabled
-        ? state.autoSellCarIds.filter((id) => id !== carId)
-        : [...state.autoSellCarIds, carId];
-      saveState();
-      renderAll();
-      const car = getCar(carId);
-      showToast(`${car.name} auto-sell ${enabled ? "disabled" : "enabled"}.`);
     }
 
     function renderMaintenance() {
@@ -5357,7 +5463,7 @@
         return;
       }
       const rolledCars = Array.from({ length: quantity }, () => rollCar(pack));
-      const storageNeeded = rolledCars.filter((car) => !state.autoSellCarIds.includes(car.id)).length;
+      const storageNeeded = rolledCars.filter((car) => !state.autoSellRarities.includes(car.rarity)).length;
       if (state.storageCapacity - getStorageUsed() < storageNeeded) {
         showToast(`This stack needs ${storageNeeded} free storage ${storageNeeded === 1 ? "space" : "spaces"} after auto-selling.`);
         return;
@@ -5536,7 +5642,7 @@
           const isNew = !state.discovered.includes(car.id);
           if (isNew) state.discovered.push(car.id);
           state.carsPacked += 1;
-          const autoSold = state.autoSellCarIds.includes(car.id);
+          const autoSold = state.autoSellRarities.includes(car.rarity);
           if (autoSold) {
             const salePrice = getSalePrice(car);
             state.credits += salePrice;
