@@ -3614,7 +3614,7 @@
           <p class="kicker">Run your dealership</p>
           <h2>Auto group</h2>
         </div>
-        <p class="section-copy">Open the rental desk and customers will take the cheapest available cars for one day. Sleep to collect the returns and review your daily results.</p>
+        <p class="section-copy">Open the rental desk and customers will choose from your available cars for one day. Sleep to collect the returns and review your daily results.</p>
       </div>
 
       <div class="factory-grid">
@@ -5341,6 +5341,12 @@
       if (maintenanceSession.step >= SERVICE_TASKS.length) {
         const car = getCar(maintenanceSession.carId);
         const queueIndex = state.maintenanceQueue.indexOf(maintenanceSession.carId);
+        if (queueIndex === -1) {
+          cancelMaintenance();
+          renderAll();
+          showToast("That car was already serviced by your maintenance crew.");
+          return;
+        }
         state.maintenanceQueue.splice(queueIndex, 1);
         cancelMaintenance();
         saveState();
@@ -5462,17 +5468,33 @@
         showToast("Not enough credits. Sell cars to fund more packs.");
         return;
       }
-      const rolledCars = Array.from({ length: quantity }, () => rollCar(pack));
-      const storageNeeded = rolledCars.filter((car) => !state.autoSellRarities.includes(car.rarity)).length;
+      const possibleRarities = Object.keys(getAdjustedPackOdds(pack));
+      const storageNeeded = possibleRarities.every((rarity) => state.autoSellRarities.includes(rarity))
+        ? 0
+        : quantity;
       if (state.storageCapacity - getStorageUsed() < storageNeeded) {
         showToast(`This stack needs ${storageNeeded} free storage ${storageNeeded === 1 ? "space" : "spaces"} after auto-selling.`);
         return;
       }
 
+      const rolledCars = Array.from({ length: quantity }, () => rollCar(pack));
       state.credits -= totalPrice;
       pendingPack = pack;
       pendingCars = rolledCars;
-      pendingResults = [];
+      pendingResults = pendingCars.map((car) => {
+        const isNew = !state.discovered.includes(car.id);
+        if (isNew) state.discovered.push(car.id);
+        state.carsPacked += 1;
+        const autoSold = state.autoSellRarities.includes(car.rarity);
+        if (autoSold) {
+          const salePrice = getSalePrice(car);
+          state.credits += salePrice;
+          state.carsSold += 1;
+          return { car, isNew, copies: state.collection[car.id] ?? 0, autoSold, salePrice };
+        }
+        state.collection[car.id] = (state.collection[car.id] ?? 0) + 1;
+        return { car, isNew, copies: state.collection[car.id], autoSold: false, salePrice: 0 };
+      });
       saveState();
       renderAll();
 
@@ -5628,7 +5650,8 @@
       }
 
       const choices = eligibleCars.filter((car) => car.rarity === rarity);
-      return choices[Math.floor(Math.random() * choices.length)];
+      const fallbackChoices = choices.length > 0 ? choices : eligibleCars;
+      return fallbackChoices[Math.floor(Math.random() * fallbackChoices.length)];
     }
 
     function openPendingPack() {
@@ -5638,25 +5661,8 @@
       tapHint.hidden = true;
 
       window.setTimeout(() => {
-        pendingResults = pendingCars.map((car) => {
-          const isNew = !state.discovered.includes(car.id);
-          if (isNew) state.discovered.push(car.id);
-          state.carsPacked += 1;
-          const autoSold = state.autoSellRarities.includes(car.rarity);
-          if (autoSold) {
-            const salePrice = getSalePrice(car);
-            state.credits += salePrice;
-            state.carsSold += 1;
-            return { car, isNew, copies: state.collection[car.id] ?? 0, autoSold, salePrice };
-          }
-          state.collection[car.id] = (state.collection[car.id] ?? 0) + 1;
-          return { car, isNew, copies: state.collection[car.id], autoSold: false, salePrice: 0 };
-        });
-
-        saveState();
         openingBox.hidden = true;
         renderReveal();
-        renderAll();
       }, 760);
     }
 
