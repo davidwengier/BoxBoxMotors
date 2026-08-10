@@ -3890,7 +3890,7 @@
 
   <script>
     const SAVE_KEY = "box-box-racing-save-v1";
-    const BONUS_CODE = "4718";
+    const BONUS_CODE_HASH = "5c9c124097bc0e8b86f9cbe8e9a9912f08119c5b196e030bf2f5b70e260ed7c2";
     const BONUS_CREDITS = 500000;
     const RENTAL_DURATIONS = [1, 2, 3, 4, 5, 6, 7];
 
@@ -5603,9 +5603,14 @@
       bonusCodeButton.focus();
     }
 
-    function submitBonusCode(event) {
+    async function submitBonusCode(event) {
       event.preventDefault();
-      if (bonusCodeInput.value.trim() !== BONUS_CODE) {
+      const codeBytes = new TextEncoder().encode(bonusCodeInput.value.trim());
+      const digest = await crypto.subtle.digest("SHA-256", codeBytes);
+      const enteredCodeHash = Array.from(new Uint8Array(digest))
+        .map((byte) => byte.toString(16).padStart(2, "0"))
+        .join("");
+      if (enteredCodeHash !== BONUS_CODE_HASH) {
         bonusCodeStatus.textContent = "That code is not correct.";
         bonusCodeInput.select();
         return;
