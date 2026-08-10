@@ -184,7 +184,7 @@
 
     .nav {
       display: grid;
-      grid-template-columns: 1fr auto repeat(4, 1fr);
+      grid-template-columns: auto repeat(5, 1fr);
       gap: 8px;
       max-width: 880px;
       margin: 0 auto 34px;
@@ -3459,7 +3459,7 @@
       }
 
       .nav {
-        grid-template-columns: minmax(108px, 1fr) 48px repeat(4, minmax(108px, 1fr));
+        grid-template-columns: 48px repeat(5, minmax(108px, 1fr));
         margin-bottom: 26px;
         overflow-x: auto;
       }
@@ -3597,8 +3597,8 @@
     </header>
 
     <nav class="nav" aria-label="Game sections">
-      <button class="nav-button active" type="button" data-view="shop">📦 Shop</button>
       <button id="bonusCodeButton" class="nav-button bonus-code-button" type="button" aria-label="Enter bonus code" title="Enter bonus code"><img src="favicon.svg" alt=""></button>
+      <button class="nav-button active" type="button" data-view="shop">📦 Shop</button>
       <button class="nav-button" type="button" data-view="garage">🚘 Garage <span id="garageCount" class="nav-count">1</span></button>
       <button class="nav-button" type="button" data-view="collection">✅ Collection</button>
       <button class="nav-button" type="button" data-view="maintenance">🔧 Maintenance</button>
