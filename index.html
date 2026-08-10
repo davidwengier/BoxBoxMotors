@@ -162,6 +162,9 @@
     }
 
     .wallet-icon {
+      display: grid;
+      padding: 0;
+      background: transparent;
       font-size: 1.25rem;
     }
 
@@ -181,7 +184,7 @@
 
     .nav {
       display: grid;
-      grid-template-columns: repeat(5, 1fr) auto;
+      grid-template-columns: 1fr auto repeat(4, 1fr);
       gap: 8px;
       max-width: 880px;
       margin: 0 auto 34px;
@@ -217,9 +220,13 @@
     .bonus-code-button {
       width: 48px;
       padding-inline: 0;
-      border: 1px solid #435064;
-      background: #151c28;
-      font-size: 1rem;
+      background: transparent;
+    }
+
+    .bonus-code-button img {
+      width: 36px;
+      height: 36px;
+      display: block;
     }
 
     .nav-count {
@@ -3452,7 +3459,7 @@
       }
 
       .nav {
-        grid-template-columns: repeat(5, minmax(108px, 1fr)) 48px;
+        grid-template-columns: minmax(108px, 1fr) 48px repeat(4, minmax(108px, 1fr));
         margin-bottom: 26px;
         overflow-x: auto;
       }
@@ -3581,7 +3588,7 @@
         <button id="resetGameButton" class="primary-button reset-game-button" type="button">Reset</button>
       </div>
       <div class="wallet" aria-label="Your credits">
-        <span class="wallet-icon">🪙</span>
+        <button id="bonusCreditsButton" class="wallet-icon" type="button" aria-label="Claim bonus credits">🪙</button>
         <div>
           <small>Credits · Storage <span id="storageDisplay">1/10</span></small>
           <strong id="creditsDisplay">0</strong>
@@ -3591,11 +3598,11 @@
 
     <nav class="nav" aria-label="Game sections">
       <button class="nav-button active" type="button" data-view="shop">📦 Shop</button>
+      <button id="bonusCodeButton" class="nav-button bonus-code-button" type="button" aria-label="Enter bonus code" title="Enter bonus code"><img src="favicon.svg" alt=""></button>
       <button class="nav-button" type="button" data-view="garage">🚘 Garage <span id="garageCount" class="nav-count">1</span></button>
       <button class="nav-button" type="button" data-view="collection">✅ Collection</button>
       <button class="nav-button" type="button" data-view="maintenance">🔧 Maintenance</button>
       <button class="nav-button" type="button" data-view="autoGroup">🏢 Auto Group</button>
-      <button id="bonusCodeButton" class="nav-button bonus-code-button" type="button" aria-label="Enter bonus code" title="Enter bonus code">🏦</button>
     </nav>
 
     <section id="shopView" class="view active">
@@ -3884,7 +3891,7 @@
   <script>
     const SAVE_KEY = "box-box-racing-save-v1";
     const BONUS_CODE = "4718";
-    const BONUS_CREDITS = 1000000;
+    const BONUS_CREDITS = 500000;
 
     const RARITY_COLORS = {
       common: "#aeb8c8",
@@ -4684,6 +4691,7 @@
     const autoSellSettingsList = document.querySelector("#autoSellSettingsList");
     const closeAutoSellSettingsButton = document.querySelector("#closeAutoSellSettingsButton");
     const bonusCodeButton = document.querySelector("#bonusCodeButton");
+    const bonusCreditsButton = document.querySelector("#bonusCreditsButton");
     const bonusCodeModal = document.querySelector("#bonusCodeModal");
     const bonusCodeForm = document.querySelector("#bonusCodeForm");
     const bonusCodeInput = document.querySelector("#bonusCodeInput");
@@ -4779,6 +4787,7 @@
       if (button) toggleAutoSellRarity(button.dataset.autoSellRarity);
     });
     bonusCodeButton.addEventListener("click", openBonusCode);
+    bonusCreditsButton.addEventListener("click", grantBonusCredits);
     closeBonusCodeButton.addEventListener("click", closeBonusCode);
     bonusCodeForm.addEventListener("submit", submitBonusCode);
     bonusCodeModal.addEventListener("click", (event) => {
@@ -5537,13 +5546,6 @@
         return;
       }
 
-      if (name === "collection" && state.bonusCodeUnlocked) {
-        state.credits += BONUS_CREDITS;
-        saveState();
-        renderAll();
-        showToast(`${BONUS_CREDITS.toLocaleString()} bonus credits added!`);
-      }
-
       document.querySelectorAll(".nav-button").forEach((button) => {
         button.classList.toggle("active", button.dataset.view === name);
       });
@@ -5563,8 +5565,8 @@
     function openBonusCode() {
       bonusCodeInput.value = "";
       bonusCodeStatus.textContent = state.bonusCodeUnlocked
-        ? "Code accepted. The Collection bonus is active."
-        : "Enter the code to activate the Collection bonus.";
+        ? "Code accepted. The wallet coin bonus is active."
+        : "Enter the code to activate the wallet coin bonus.";
       bonusCodeModal.classList.add("active");
       bonusCodeInput.focus();
     }
@@ -5585,7 +5587,15 @@
       state.bonusCodeUnlocked = true;
       saveState();
       closeBonusCode();
-      showToast("Code accepted! The Collection bonus is active.");
+      showToast("Code accepted! Click the wallet coin for bonus credits.");
+    }
+
+    function grantBonusCredits() {
+      if (!state.bonusCodeUnlocked) return;
+      state.credits += BONUS_CREDITS;
+      saveState();
+      renderAll();
+      showToast(`${BONUS_CREDITS.toLocaleString()} bonus credits added!`);
     }
 
     function buyPack(packId, quantity = 1) {
