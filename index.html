@@ -3676,7 +3676,7 @@
           <p class="kicker">Run your dealership</p>
           <h2>Auto group</h2>
         </div>
-        <p class="section-copy">Open the rental desk and customers will choose from your available cars for one day. Sleep to collect the returns and review your daily results.</p>
+        <p class="section-copy">Open the rental desk and customers will choose from your available cars for one to seven days. Sleep to collect due returns and review your daily results.</p>
       </div>
 
       <div class="factory-grid">
@@ -4584,7 +4584,7 @@
       carsSold: 0,
       customersServed: 0,
       dealershipOpen: true,
-      rentedCars: {},
+      activeRentals: [],
       maintenanceQueue: [],
       maintenanceWorkers: 0,
       workerPartProgress: 0,
@@ -4878,12 +4878,32 @@
           storedCars,
           validNumber(saved.storageCapacity, defaultState.storageCapacity)
         );
-        const rentedCars = {};
-        Object.entries(saved.rentedCars ?? {}).forEach(([id, count]) => {
-          if (collection[id] && Number.isInteger(count) && count > 0) {
-            rentedCars[id] = Math.min(count, collection[id]);
-          }
-        });
+        const day = Math.max(1, validNumber(saved.day, 1));
+        const activeRentals = [];
+        const rentedCounts = {};
+        const addActiveRental = (carId, returnDay) => {
+          if (!collection[carId] || (rentedCounts[carId] ?? 0) >= collection[carId]) return;
+          activeRentals.push({ carId, returnDay });
+          rentedCounts[carId] = (rentedCounts[carId] ?? 0) + 1;
+        };
+        if (Array.isArray(saved.activeRentals)) {
+          saved.activeRentals.forEach((rental) => {
+            if (rental
+              && typeof rental === "object"
+              && getCar(rental.carId)
+              && Number.isInteger(rental.returnDay)
+              && rental.returnDay > 0) {
+              addActiveRental(rental.carId, Math.max(day, rental.returnDay));
+            }
+          });
+        } else {
+          Object.entries(saved.rentedCars ?? {}).forEach(([carId, count]) => {
+            if (!collection[carId] || !Number.isInteger(count) || count <= 0) return;
+            for (let index = 0; index < Math.min(count, collection[carId]); index += 1) {
+              addActiveRental(carId, day);
+            }
+          });
+        }
         const maintenanceQueue = Array.isArray(saved.maintenanceQueue)
           ? saved.maintenanceQueue.filter((id) => getCar(id))
           : [];
@@ -4907,7 +4927,7 @@
           carsSold: validNumber(saved.carsSold, 0),
           customersServed: validNumber(saved.customersServed, 0),
           dealershipOpen: saved.dealershipOpen !== false,
-          rentedCars,
+          activeRentals,
           maintenanceQueue,
           maintenanceWorkers: Math.min(5, validNumber(saved.maintenanceWorkers, 0)),
           workerPartProgress: Math.min(4, validNumber(saved.workerPartProgress, 0)),
@@ -4918,7 +4938,7 @@
             || Boolean(collection[COLLECTION_REWARD_ID])
             || discovered.includes(COLLECTION_REWARD_ID),
           bonusCodeUnlocked: saved.bonusCodeUnlocked === true,
-          day: Math.max(1, validNumber(saved.day, 1)),
+          day,
           dayRevenue: validNumber(saved.dayRevenue, 0),
           dayRentals: validNumber(saved.dayRentals, 0),
           licenses: Array.from(new Set(["neon", ...(Array.isArray(saved.licenses) ? saved.licenses : [])]))
@@ -5477,14 +5497,13 @@
       const maintenanceWasEmpty = state.maintenanceQueue.length === 0;
       let returns = 0;
 
-      Object.entries(state.rentedCars).forEach(([id, count]) => {
-        for (let index = 0; index < count; index += 1) {
-          state.maintenanceQueue.push(id);
-          returns += 1;
-        }
+      state.activeRentals = state.activeRentals.filter((rental) => {
+        if (rental.returnDay > completedDay) return true;
+        state.maintenanceQueue.push(rental.carId);
+        returns += 1;
+        return false;
       });
 
-      state.rentedCars = {};
       state.day += 1;
       state.dayRevenue = 0;
       state.dayRentals = 0;
@@ -5497,8 +5516,10 @@
 
       dayReportTitle.textContent = `Day ${completedDay} complete`;
       dayReportCopy.textContent = returns
-        ? "Your rentals have returned. Service them before putting them back on the lot."
-        : "No cars were out on rent today. Open the rental desk tomorrow to attract customers.";
+        ? `${returns} ${returns === 1 ? "rental has" : "rentals have"} returned. Service ${returns === 1 ? "it" : "them"} before putting ${returns === 1 ? "it" : "them"} back on the lot.`
+        : state.activeRentals.length > 0
+          ? `No rentals returned today. ${state.activeRentals.length} ${state.activeRentals.length === 1 ? "car is" : "cars are"} still out with customers.`
+          : "No cars were out on rent today. Open the rental desk tomorrow to attract customers.";
       reportRevenue.textContent = money(revenue);
       reportRentals.textContent = rentals.toLocaleString();
       reportReturns.textContent = returns.toLocaleString();
@@ -5871,8 +5892,8 @@
     }
 
     function getRentedCount(carId) {
-      if (carId) return state.rentedCars[carId] ?? 0;
-      return Object.values(state.rentedCars).reduce((total, count) => total + count, 0);
+      if (carId) return state.activeRentals.filter((rental) => rental.carId === carId).length;
+      return state.activeRentals.length;
     }
 
     function getMaintenanceCount(carId) {
@@ -6089,7 +6110,7 @@
       factoryStored.textContent = `${getAvailableStoredCount()} / ${stored}`;
       factoryPacked.textContent = state.dayRentals.toLocaleString();
       factorySold.textContent = money(state.dayRevenue);
-      dayLabel.textContent = `Day ${state.day} · ${getRentedCount()} cars are currently out on one-day rentals.`;
+      dayLabel.textContent = `Day ${state.day} · ${getRentedCount()} cars are currently out on 1–7 day rentals.`;
       dealershipState.textContent = state.dealershipOpen ? "Open" : "Closed";
       dealershipState.classList.toggle("closed", !state.dealershipOpen);
       toggleDealershipButton.textContent = state.dealershipOpen ? "Close rental desk" : "Open rental desk";
@@ -6184,16 +6205,20 @@
           return;
         }
 
-        const price = getRentalFee(car);
-        state.rentedCars[car.id] = (state.rentedCars[car.id] ?? 0) + 1;
+        const rentalDays = Math.floor(Math.random() * 7) + 1;
+        const price = getRentalFee(car) * rentalDays;
+        state.activeRentals.push({
+          carId: car.id,
+          returnDay: state.day + rentalDays - 1
+        });
         state.credits += price;
         state.dayRevenue += price;
         state.dayRentals += 1;
         state.customersServed += 1;
         saveState();
         renderAll();
-        customerMessage.textContent = `${shopper.label} rented ${car.name} for ${price.toLocaleString()} credits.`;
-        showToast(`${shopper.label} rented ${car.name} for one day.`);
+        customerMessage.textContent = `${shopper.label} rented ${car.name} for ${rentalDays} ${rentalDays === 1 ? "day" : "days"} · ${price.toLocaleString()} credits.`;
+        showToast(`${shopper.label} rented ${car.name} for ${rentalDays} ${rentalDays === 1 ? "day" : "days"}.`);
       }, timings.browsing));
 
       customerTimers.push(window.setTimeout(() => {

@@ -45,14 +45,15 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
   confirming the warning.
 - Store every packed copy as an individual car, including unlimited duplicates.
 - Rent cars from the auto group to passive customers, with each customer choosing
-  randomly from the individual cars currently available.
+  randomly from the individual cars currently available for one to seven days.
 - LEGO and Fast & Furious vehicles earn a small rental premium, while Trek and
   Surron bikes have lower rental fees.
 - Upgrade customer speed through five levels to shorten browsing and arrival times.
 - Serve ten visually distinct customer types with varied clothing, skin tones,
   hairstyles, and accessories.
 - Close the rental desk at any time to stop new rentals.
-- Sleep to end the day, return every rented car, and see the day's income and rental totals.
+- Sleep to end the day, receive rentals whose one-to-seven-day terms have finished,
+  and see the day's income and rental totals.
 - Process each returned car through interactive scanning, meter-based washing, refuelling,
   safety checks, and parking before it can be rented again.
 - Hire up to five maintenance workers to process returns automatically, improving from
