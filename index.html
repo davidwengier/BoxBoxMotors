@@ -3892,6 +3892,7 @@
     const SAVE_KEY = "box-box-racing-save-v1";
     const BONUS_CODE = "4718";
     const BONUS_CREDITS = 500000;
+    const RENTAL_DURATIONS = [1, 2, 3, 4, 5, 6, 7];
 
     const RARITY_COLORS = {
       common: "#aeb8c8",
@@ -4585,6 +4586,7 @@
       customersServed: 0,
       dealershipOpen: true,
       activeRentals: [],
+      rentalDurationBag: [],
       maintenanceQueue: [],
       maintenanceWorkers: 0,
       workerPartProgress: 0,
@@ -4928,6 +4930,10 @@
           customersServed: validNumber(saved.customersServed, 0),
           dealershipOpen: saved.dealershipOpen !== false,
           activeRentals,
+          rentalDurationBag: Array.isArray(saved.rentalDurationBag)
+            ? Array.from(new Set(saved.rentalDurationBag))
+              .filter((duration) => RENTAL_DURATIONS.includes(duration))
+            : [],
           maintenanceQueue,
           maintenanceWorkers: Math.min(5, validNumber(saved.maintenanceWorkers, 0)),
           workerPartProgress: Math.min(4, validNumber(saved.workerPartProgress, 0)),
@@ -5931,6 +5937,14 @@
       return Math.round(baseFee * seriesMultiplier / 20) * 20;
     }
 
+    function getRandomRentalDays() {
+      if (state.rentalDurationBag.length === 0) {
+        state.rentalDurationBag = [...RENTAL_DURATIONS];
+      }
+      const index = Math.floor(Math.random() * state.rentalDurationBag.length);
+      return state.rentalDurationBag.splice(index, 1)[0];
+    }
+
     function grantCollectionReward() {
       if (state.dugMobileAwarded) return false;
       const discovered = new Set(state.discovered);
@@ -6205,7 +6219,7 @@
           return;
         }
 
-        const rentalDays = Math.floor(Math.random() * 7) + 1;
+        const rentalDays = getRandomRentalDays();
         const price = getRentalFee(car) * rentalDays;
         state.activeRentals.push({
           carId: car.id,
@@ -6217,8 +6231,9 @@
         state.customersServed += 1;
         saveState();
         renderAll();
-        customerMessage.textContent = `${shopper.label} rented ${car.name} for ${rentalDays} ${rentalDays === 1 ? "day" : "days"} · ${price.toLocaleString()} credits.`;
-        showToast(`${shopper.label} rented ${car.name} for ${rentalDays} ${rentalDays === 1 ? "day" : "days"}.`);
+        const rentalLength = `${rentalDays} ${rentalDays === 1 ? "day" : "days"}`;
+        customerMessage.textContent = `${shopper.label} rented ${car.name} · Rental length: ${rentalLength} · ${price.toLocaleString()} credits.`;
+        showToast(`${car.name} rental: ${rentalLength}.`);
       }, timings.browsing));
 
       customerTimers.push(window.setTimeout(() => {
