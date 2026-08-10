@@ -53,6 +53,7 @@
     }
 
     button,
+    input,
     select {
       font: inherit;
     }
@@ -64,6 +65,7 @@
     }
 
     button:focus-visible,
+    input:focus-visible,
     select:focus-visible {
       outline: 3px solid var(--cyan);
       outline-offset: 3px;
@@ -179,7 +181,7 @@
 
     .nav {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(5, 1fr) auto;
       gap: 8px;
       max-width: 880px;
       margin: 0 auto 34px;
@@ -210,6 +212,14 @@
       background: var(--panel-2);
       color: var(--text);
       box-shadow: inset 0 -2px var(--cyan);
+    }
+
+    .bonus-code-button {
+      width: 48px;
+      padding-inline: 0;
+      border: 1px solid #435064;
+      background: #151c28;
+      font-size: 1rem;
     }
 
     .nav-count {
@@ -2172,6 +2182,50 @@
       box-shadow: 0 0 70px rgb(255 204 51 / 13%), var(--shadow);
     }
 
+    .bonus-code-card {
+      width: min(430px, 94vw);
+      padding: 26px;
+      border: 2px solid var(--green);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: 0 0 70px rgb(100 239 145 / 13%), var(--shadow);
+    }
+
+    .bonus-code-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .bonus-code-form label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .bonus-code-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #435064;
+      border-radius: 12px;
+      background: #0c111a;
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 0.24em;
+      text-align: center;
+    }
+
+    .bonus-code-status {
+      min-height: 1.4em;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
     .auto-sell-settings-list {
       display: grid;
       gap: 9px;
@@ -3398,7 +3452,7 @@
       }
 
       .nav {
-        grid-template-columns: repeat(5, minmax(108px, 1fr));
+        grid-template-columns: repeat(5, minmax(108px, 1fr)) 48px;
         margin-bottom: 26px;
         overflow-x: auto;
       }
@@ -3541,6 +3595,7 @@
       <button class="nav-button" type="button" data-view="collection">✅ Collection</button>
       <button class="nav-button" type="button" data-view="maintenance">🔧 Maintenance</button>
       <button class="nav-button" type="button" data-view="autoGroup">🏢 Auto Group</button>
+      <button id="bonusCodeButton" class="nav-button bonus-code-button" type="button" aria-label="Enter bonus code" title="Enter bonus code">🏦</button>
     </nav>
 
     <section id="shopView" class="view active">
@@ -3806,10 +3861,30 @@
     </div>
   </div>
 
+  <div id="bonusCodeModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="bonusCodeTitle">
+    <div class="bonus-code-card">
+      <div class="pack-contents-header">
+        <div>
+          <p class="kicker">Private access</p>
+          <h2 id="bonusCodeTitle">Enter code</h2>
+        </div>
+        <button id="closeBonusCodeButton" class="close-pack-contents" type="button" aria-label="Close bonus code">×</button>
+      </div>
+      <form id="bonusCodeForm" class="bonus-code-form">
+        <label for="bonusCodeInput">Four-digit code</label>
+        <input id="bonusCodeInput" class="bonus-code-input" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required>
+        <p id="bonusCodeStatus" class="bonus-code-status"></p>
+        <button class="primary-button" type="submit">Unlock</button>
+      </form>
+    </div>
+  </div>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
     const SAVE_KEY = "box-box-racing-save-v1";
+    const BONUS_CODE = "4718";
+    const BONUS_CREDITS = 1000000;
 
     const RARITY_COLORS = {
       common: "#aeb8c8",
@@ -4508,6 +4583,7 @@
       workerPartProgress: 0,
       workerLastTick: 0,
       dugMobileAwarded: false,
+      bonusCodeUnlocked: false,
       day: 1,
       dayRevenue: 0,
       dayRentals: 0,
@@ -4607,6 +4683,12 @@
     const autoSellSettingsModal = document.querySelector("#autoSellSettingsModal");
     const autoSellSettingsList = document.querySelector("#autoSellSettingsList");
     const closeAutoSellSettingsButton = document.querySelector("#closeAutoSellSettingsButton");
+    const bonusCodeButton = document.querySelector("#bonusCodeButton");
+    const bonusCodeModal = document.querySelector("#bonusCodeModal");
+    const bonusCodeForm = document.querySelector("#bonusCodeForm");
+    const bonusCodeInput = document.querySelector("#bonusCodeInput");
+    const bonusCodeStatus = document.querySelector("#bonusCodeStatus");
+    const closeBonusCodeButton = document.querySelector("#closeBonusCodeButton");
     const selectedRacer = document.querySelector("#selectedRacer");
     const trackSelect = document.querySelector("#trackSelect");
     const licenseInfo = document.querySelector("#licenseInfo");
@@ -4631,7 +4713,7 @@
     const revealCard = document.querySelector("#revealCard");
     const toast = document.querySelector("#toast");
 
-    document.querySelectorAll(".nav-button").forEach((button) => {
+    document.querySelectorAll(".nav-button[data-view]").forEach((button) => {
       button.addEventListener("click", () => showView(button.dataset.view));
     });
 
@@ -4696,8 +4778,18 @@
       const button = event.target.closest("[data-auto-sell-rarity]");
       if (button) toggleAutoSellRarity(button.dataset.autoSellRarity);
     });
+    bonusCodeButton.addEventListener("click", openBonusCode);
+    closeBonusCodeButton.addEventListener("click", closeBonusCode);
+    bonusCodeForm.addEventListener("submit", submitBonusCode);
+    bonusCodeModal.addEventListener("click", (event) => {
+      if (event.target === bonusCodeModal) closeBonusCode();
+    });
 
     document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && bonusCodeModal.classList.contains("active")) {
+        closeBonusCode();
+        return;
+      }
       if (event.key === "Escape" && autoSellSettingsModal.classList.contains("active")) {
         closeAutoSellSettings();
         return;
@@ -4816,6 +4908,7 @@
           dugMobileAwarded: saved.dugMobileAwarded === true
             || Boolean(collection[COLLECTION_REWARD_ID])
             || discovered.includes(COLLECTION_REWARD_ID),
+          bonusCodeUnlocked: saved.bonusCodeUnlocked === true,
           day: Math.max(1, validNumber(saved.day, 1)),
           dayRevenue: validNumber(saved.dayRevenue, 0),
           dayRentals: validNumber(saved.dayRentals, 0),
@@ -5444,6 +5537,13 @@
         return;
       }
 
+      if (name === "collection" && state.bonusCodeUnlocked) {
+        state.credits += BONUS_CREDITS;
+        saveState();
+        renderAll();
+        showToast(`${BONUS_CREDITS.toLocaleString()} bonus credits added!`);
+      }
+
       document.querySelectorAll(".nav-button").forEach((button) => {
         button.classList.toggle("active", button.dataset.view === name);
       });
@@ -5458,6 +5558,34 @@
         renderSelectedRacer();
         resetRace();
       }
+    }
+
+    function openBonusCode() {
+      bonusCodeInput.value = "";
+      bonusCodeStatus.textContent = state.bonusCodeUnlocked
+        ? "Code accepted. The Collection bonus is active."
+        : "Enter the code to activate the Collection bonus.";
+      bonusCodeModal.classList.add("active");
+      bonusCodeInput.focus();
+    }
+
+    function closeBonusCode() {
+      bonusCodeModal.classList.remove("active");
+      bonusCodeButton.focus();
+    }
+
+    function submitBonusCode(event) {
+      event.preventDefault();
+      if (bonusCodeInput.value.trim() !== BONUS_CODE) {
+        bonusCodeStatus.textContent = "That code is not correct.";
+        bonusCodeInput.select();
+        return;
+      }
+
+      state.bonusCodeUnlocked = true;
+      saveState();
+      closeBonusCode();
+      showToast("Code accepted! The Collection bonus is active.");
     }
 
     function buyPack(packId, quantity = 1) {

@@ -31,6 +31,8 @@ Play at [wengier.com/BoxBoxMotors](https://wengier.com/BoxBoxMotors/).
 - Car artwork adds model-specific aero, lighting, grilles, stripes,
   wheel designs, era details, and brand styling across all 300 vehicles.
 - Track every obtainable car on an automatic collection checklist.
+- Enter the private bonus code from the building button beside Auto Group to
+  activate a repeatable credit bonus from the Collection button.
 - Complete all 300 collectible vehicles to unlock the one-time black DugMobile reward,
   worth 5,000 credits per rental or 100,000 credits when sold.
 - The bike pack includes a Mythic Surron Ultra Bee and a rainbow Limited
